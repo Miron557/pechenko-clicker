@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.4</title>
+    <title>Печенько кликер v2.0.9.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -229,7 +229,7 @@
         }
         @keyframes gradientShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
         .gradient-text {
-            background: linear-gradient(45deg, #a18cd1, #fbc2eb, #a18cd1); background-size:200% 200%;
+            background: linear-gradient(45deg, #ff4757, #ff6b81, #ff4757); background-size:200% 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             animation: gradientShift 3s ease infinite; font-weight:600;
         }
@@ -281,7 +281,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.4</h1>
+    <h1>🍪 Печенько кликер v2.0.9.5</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -340,6 +340,10 @@
                 <button id="addBillionCookiesBtn">+1 000 000 000 печенек</button>
                 <button id="addTrillionCookiesBtn">+1 000 000 000 000 печенек</button>
                 <button id="add100BillionBtn">+100 000 000 000 печенек</button>
+                <div style="display:flex; gap:5px; margin-top:5px;">
+                    <input type="number" id="customAmountInput" placeholder="Своя сумма" style="flex:1; padding:10px; border-radius:15px; border:1px solid var(--btn-border); background:var(--btn-bg); color:var(--text);" min="1" step="any">
+                    <button id="addCustomAmountBtn" style="padding:10px 15px;">Выдать</button>
+                </div>
                 <button id="adminStartEvent">Дождь x2</button>
                 <button id="adminSetClick2">Клик x2</button>
                 <button id="adminResetClick">Сброс клика</button>
@@ -349,6 +353,7 @@
                 <button id="adminClearChat">Очистить чат (локально)</button>
                 <button id="adminSimulateOffline">Симулировать 1ч оффлайн</button>
                 <button id="adminFullReset">Полный сброс</button>
+                <button id="adminGiftT1nator">🎁 Подарок для t1nator (+1 трлн)</button>
             </div>
         </div>
         <button id="closeAdminModal" style="margin-top:15px;">Закрыть</button>
@@ -436,6 +441,7 @@
             <button class="shop-btn" id="buyVIPMoney">VIP x2 - 120₽</button>
             <button class="shop-btn" id="buyX3Money">x3 навсегда - 50₽</button>
             <button class="shop-btn" id="buyModerMoney">Модер (30д) - 100₽</button>
+            <button class="shop-btn" id="buyModerCookies">Модер (30д) - 100 000 000 🍪</button>
             <button class="shop-btn" id="buyTempAdmin">Админ на 1 день - 1 000 000 000 000 🍪</button>
         </div>
         <p id="shopStatus" style="font-weight:700; margin-top:15px;"></p>
@@ -731,7 +737,7 @@
     }
     function getUpgradeCost(i) { const u = upgrades[i]; return Math.floor(u.baseCost * Math.pow(u.costMult, u.count)); }
     function getCurrentRank() { let rank = ranks[0]; for (let r of ranks) if (cookies >= r.threshold) rank = r; else break; return rank.name; }
-    function getPetBonus(type) { return 0; } // заглушка, чтобы не ломать вызовы
+    function getPetBonus(type) { return 0; }
 
     function updateUI() {
         document.getElementById('score').textContent = Math.floor(cookies);
@@ -968,6 +974,19 @@
     document.getElementById('buyVIPMoney').addEventListener('click', () => alert('Оплата временно недоступна.'));
     document.getElementById('buyX3Money').addEventListener('click', () => { if (isX3) { alert('x3 уже активирован!'); return; } alert('Оплата временно недоступна.'); });
     document.getElementById('buyModerMoney').addEventListener('click', () => { if (isModer) { alert('Модер уже активирован!'); return; } alert('Оплата временно недоступна.'); });
+    document.getElementById('buyModerCookies').addEventListener('click', () => {
+        if (isModer) { alert('Модер уже активирован!'); return; }
+        if (cookies >= 100000000) {
+            cookies -= 100000000;
+            isModer = true;
+            moderExpiry = Date.now() + 30 * 86400000;
+            localStorage.setItem('pechenkoIsModer', 'true');
+            localStorage.setItem('pechenkoModerExpiry', moderExpiry.toString());
+            updateUI();
+            updateShopStatus();
+            alert('Модер активирован на 30 дней!');
+        } else alert('Недостаточно печенек (нужно 100 000 000)');
+    });
     document.getElementById('buyTempAdmin').addEventListener('click', () => { if (isSpecialAdmin || isFriendAdmin) { alert('У вас уже постоянная админка!'); return; } if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { alert('Временная админка уже активна!'); return; } if (cookies >= 1e12) { cookies -= 1e12; isTemporaryAdmin = true; tempAdminExpiry = Date.now() + 86400000; localStorage.setItem('pechenkoIsTemporaryAdmin', 'true'); localStorage.setItem('pechenkoTempAdminExpiry', tempAdminExpiry.toString()); if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); } updateUI(); updateAdminVisibility(); updateShopStatus(); alert('Временная админка активирована на 24 часа!'); } else { alert('Недостаточно печенек (нужно 1 000 000 000 000)'); } });
 
     document.querySelectorAll('.modal').forEach(modal => { const closeBtn = modal.querySelector('[id^="close"]'); if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal)); });
@@ -1007,6 +1026,11 @@
     document.getElementById('addBillionCookiesBtn').addEventListener('click', () => { cookies += 1e9; updateUI(); });
     document.getElementById('addTrillionCookiesBtn').addEventListener('click', () => { cookies += 1e12; updateUI(); });
     document.getElementById('add100BillionBtn').addEventListener('click', () => { cookies += 1e11; updateUI(); alert('100 миллиардов печенек добавлено!'); });
+    document.getElementById('addCustomAmountBtn').addEventListener('click', () => {
+        const amount = parseFloat(document.getElementById('customAmountInput').value);
+        if (!isNaN(amount) && amount > 0) { cookies += amount; updateUI(); alert(`Выдано ${amount.toLocaleString()} печенек.`); }
+        else { alert('Введите корректную сумму.'); }
+    });
     document.getElementById('adminStartEvent').addEventListener('click', () => startEvent('rain'));
     document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; updateUI(); });
     document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; updateUI(); });
@@ -1016,6 +1040,13 @@
     document.getElementById('adminClearChat').addEventListener('click', () => { document.getElementById('chatMessages').innerHTML = ''; alert('Чат очищен (локально).'); });
     document.getElementById('adminSimulateOffline').addEventListener('click', () => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond * 3600; updateUI(); alert('Симулирован 1 час оффлайн-прогресса.'); } });
     document.getElementById('adminFullReset').addEventListener('click', () => { if (confirm('Полный сброс всего? Это удалит весь прогресс и админ-доступ.')) { localStorage.clear(); location.reload(); } });
+    document.getElementById('adminGiftT1nator').addEventListener('click', () => {
+        if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
+            cookies += 1e12;
+            updateUI();
+            alert('🎁 Подарок для t1nator: +1 000 000 000 000 печенек!');
+        }
+    });
 
     document.getElementById('activateFriendBtn').addEventListener('click', () => { if (isFriendAdmin) return; const secret = prompt('Пароль для друга:'); if (secret === 'friend') { isFriendAdmin = true; playerName = 't1nator'; localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator'); updateAdminVisibility(); updateUI(); alert('Доступ активирован! Теперь ты [Друн] t1nator.'); } else alert('Неверный пароль'); });
     document.getElementById('activateSpecialBtn').addEventListener('click', () => { if (isSpecialAdmin) return; const secret = prompt('Секретный пароль:'); if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; } const ip = prompt('IP для подтверждения:'); if (ip !== '94.181.23.61') { alert('Неверный IP'); return; } isSpecialAdmin = true; playerName = 'tr3haszz'; localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz'); updateAdminVisibility(); updateUI(); alert('tr3haszz активирован!'); });
@@ -1070,7 +1101,7 @@
         localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
     }
 
-    setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond * (1 + getPetBonus('cps')) / 10; updateUI(); } }, 100);
+    setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; updateUI(); } }, 100);
     loadGame(); updateCookiesPerSecond(); updateUI(); scheduleRandomEvent();
 </script>
 </body>
