@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.13</title>
+    <title>Печенько кликер v2.0.9.14</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* полный CSS идентичен предыдущей версии, без изменений */
         :root {
             --bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0d0d2b 100%);
             --glass-bg: rgba(255, 248, 240, 0.06);
@@ -312,7 +313,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.13</h1>
+    <h1>🍪 Печенько кликер v2.0.9.14</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -1322,6 +1323,11 @@
 
     function updateBadge() { if (unreadCount > 0) { badge.textContent = unreadCount > 99 ? '99+' : unreadCount; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
 
+    // Явный обработчик закрытия чата
+    document.getElementById('closeChatModal').addEventListener('click', () => {
+        closeModal(document.getElementById('chatModal'));
+    });
+
     // Остальные обработчики игры
     document.querySelectorAll('.modal').forEach(modal => { const closeBtn = modal.querySelector('[id^="close"]'); if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal)); });
     document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
@@ -1418,7 +1424,7 @@
     document.getElementById('showCRTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.add('hidden'); document.getElementById('leaderboardCRTable').classList.remove('hidden'); });
 
     document.getElementById('openChatBtn').addEventListener('click', () => { document.getElementById('chatModal').classList.add('active'); chatModalActive = true; unreadCount = 0; updateBadge(); });
-    document.getElementById('closeChatModal').addEventListener('click', () => { chatModalActive = false; });
+    // Закрытие чата уже обработано выше
 
     document.getElementById('openAchievementsBtn').addEventListener('click', () => { renderAchievements(); document.getElementById('achievementsModal').classList.add('active'); });
 
