@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
+    <title>Печенько кликер v1.02</title>
+    <style>
+        :root {
+            --bg: linear-gradient(135deg, #f5e3c3 0%, #d4a373 100%);
+            --container-bg: rgba(255, 248, 240, 0.9);
+            --text: #582f0e;
+            --accent: #bc6c25;
+            --accent-light: #d4a373;
+            --card: #fefae0;
+            --shadow: 0 25px 60px rgba(0,0,0,0.2);
+            --btn-bg: white;
+            --btn-border: #d4a373;
+            --btn-hover-bg: #fefae0;
+            --inset-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
+            --prestige-color: #9c27b0;
+            --prestige-bg: #f3e5f5;
+        }
+        body.dark {
+            --bg: linear-gradient(135deg, #2c1e16 0%, #1a0f0a 100%);
+            --container-bg: rgba(30, 20, 15, 0.95);
+            --text: #f0e0c8;
+            --accent: #e0a96d;
+            --accent-light: #b07d5b;
+            --card: #3e2e24;
+            --shadow: 0 25px 60px rgba(0,0,0,0.6);
+            --btn-bg: #4a382e;
+            --btn-border: #8b6b50;
+            --btn-hover-bg: #5e4a3a;
+            --inset-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
+            --prestige-bg: #2a1a2e;
+        }
+        * { transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        body {
+            margin: 0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg); min-height: 100vh; display: flex; justify-content: center;
+            align-items: center; user-select: none; color: var(--text);
+        }
+        .game-container {
+            background: var(--container-bg); backdrop-filter: blur(10px); border-radius: 40px;
+            padding: 30px; box-shadow: var(--shadow); text-align: center; max-width: 750px;
+            width: 95%; position: relative;
+        }
+        .theme-toggle {
+            position: absolute; top: 20px; right: 20px; background: var(--btn-bg);
+            border: 2px solid var(--btn-border); color: var(--accent); border-radius: 50%;
+            width: 45px; height: 45px; font-size: 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--inset-shadow); z-index: 2;
+        }
+        h1 { color: var(--accent); margin-top: 0; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(255,255,255,0.3); }
+        .dark h1 { text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+        .score-display {
+            background: var(--card); border-radius: 20px; padding: 15px 30px;
+            margin: 20px 0; box-shadow: var(--inset-shadow); position: relative;
+        }
+        .rank-badge {
+            position: absolute; top: 10px; right: 15px; background: var(--accent-light);
+            color: white; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;
+        }
+        .score-label { font-size: 1.2rem; color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .score { font-size: 3.5rem; font-weight: 900; color: var(--text); display: block; line-height: 1.2; }
+        .per-second { font-size: 1rem; margin-top: 5px; opacity: 0.8; }
+        .cookie-btn {
+            background: none; border: none; cursor: pointer; font-size: 150px;
+            transition: transform 0.05s ease; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.3));
+            outline: none; line-height: 1; padding: 10px;
+        }
+        .cookie-btn:active { transform: scale(0.9); filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3)); }
+        .cookie-btn:hover { transform: scale(1.05); filter: drop-shadow(0 18px 25px rgba(0,0,0,0.35)); }
+        .upgrades { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 25px; }
+        .upgrade-btn, .shop-btn {
+            background: var(--btn-bg); border: 2px solid var(--btn-border); border-radius: 20px;
+            padding: 12px 8px; cursor: pointer; font-weight: bold; color: var(--text);
+            transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-size: 0.9rem;
+        }
+        .upgrade-btn:hover:not(:disabled), .shop-btn:hover:not(:disabled) {
+            background: var(--btn-hover-bg); border-color: var(--accent); transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        .upgrade-btn:disabled, .shop-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(40%); }
+        .upgrade-name, .shop-name { display: block; font-size: 1.1rem; }
+        .upgrade-cost, .shop-cost { display: block; font-size: 0.8rem; color: var(--accent); margin-top: 4px; }
+        .upgrade-count, .shop-count {
+            background: var(--accent-light); color: white; border-radius: 10px; padding: 3px 8px;
+            font-size: 0.75rem; display: inline-block; margin-top: 4px;
+        }
+        .prestige-btn {
+            margin-top: 20px; background: var(--prestige-bg); border: 2px solid var(--prestige-color);
+            color: var(--prestige-color); padding: 12px 25px; border-radius: 20px;
+            cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.2s;
+        }
+        .prestige-btn:hover:not(:disabled) { background: var(--prestige-color); color: white; }
+        .prestige-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .prestige-display { margin-top: 10px; font-weight: bold; color: var(--prestige-color); }
+        .shop-section {
+            margin-top: 25px; background: var(--card); border-radius: 20px; padding: 15px;
+            box-shadow: var(--inset-shadow);
+        }
+        .shop-title { font-size: 1.3rem; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
+        .shop-items { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .shop-btn { flex: 1 1 140px; max-width: 200px; background: var(--prestige-bg); border-color: var(--prestige-color); }
+        .daily-bonus {
+            margin-top: 15px; background: #ffeaa7; border-radius: 20px; padding: 10px;
+            color: #582f0e; font-weight: bold;
+        }
+        .daily-bonus button {
+            background: #fdcb6e; border: none; border-radius: 15px; padding: 8px 20px;
+            font-weight: bold; cursor: pointer;
+        }
+        .floating-score {
+            position: fixed; pointer-events: none; font-weight: 900; font-size: 2rem;
+            color: var(--accent); transform: translate(-50%, -50%);
+            animation: floatUp 0.8s ease-out forwards; z-index: 1000;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, calc(-50% - 80px)) scale(1.5); }
+        }
+        .event-notification {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            padding: 15px 30px; border-radius: 30px; font-weight: bold;
+            font-size: 1.2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 2000; animation: slideDown 0.5s ease-out; color: white;
+        }
+        .event-notification.gold { background: #f1c40f; color: #333; }
+        .event-notification.storm { background: #3498db; }
+        .event-notification.bunt { background: #e67e22; }
+        .event-notification.rain { background: #ff9800; }
+        .event-timer {
+            background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 15px;
+            margin-top: 5px; display: inline-block;
+        }
+        @keyframes slideDown {
+            from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; }
+        }
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 3000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--container-bg); padding: 30px; border-radius: 30px;
+            max-width: 500px; width: 90%; box-shadow: var(--shadow); text-align: left; color: var(--text);
+        }
+        .modal-content h3 { margin-top: 0; color: var(--accent); }
+        .modal-content input, .modal-content button {
+            margin: 8px 0; padding: 10px; border-radius: 10px;
+            border: 1px solid var(--btn-border); background: var(--btn-bg); color: var(--text); font-size: 1rem;
+        }
+        .modal-content button { cursor: pointer; font-weight: bold; }
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn {
+            background: var(--btn-bg); border: 2px solid var(--btn-border); color: var(--accent);
+            border-radius: 20px; padding: 8px 15px; cursor: pointer; font-weight: bold; margin: 5px;
+        }
+        .bottom-panel { margin-top: 15px; display: flex; justify-content: center; gap: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; border-bottom: 1px solid var(--btn-border); text-align: center; }
+        th { color: var(--accent); }
+        .chat-messages {
+            max-height: 300px; overflow-y: auto; margin: 15px 0; padding: 10px;
+            background: var(--card); border-radius: 15px; box-shadow: var(--inset-shadow);
+        }
+        .chat-message { margin: 8px 0; word-break: break-word; }
+        .admin-tag { color: red; font-weight: bold; }
+        .friend-tag { color: red; font-weight: bold; }
+        .gradient-nick {
+            background: linear-gradient(45deg, red, black, red); background-size: 200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; animation: gradientShift 2s ease infinite; font-weight: bold;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        }
+        .rank-tag { color: #ff9800; font-weight: bold; }
+        .achievement-list { list-style: none; padding: 0; }
+        .achievement-list li { padding: 8px; margin: 5px 0; background: var(--card); border-radius: 10px; }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌓</button>
+    <h1>🍪 Печенько кликер v1.02</h1>
+    <div class="score-display">
+        <span class="score-label">Печенек собрано</span>
+        <span class="score" id="score">0</span>
+        <div class="per-second">в секунду: <span id="perSecond">0</span></div>
+        <span class="rank-badge" id="rankDisplay">Новичок</span>
+    </div>
+    <button class="cookie-btn" id="cookieBtn">🍪</button>
+    <div class="upgrades" id="upgradesContainer"></div>
+    <button class="prestige-btn" id="prestigeBtn" disabled>✨ Переродиться (нужно 1 млн 🍪)</button>
+    <div class="prestige-display" id="prestigeDisplay">🌟 Очки престижа: 0</div>
+    <div class="shop-section" id="shopSection" style="display: none;">
+        <div class="shop-title">🛒 Магазин престижа</div>
+        <div class="shop-items">
+            <button class="shop-btn" id="shopBuy1000"><span class="shop-name">💰 1 000 печенек</span><span class="shop-cost">Цена: 1 🌟</span></button>
+            <button class="shop-btn" id="shopBuy10000"><span class="shop-name">💎 10 000 печенек</span><span class="shop-cost">Цена: 2 🌟</span></button>
+            <button class="shop-btn" id="shopBuy1M"><span class="shop-name">👑 1 000 000 печенек</span><span class="shop-cost">Цена: 5 🌟</span></button>
+        </div>
+    </div>
+    <div class="daily-bonus" id="dailyBonusSection">
+        <span>🎁 Ежедневная награда: </span>
+        <button id="claimDailyBtn">Забрать</button>
+        <span id="dailyStreak" style="margin-left:10px;"></span>
+    </div>
+    <div class="bottom-panel">
+        <button class="admin-btn" id="openAdminBtn" style="display: none;">⚙️ Админ</button>
+        <button class="leaderboard-btn" id="openLeaderboardBtn">🏆 Лидеры</button>
+        <button class="chat-btn" id="openChatBtn">💬 Чат</button>
+        <button class="achievements-btn" id="openAchievementsBtn">🎖️ Достижения</button>
+        <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
+    </div>
+</div>
+<!-- Модальные окна -->
+<div class="modal" id="adminModal"><div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls"><button id="addCookiesBtn">+1000 печенек</button><button id="addManyCookiesBtn">+1 000 000 печенек</button><button id="adminStartEvent">Запустить Дождь из печенек (x2)</button><button id="adminSetClick2">Множитель клика = 2</button><button id="adminResetClick">Сбросить множитель</button><button id="adminFullReset">Полный сброс игры</button></div><button id="closeAdminModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="leaderboardModal"><div class="modal-content"><h3>🏆 Лучшие перерождения (мировой топ)</h3><table id="leaderboardTable"><thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead><tbody></tbody></table><button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="chatModal"><div class="modal-content"><h3>💬 Мировой чат</h3><div class="chat-messages" id="chatMessages"></div><input type="text" id="chatInput" placeholder="Введите сообщение..." style="width:70%;"><button id="sendChatBtn">Отправить</button><button id="closeChatModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="achievementsModal"><div class="modal-content"><h3>🎖️ Достижения</h3><ul class="achievement-list" id="achievementList"></ul><button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button></div></div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded, serverTimestamp, set, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCKsCycC_nlvlvXonjZdBpViyIVE6yNHpM",
+        authDomain: "chat-2f0e3.firebaseapp.com",
+        databaseURL: "https://chat-2f0e3-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "chat-2f0e3",
+        storageBucket: "chat-2f0e3.firebasestorage.app",
+        messagingSenderId: "1074494149039",
+        appId: "1:1074494149039:web:31a72ccc5ad8414dccdf5a",
+        measurementId: "G-J6C5F9Y2K6"
+    };
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const chatRef = ref(database, 'messages');
+    const leaderboardRef = ref(database, 'leaderboard');
+
+    let cookies = 0, cookiesPerClick = 1, cookiesPerSecond = 0, prestigePoints = 0;
+    let playerName = localStorage.getItem('pechenkoPlayerName') || '';
+    let isSpecialAdmin = localStorage.getItem('pechenkoIsSpecialAdmin') === 'true';
+    let isFriendAdmin = localStorage.getItem('pechenkoIsFriendAdmin') === 'true';
+    let eventActive = false, eventMultiplier = 1, eventTimerId = null;
+    let productionMultiplier = 1, grandmaBoost = 1;
+
+    // Ежедневная награда
+    const DAILY_KEY = 'pechenkoDaily';
+    let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
+    function canClaimDaily() {
+        const now = Date.now();
+        const last = dailyData.lastClaim || 0;
+        const oneDay = 24 * 60 * 60 * 1000;
+        if (now - last < oneDay) return false;
+        // если прошло больше 48 часов, сбрасываем стрик
+        if (now - last > 2 * oneDay) dailyData.streak = 0;
+        return true;
+    }
+    function claimDaily() {
+        if (!canClaimDaily()) return;
+        dailyData.streak = Math.min(dailyData.streak + 1, 7);
+        const rewards = [0, 50, 100, 250, 500, 1000, 2500, 5000];
+        const amount = rewards[dailyData.streak] || 1000;
+        cookies += amount;
+        dailyData.lastClaim = Date.now();
+        localStorage.setItem(DAILY_KEY, JSON.stringify(dailyData));
+        updateDailyUI();
+        updateUI();
+        alert(`🎁 Вы получили ${amount} печенек! День ${dailyData.streak}`);
+    }
+    function updateDailyUI() {
+        const btn = document.getElementById('claimDailyBtn');
+        const streakSpan = document.getElementById('dailyStreak');
+        const can = canClaimDaily();
+        btn.disabled = !can;
+        btn.textContent = can ? 'Забрать' : 'Уже собрано';
+        streakSpan.textContent = dailyData.streak > 0 ? `Дней подряд: ${dailyData.streak}` : '';
+    }
+
+    const upgrades = [
+        { id: 'upgrade1', name: '👆 Бабушка', baseCost: 15, cps: 0.5, count: 0, costMult: 1.15 },
+        { id: 'upgrade2', name: '🏭 Фабрика', baseCost: 100, cps: 4, count: 0, costMult: 1.18 },
+        { id: 'upgrade3', name: '🧙‍♂️ Волшебник', baseCost: 500, cps: 20, count: 0, costMult: 1.20 },
+        { id: 'upgrade4', name: '🚀 Печеньколёт', baseCost: 3000, cps: 100, count: 0, costMult: 1.25 },
+        { id: 'upgrade5', name: '🛸 НЛО-пекарня', baseCost: 15000, cps: 500, count: 0, costMult: 1.28 },
+        { id: 'upgrade6', name: '🕰️ Временной пекарь', baseCost: 100000, cps: 2000, count: 0, costMult: 1.30 },
+        { id: 'upgrade7', name: '🌌 Квантовая печенька', baseCost: 500000, cps: 10000, count: 0, costMult: 1.33 }
+    ];
+    const ranks = [
+        { threshold: 0, name: 'Новичок' }, { threshold: 1000, name: 'Пекарь' },
+        { threshold: 10000, name: 'Кондитер' }, { threshold: 100000, name: 'Мастер печенья' },
+        { threshold: 1000000, name: 'Печеньковый магнат' }, { threshold: 10000000, name: 'Король печенек' },
+        { threshold: 100000000, name: 'Бог печенек' }
+    ];
+    const achievements = [
+        { id: 'first_cookie', name: 'Первая печенька', desc: 'Кликнуть 1 раз', check: () => totalClicks >= 1 },
+        { id: 'click_100', name: 'Сотня кликов', desc: 'Совершить 100 кликов', check: () => totalClicks >= 100 },
+        { id: 'cookies_1000', name: 'Тысяча печенек', desc: 'Накопить 1000 печенек', check: () => cookies >= 1000 },
+        { id: 'prestige_1', name: 'Первое перерождение', desc: 'Выполнить перерождение', check: () => prestigePoints >= 1 },
+        { id: 'buy_10_grandmas', name: 'Бабушкоман', desc: 'Купить 10 бабушек', check: () => upgrades[0].count >= 10 },
+        { id: 'daily_3', name: 'Постоянство', desc: 'Забрать ежедневную награду 3 дня подряд', check: () => dailyData.streak >= 3 },
+        { id: 'event_master', name: 'Мастер ивентов', desc: 'Пережить 5 ивентов', check: () => totalEvents >= 5 }
+    ];
+    let unlockedAchievements = JSON.parse(localStorage.getItem('pechenkoAchievements') || '[]');
+    let totalClicks = parseInt(localStorage.getItem('pechenkoTotalClicks') || '0');
+    let totalEvents = parseInt(localStorage.getItem('pechenkoTotalEvents') || '0');
+
+    // Генерация кнопок улучшений
+    const container = document.getElementById('upgradesContainer');
+    upgrades.forEach((u, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'upgrade-btn';
+        btn.id = u.id;
+        btn.innerHTML = `<span class="upgrade-name">${u.name}</span><span class="upgrade-cost">Цена: <span id="cost${i+1}">${u.baseCost}</span> 🍪</span><span class="upgrade-count">Куплено: <span id="count${i+1}">0</span></span>`;
+        container.appendChild(btn);
+    });
+
+    function loadGame() {
+        const saved = localStorage.getItem('pechenkoClickerSave');
+        if (saved) {
+            const data = JSON.parse(saved);
+            cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1;
+            prestigePoints = data.prestigePoints || 0;
+            upgrades.forEach((u, i) => u.count = data.upgrades[i].count || 0);
+            updateCookiesPerSecond();
+        }
+        if (localStorage.getItem('cookieClickerTheme') === 'dark') document.body.classList.add('dark');
+        if (!playerName) {
+            playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним';
+            localStorage.setItem('pechenkoPlayerName', playerName);
+        }
+        if (isSpecialAdmin) playerName = 'tr3haszz';
+        if (isFriendAdmin) playerName = 't1nator';
+        updateAdminVisibility();
+        updateDailyUI();
+    }
+
+    function saveGame() {
+        localStorage.setItem('pechenkoClickerSave', JSON.stringify({
+            cookies, cookiesPerClick, prestigePoints,
+            upgrades: upgrades.map(u => ({ count: u.count }))
+        }));
+        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString());
+        localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
+    }
+
+    function updateAdminVisibility() {
+        document.getElementById('openAdminBtn').style.display = (isSpecialAdmin || isFriendAdmin) ? 'inline-block' : 'none';
+        document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
+    }
+
+    // Firebase лидерборд
+    function pushToLeaderboard(score) {
+        push(leaderboardRef, { name: playerName, score: Math.floor(score), timestamp: serverTimestamp() });
+    }
+    function loadLeaderboard() {
+        const q = query(leaderboardRef, orderByChild('score'), limitToLast(20));
+        onValue(q, (snapshot) => {
+            const entries = [];
+            snapshot.forEach(child => entries.push(child.val()));
+            entries.sort((a,b) => b.score - a.score);
+            const top10 = entries.slice(0, 10);
+            const tbody = document.querySelector('#leaderboardTable tbody');
+            tbody.innerHTML = '';
+            top10.forEach((e, i) => {
+                const row = tbody.insertRow();
+                row.insertCell().textContent = i+1;
+                row.insertCell().textContent = e.name;
+                row.insertCell().textContent = e.score.toLocaleString();
+            });
+            localStorage.setItem('pechenkoLeaderboard', JSON.stringify(top10));
+        });
+    }
+    loadLeaderboard();
+    function getPlayerRankPosition() {
+        const lb = JSON.parse(localStorage.getItem('pechenkoLeaderboard') || '[]');
+        const idx = lb.findIndex(e => e.name === playerName);
+        return idx !== -1 ? idx+1 : null;
+    }
+
+    // Ивенты
+    function startEvent(type) {
+        if (eventActive) { clearTimeout(eventTimerId); eventMultiplier = 1; productionMultiplier = 1; grandmaBoost = 1; removeEventNotification(); }
+        eventActive = true;
+        const events = {
+            rain: { text: '🌧️ ДОЖДЬ ИЗ ПЕЧЕНЕК! Клик x2', duration: 30, cls: 'rain', apply: ()=>{ eventMultiplier = 2; }, clear: ()=>{} },
+            gold: { text: '🟡 ЗОЛОТОЕ ПЕЧЕНЬЕ! Клик x5', duration: 10, cls: 'gold', apply: ()=>{ eventMultiplier = 5; }, clear: ()=>{} },
+            storm: { text: '🌪️ ПЕЧЕНЬКОВЫЙ ШТОРМ! Авто-доход x2', duration: 20, cls: 'storm', apply: ()=>{ productionMultiplier = 2; }, clear: ()=>{ productionMultiplier = 1; } },
+            bunt: { text: '👵 БАБУШКИН БУНТ! Бабушки x3', duration: 15, cls: 'bunt', apply: ()=>{ grandmaBoost = 3; }, clear: ()=>{ grandmaBoost = 1; } }
+        };
+        const ev = events[type] || events.rain;
+        showEventNotification(ev.text, ev.duration, ev.cls);
+        ev.apply();
+        totalEvents++;
+        eventTimerId = setTimeout(() => {
+            eventMultiplier = 1; productionMultiplier = 1; grandmaBoost = 1;
+            ev.clear && ev.clear();
+            eventActive = false;
+            removeEventNotification();
+        }, ev.duration * 1000);
+        updateUI();
+    }
+    function showEventNotification(text, seconds, cls) {
+        const existing = document.getElementById('eventNotification');
+        if (existing) existing.remove();
+        const notif = document.createElement('div');
+        notif.id = 'eventNotification';
+        notif.className = `event-notification ${cls}`;
+        notif.innerHTML = `${text} <span class="event-timer" id="eventTimer">${seconds}с</span>`;
+        document.body.appendChild(notif);
+        let remaining = seconds;
+        const timerInterval = setInterval(() => {
+            remaining--;
+            const timerEl = document.getElementById('eventTimer');
+            if (timerEl) timerEl.textContent = remaining + 'с';
+            if (remaining <= 0) clearInterval(timerInterval);
+        }, 1000);
+        notif.dataset.intervalId = timerInterval;
+    }
+    function removeEventNotification() {
+        const notif = document.getElementById('eventNotification');
+        if (notif) { clearInterval(parseInt(notif.dataset.intervalId)); notif.remove(); }
+    }
+    function scheduleRandomEvent() {
+        const types = ['rain', 'gold', 'storm', 'bunt'];
+        const weights = [40, 15, 25, 20];
+        const total = weights.reduce((a,b)=>a+b);
+        let r = Math.random() * total, type = 'rain';
+        for (let i=0; i<types.length; i++) {
+            r -= weights[i];
+            if (r <= 0) { type = types[i]; break; }
+        }
+        setTimeout(() => {
+            if (!eventActive) startEvent(type);
+            scheduleRandomEvent();
+        }, Math.random() * 180000 + 120000);
+    }
+
+    function updateCookiesPerSecond() {
+        let baseCps = upgrades.reduce((sum, u) => sum + u.cps * u.count, 0);
+        if (upgrades[0].count > 0) baseCps += upgrades[0].cps * upgrades[0].count * (grandmaBoost - 1);
+        cookiesPerSecond = baseCps * productionMultiplier;
+        document.getElementById('perSecond').textContent = cookiesPerSecond.toFixed(1);
+    }
+    function getUpgradeCost(index) {
+        const u = upgrades[index];
+        return Math.floor(u.baseCost * Math.pow(u.costMult, u.count));
+    }
+    function getCurrentRank() {
+        let rank = ranks[0];
+        for (let r of ranks) if (cookies >= r.threshold) rank = r; else break;
+        return rank.name;
+    }
+    function updateUI() {
+        document.getElementById('score').textContent = Math.floor(cookies);
+        document.getElementById('rankDisplay').textContent = getCurrentRank();
+        upgrades.forEach((u, i) => {
+            const cost = getUpgradeCost(i);
+            document.getElementById(`cost${i+1}`).textContent = cost.toLocaleString();
+            document.getElementById(`count${i+1}`).textContent = u.count;
+            document.getElementById(u.id).disabled = cookies < cost;
+        });
+        const prestigeBtn = document.getElementById('prestigeBtn');
+        const canPrestige = cookies >= 1_000_000;
+        prestigeBtn.disabled = !canPrestige;
+        prestigeBtn.textContent = canPrestige ? '✨ Переродиться! (+1🌟)' : '✨ Переродиться (нужно 1 млн 🍪)';
+        document.getElementById('prestigeDisplay').textContent = `🌟 Очки престижа: ${prestigePoints}`;
+        document.getElementById('shopSection').style.display = prestigePoints > 0 ? 'block' : 'none';
+        document.getElementById('shopBuy1000').disabled = prestigePoints < 1;
+        document.getElementById('shopBuy10000').disabled = prestigePoints < 2;
+        document.getElementById('shopBuy1M').disabled = prestigePoints < 5;
+        checkAchievements();
+        saveGame();
+    }
+
+    function buyUpgrade(index) {
+        const u = upgrades[index];
+        const cost = getUpgradeCost(index);
+        if (cookies >= cost) {
+            cookies -= cost; u.count++;
+            if (index === 0 && u.count % 10 === 0) cookiesPerClick++;
+            updateCookiesPerSecond(); updateUI();
+        }
+    }
+    function showFloatingScore(x, y, amount) {
+        const el = document.createElement('div');
+        el.className = 'floating-score';
+        el.textContent = '+' + amount;
+        el.style.left = x + 'px'; el.style.top = y + 'px';
+        document.body.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+    }
+    function performPrestige() {
+        if (cookies >= 1_000_000 && confirm('Переродиться?')) {
+            pushToLeaderboard(cookies);
+            cookies = 0; cookiesPerClick = 1;
+            upgrades.forEach(u => u.count = 0);
+            updateCookiesPerSecond();
+            prestigePoints++;
+            updateUI();
+            alert('Перерождение успешно!');
+        }
+    }
+    function buyShopItem(amount, cost) {
+        if (prestigePoints >= cost) { prestigePoints -= cost; cookies += amount; updateUI(); }
+    }
+    function toggleTheme() {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('cookieClickerTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    function checkAchievements() {
+        achievements.forEach(a => {
+            if (!unlockedAchievements.includes(a.id) && a.check()) {
+                unlockedAchievements.push(a.id);
+                localStorage.setItem('pechenkoAchievements', JSON.stringify(unlockedAchievements));
+                alert(`🎖️ Достижение разблокировано: ${a.name}`);
+            }
+        });
+    }
+    function renderAchievements() {
+        const list = document.getElementById('achievementList');
+        list.innerHTML = '';
+        achievements.forEach(a => {
+            const unlocked = unlockedAchievements.includes(a.id);
+            const li = document.createElement('li');
+            li.textContent = `${unlocked ? '✅' : '🔒'} ${a.name} – ${a.desc}`;
+            list.appendChild(li);
+        });
+    }
+
+    function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function renderChatMessage(msg) {
+        const container = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = 'chat-message';
+        let nameHtml = '';
+        if (msg.isSpecialAdmin) nameHtml = `<span class="admin-tag">[Фулл разраб]</span> <span class="gradient-nick">${escapeHtml(msg.name)}</span>`;
+        else if (msg.isFriendAdmin) nameHtml = `<span class="friend-tag">[Друн]</span> <span class="gradient-nick">${escapeHtml(msg.name)}</span>`;
+        else nameHtml = `<strong>${escapeHtml(msg.name)}</strong>`;
+        if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
+        div.innerHTML = `${nameHtml}: ${escapeHtml(msg.text)}`;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+    onChildAdded(chatRef, snapshot => { const msg = snapshot.val(); if (msg) renderChatMessage(msg); });
+    function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        const rankPos = getPlayerRankPosition();
+        push(chatRef, {
+            name: playerName, text, isSpecialAdmin, isFriendAdmin,
+            rankPosition: rankPos, timestamp: serverTimestamp()
+        });
+        input.value = '';
+    }
+
+    // Обработчики
+    document.getElementById('cookieBtn').addEventListener('click', (e) => {
+        const effective = cookiesPerClick * (eventActive ? eventMultiplier : 1);
+        cookies += effective; totalClicks++;
+        updateUI();
+        showFloatingScore(e.clientX, e.clientY, effective);
+    });
+    upgrades.forEach((u, i) => document.getElementById(u.id).addEventListener('click', () => buyUpgrade(i)));
+    document.getElementById('prestigeBtn').addEventListener('click', performPrestige);
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('shopBuy1000').addEventListener('click', () => buyShopItem(1000,1));
+    document.getElementById('shopBuy10000').addEventListener('click', () => buyShopItem(10000,2));
+    document.getElementById('shopBuy1M').addEventListener('click', () => buyShopItem(1000000,5));
+    document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
+
+    document.getElementById('openAdminBtn').addEventListener('click', () => {
+        if (!isSpecialAdmin && !isFriendAdmin) return;
+        document.getElementById('adminModal').classList.add('active');
+    });
+    document.getElementById('closeAdminModal').addEventListener('click', () => document.getElementById('adminModal').classList.remove('active'));
+    document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; updateUI(); });
+    document.getElementById('addManyCookiesBtn').addEventListener('click', () => { cookies += 1000000; updateUI(); });
+    document.getElementById('adminStartEvent').addEventListener('click', () => startEvent('rain'));
+    document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; updateUI(); });
+    document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; updateUI(); });
+    document.getElementById('adminFullReset').addEventListener('click', () => { if (confirm('Полный сброс всего?')) { localStorage.clear(); location.reload(); } });
+
+    document.getElementById('activateFriendBtn').addEventListener('click', () => {
+        if (isFriendAdmin) return;
+        const secret = prompt('Пароль для друга:');
+        if (secret === 'friend') {
+            isFriendAdmin = true; playerName = 't1nator';
+            localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator');
+            updateAdminVisibility(); updateUI();
+            alert('Доступ активирован! Теперь ты [Друн] t1nator.');
+        } else alert('Неверный пароль');
+    });
+
+    document.getElementById('openLeaderboardBtn').addEventListener('click', () => document.getElementById('leaderboardModal').classList.add('active'));
+    document.getElementById('closeLeaderboardModal').addEventListener('click', () => document.getElementById('leaderboardModal').classList.remove('active'));
+    document.getElementById('openChatBtn').addEventListener('click', () => document.getElementById('chatModal').classList.add('active'));
+    document.getElementById('closeChatModal').addEventListener('click', () => document.getElementById('chatModal').classList.remove('active'));
+    document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
+    document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
+    document.getElementById('openAchievementsBtn').addEventListener('click', () => {
+        renderAchievements();
+        document.getElementById('achievementsModal').classList.add('active');
+    });
+    document.getElementById('closeAchievementsModal').addEventListener('click', () => document.getElementById('achievementsModal').classList.remove('active'));
+
+    window.activateSpecialAdmin = function() {
+        if (isSpecialAdmin) return;
+        const secret = prompt('Секретный пароль:');
+        if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; }
+        const ip = prompt('IP для подтверждения:');
+        if (ip !== '94.181.23.61') { alert('Неверный IP'); return; }
+        isSpecialAdmin = true; playerName = 'tr3haszz';
+        localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz');
+        updateAdminVisibility(); updateUI();
+        alert('tr3haszz активирован!');
+    };
+    window.activateFriendAdmin = function() {
+        if (isFriendAdmin) return;
+        const secret = prompt('Пароль друга:');
+        if (secret !== 'friend') { alert('Неверный пароль'); return; }
+        isFriendAdmin = true; playerName = 't1nator';
+        localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator');
+        updateAdminVisibility(); updateUI();
+        alert('t1nator активирован как Друн!');
+    };
+
+    setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; updateUI(); } }, 100);
+    loadGame();
+    updateCookiesPerSecond();
+    updateUI();
+    scheduleRandomEvent();
+</script>
+</body>
+</html>
