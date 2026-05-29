@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v1.04</title>
+    <title>Печенько кликер v1.04.1</title>
     <style>
         :root {
             --bg: linear-gradient(135deg, #f5e3c3 0%, #d4a373 100%);
@@ -186,7 +186,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌓</button>
-    <h1>🍪 Печенько кликер v1.04</h1>
+    <h1>🍪 Печенько кликер v1.04.1</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -220,80 +220,12 @@
     </div>
 </div>
 
-<!-- Админ-панель -->
-<div class="modal" id="adminModal">
-    <div class="modal-content">
-        <h3>🛠️ Админ-панель</h3>
-        <div id="adminControls">
-            <button id="addCookiesBtn">+1000 печенек</button>
-            <button id="addManyCookiesBtn">+1 000 000 печенек</button>
-            <button id="addBillionCookiesBtn" class="hidden">+1 000 000 000 печенек</button>
-            <button id="adminStartEvent">Запустить Дождь из печенек (x2)</button>
-            <button id="adminSetClick2">Множитель клика = 2</button>
-            <button id="adminResetClick">Сбросить множитель</button>
-            <button id="adminGive10CR" class="hidden">Получить 10 CR</button>
-            <button id="adminFullReset">Полный сброс игры</button>
-        </div>
-        <button id="closeAdminModal" style="margin-top:15px;">Закрыть</button>
-    </div>
-</div>
-
-<!-- Лидерборд -->
-<div class="modal" id="leaderboardModal">
-    <div class="modal-content">
-        <h3>🏆 Таблицы лидеров</h3>
-        <button id="showCookiesTop">Топ по печенькам</button>
-        <button id="showCRTop">Топ по CR</button>
-        <table id="leaderboardCookiesTable" class="leaderboard-table">
-            <thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead>
-            <tbody></tbody>
-        </table>
-        <table id="leaderboardCRTable" class="leaderboard-table hidden">
-            <thead><tr><th>#</th><th>Имя</th><th>CR (Перерождений)</th></tr></thead>
-            <tbody></tbody>
-        </table>
-        <button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button>
-    </div>
-</div>
-
-<!-- Чат -->
-<div class="modal" id="chatModal">
-    <div class="modal-content">
-        <h3>💬 Мировой чат</h3>
-        <div class="chat-messages" id="chatMessages"></div>
-        <input type="text" id="chatInput" placeholder="Введите сообщение..." style="width:70%;">
-        <button id="sendChatBtn">Отправить</button>
-        <button id="closeChatModal" style="margin-top:15px;">Закрыть</button>
-    </div>
-</div>
-
-<!-- Достижения -->
-<div class="modal" id="achievementsModal">
-    <div class="modal-content">
-        <h3>🎖️ Достижения</h3>
-        <ul class="achievement-list" id="achievementList"></ul>
-        <button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button>
-    </div>
-</div>
-
-<!-- Кланы -->
-<div class="modal" id="clanModal">
-    <div class="modal-content">
-        <h3>👥 Кланы</h3>
-        <div id="myClanInfo" style="margin-bottom:15px;"></div>
-        <button id="createClanBtn">Создать клан</button>
-        <button id="joinClanBtn">Вступить в клан</button>
-        <div style="margin:10px 0;">
-            <input type="text" id="clanNameInput" placeholder="Название клана">
-        </div>
-        <h4>Топ кланов по CR</h4>
-        <table id="clanLeaderboardTable">
-            <thead><tr><th>#</th><th>Клан</th><th>Общий CR</th></tr></thead>
-            <tbody></tbody>
-        </table>
-        <button id="closeClanModal" style="margin-top:15px;">Закрыть</button>
-    </div>
-</div>
+<!-- Модальные окна -->
+<div class="modal" id="adminModal"><div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls"><button id="addCookiesBtn">+1000 печенек</button><button id="addManyCookiesBtn">+1 000 000 печенек</button><button id="addBillionCookiesBtn" class="hidden">+1 000 000 000 печенек</button><button id="adminStartEvent">Запустить Дождь из печенек (x2)</button><button id="adminSetClick2">Множитель клика = 2</button><button id="adminResetClick">Сбросить множитель</button><button id="adminGive10CR" class="hidden">Получить 10 CR</button><button id="adminFullReset">Полный сброс игры</button></div><button id="closeAdminModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="leaderboardModal"><div class="modal-content"><h3>🏆 Таблицы лидеров</h3><button id="showCookiesTop">Топ по печенькам</button><button id="showCRTop">Топ по CR</button><table id="leaderboardCookiesTable" class="leaderboard-table"><thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead><tbody></tbody></table><table id="leaderboardCRTable" class="leaderboard-table hidden"><thead><tr><th>#</th><th>Имя</th><th>CR (Перерождений)</th></tr></thead><tbody></tbody></table><button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="chatModal"><div class="modal-content"><h3>💬 Мировой чат</h3><div class="chat-messages" id="chatMessages"></div><input type="text" id="chatInput" placeholder="Введите сообщение..." style="width:70%;"><button id="sendChatBtn">Отправить</button><button id="closeChatModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="achievementsModal"><div class="modal-content"><h3>🎖️ Достижения</h3><ul class="achievement-list" id="achievementList"></ul><button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="clanModal"><div class="modal-content"><h3>👥 Кланы</h3><div id="myClanInfo" style="margin-bottom:15px;"></div><button id="createClanBtn">Создать клан</button><button id="joinClanBtn">Вступить в клан</button><div style="margin:10px 0;"><input type="text" id="clanNameInput" placeholder="Название клана"></div><h4>Топ кланов по CR</h4><table id="clanLeaderboardTable"><thead><tr><th>#</th><th>Клан</th><th>Общий CR</th></tr></thead><tbody></tbody></table><button id="closeClanModal" style="margin-top:15px;">Закрыть</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -327,7 +259,6 @@
     const DAILY_KEY = 'pechenkoDaily';
     let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
 
-    // Улучшения, ранги, достижения без изменений
     const upgrades = [
         { id: 'upgrade1', name: '👆 Бабушка', baseCost: 15, cps: 0.5, count: 0, costMult: 1.15 },
         { id: 'upgrade2', name: '🏭 Фабрика', baseCost: 100, cps: 4, count: 0, costMult: 1.18 },
@@ -368,9 +299,7 @@
 
     // Ежедневная награда
     function canClaimDaily() {
-        const now = Date.now();
-        const last = dailyData.lastClaim || 0;
-        const oneDay = 24 * 60 * 60 * 1000;
+        const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
         if (now - last < oneDay) return false;
         if (now - last > 2 * oneDay) dailyData.streak = 0;
         return true;
@@ -379,64 +308,55 @@
         if (!canClaimDaily()) return;
         dailyData.streak = Math.min(dailyData.streak + 1, 7);
         const rewards = [0, 50, 100, 250, 500, 1000, 2500, 5000];
-        const amount = rewards[dailyData.streak] || 1000;
-        cookies += amount;
+        cookies += rewards[dailyData.streak] || 1000;
         dailyData.lastClaim = Date.now();
         localStorage.setItem(DAILY_KEY, JSON.stringify(dailyData));
-        updateDailyUI();
-        updateUI();
-        alert(`🎁 Вы получили ${amount} печенек! День ${dailyData.streak}`);
+        updateDailyUI(); updateUI();
+        alert(`🎁 Вы получили ${rewards[dailyData.streak]} печенек! День ${dailyData.streak}`);
     }
     function updateDailyUI() {
-        const btn = document.getElementById('claimDailyBtn');
-        const streakSpan = document.getElementById('dailyStreak');
+        const btn = document.getElementById('claimDailyBtn'), span = document.getElementById('dailyStreak');
         const can = canClaimDaily();
         btn.disabled = !can;
         btn.textContent = can ? 'Забрать' : 'Уже собрано';
-        streakSpan.textContent = dailyData.streak > 0 ? `Дней подряд: ${dailyData.streak}` : '';
+        span.textContent = dailyData.streak > 0 ? `Дней подряд: ${dailyData.streak}` : '';
     }
 
     // Лидерборды
     function pushToLeaderboard(score) {
         const playerRef = ref(database, 'leaderboard/' + encodeURIComponent(playerName));
-        get(playerRef).then((snapshot) => {
-            const old = snapshot.val();
-            if (!old || score > old.score) {
-                set(playerRef, { name: playerName, score: Math.floor(score), timestamp: serverTimestamp() });
-            }
+        get(playerRef).then(snap => {
+            const old = snap.val();
+            if (!old || score > old.score) set(playerRef, { name: playerName, score: Math.floor(score), timestamp: serverTimestamp() });
         });
     }
     function pushToLeaderboardCR() {
         const playerRef = ref(database, 'leaderboardCR/' + encodeURIComponent(playerName));
-        get(playerRef).then((snapshot) => {
-            const old = snapshot.val();
-            if (!old || prestigePoints > old.score) {
-                set(playerRef, { name: playerName, score: prestigePoints, timestamp: serverTimestamp() });
-            }
+        get(playerRef).then(snap => {
+            const old = snap.val();
+            if (!old || prestigePoints > old.score) set(playerRef, { name: playerName, score: prestigePoints, timestamp: serverTimestamp() });
         });
     }
     function loadLeaderboard(type = 'cookies') {
         const refPath = type === 'cookies' ? leaderboardRef : leaderboardCRRef;
         const tableId = type === 'cookies' ? 'leaderboardCookiesTable' : 'leaderboardCRTable';
-        const q = query(refPath, orderByChild('score'), limitToLast(10));
-        onValue(q, (snapshot) => {
+        onValue(query(refPath, orderByChild('score'), limitToLast(10)), snapshot => {
             const entries = [];
             snapshot.forEach(child => entries.push(child.val()));
             entries.sort((a,b) => b.score - a.score);
-            const top10 = entries.slice(0, 10);
+            const top10 = entries.slice(0,10);
             const tbody = document.querySelector(`#${tableId} tbody`);
             tbody.innerHTML = '';
-            top10.forEach((e, i) => {
+            top10.forEach((e,i) => {
                 const row = tbody.insertRow();
                 row.insertCell().textContent = i+1;
                 row.insertCell().textContent = e.name;
                 row.insertCell().textContent = e.score.toLocaleString();
             });
+            if (type === 'cookies') localStorage.setItem('pechenkoLeaderboard', JSON.stringify(top10));
         });
     }
-    loadLeaderboard('cookies');
-    loadLeaderboard('cr');
-
+    loadLeaderboard('cookies'); loadLeaderboard('cr');
     function getPlayerRankPosition() {
         const lb = JSON.parse(localStorage.getItem('pechenkoLeaderboard') || '[]');
         const idx = lb.findIndex(e => e.name === playerName);
@@ -449,28 +369,20 @@
         if (currentClan) {
             get(ref(database, 'clans/' + currentClan)).then(snap => {
                 const clan = snap.val();
-                if (clan) {
-                    infoDiv.innerHTML = `Ваш клан: <strong>${currentClan}</strong> | Участников: ${Object.keys(clan.members).length} | CR клана: ${clan.totalCR || 0}`;
-                } else {
-                    currentClan = null;
-                    localStorage.removeItem('pechenkoClan');
-                    infoDiv.innerHTML = 'Вы не в клане.';
-                }
+                if (clan) infoDiv.innerHTML = `Ваш клан: <strong>${currentClan}</strong> | Участников: ${Object.keys(clan.members).length} | CR клана: ${clan.totalCR || 0}`;
+                else { currentClan = null; localStorage.removeItem('pechenkoClan'); infoDiv.innerHTML = 'Вы не в клане.'; }
             });
-        } else {
-            infoDiv.innerHTML = 'Вы не в клане.';
-        }
+        } else infoDiv.innerHTML = 'Вы не в клане.';
     }
     function loadClanLeaderboard() {
-        const q = query(clansRef, orderByChild('totalCR'), limitToLast(10));
-        onValue(q, (snapshot) => {
+        onValue(query(clansRef, orderByChild('totalCR'), limitToLast(10)), snapshot => {
             const entries = [];
             snapshot.forEach(child => entries.push({ name: child.key, ...child.val() }));
             entries.sort((a,b) => (b.totalCR||0) - (a.totalCR||0));
-            const top10 = entries.slice(0, 10);
+            const top10 = entries.slice(0,10);
             const tbody = document.querySelector('#clanLeaderboardTable tbody');
             tbody.innerHTML = '';
-            top10.forEach((e, i) => {
+            top10.forEach((e,i) => {
                 const row = tbody.insertRow();
                 row.insertCell().textContent = i+1;
                 row.insertCell().textContent = e.name;
@@ -479,37 +391,25 @@
         });
     }
     loadClanLeaderboard();
-
     async function createClan(name) {
         if (!name) return alert('Введите название');
-        const clanSnap = await get(ref(database, 'clans/' + name));
-        if (clanSnap.exists()) return alert('Клан уже существует');
-        // Покидаем старый
-        if (currentClan) {
-            await update(ref(database, 'clans/' + currentClan + '/members'), { [playerName]: null });
-        }
-        await set(ref(database, 'clans/' + name), {
-            name: name,
-            totalCR: 0,
-            members: { [playerName]: true }
-        });
+        const snap = await get(ref(database, 'clans/' + name));
+        if (snap.exists()) return alert('Клан уже существует');
+        if (currentClan) await update(ref(database, 'clans/' + currentClan + '/members'), { [playerName]: null });
+        await set(ref(database, 'clans/' + name), { name, totalCR: 0, members: { [playerName]: true } });
         currentClan = name;
         localStorage.setItem('pechenkoClan', name);
         updateClanUI();
-        alert('Клан создан!');
     }
     async function joinClan(name) {
         if (!name) return alert('Введите название клана');
-        const clanSnap = await get(ref(database, 'clans/' + name));
-        if (!clanSnap.exists()) return alert('Клан не найден');
-        if (currentClan) {
-            await update(ref(database, 'clans/' + currentClan + '/members'), { [playerName]: null });
-        }
+        const snap = await get(ref(database, 'clans/' + name));
+        if (!snap.exists()) return alert('Клан не найден');
+        if (currentClan) await update(ref(database, 'clans/' + currentClan + '/members'), { [playerName]: null });
         await update(ref(database, 'clans/' + name + '/members'), { [playerName]: true });
         currentClan = name;
         localStorage.setItem('pechenkoClan', name);
         updateClanUI();
-        alert('Вы вступили в клан!');
     }
     async function addCRToClan(cr) {
         if (!currentClan) return;
@@ -517,11 +417,112 @@
         const snap = await get(clanRef);
         if (!snap.exists()) return;
         const clan = snap.val();
-        const newTotal = (clan.totalCR || 0) + cr;
-        await update(clanRef, { totalCR: newTotal });
+        await update(clanRef, { totalCR: (clan.totalCR || 0) + cr });
     }
 
-    // Перерождение с обновлением CR
+    // Ивенты
+    function startEvent(type) {
+        if (eventActive) { clearTimeout(eventTimerId); eventMultiplier = 1; productionMultiplier = 1; grandmaBoost = 1; removeEventNotification(); }
+        eventActive = true;
+        const events = {
+            rain: { text: '🌧️ ДОЖДЬ ИЗ ПЕЧЕНЕК! Клик x2', duration: 30, cls: 'rain', apply: ()=> eventMultiplier = 2 },
+            gold: { text: '🟡 ЗОЛОТОЕ ПЕЧЕНЬЕ! Клик x5', duration: 10, cls: 'gold', apply: ()=> eventMultiplier = 5 },
+            storm: { text: '🌪️ ПЕЧЕНЬКОВЫЙ ШТОРМ! Авто-доход x2', duration: 20, cls: 'storm', apply: ()=> productionMultiplier = 2, clear: ()=> productionMultiplier = 1 },
+            bunt: { text: '👵 БАБУШКИН БУНТ! Бабушки x3', duration: 15, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 }
+        };
+        const ev = events[type] || events.rain;
+        showEventNotification(ev.text, ev.duration, ev.cls);
+        ev.apply();
+        totalEvents++;
+        eventTimerId = setTimeout(() => {
+            eventMultiplier = 1; productionMultiplier = 1; grandmaBoost = 1;
+            if (ev.clear) ev.clear();
+            eventActive = false;
+            removeEventNotification();
+        }, ev.duration * 1000);
+        updateUI();
+    }
+    function showEventNotification(text, seconds, cls) {
+        const old = document.getElementById('eventNotification'); if (old) old.remove();
+        const notif = document.createElement('div');
+        notif.id = 'eventNotification';
+        notif.className = `event-notification ${cls}`;
+        notif.innerHTML = `${text} <span class="event-timer" id="eventTimer">${seconds}с</span>`;
+        document.body.appendChild(notif);
+        let remaining = seconds;
+        const timer = setInterval(() => {
+            remaining--;
+            const el = document.getElementById('eventTimer');
+            if (el) el.textContent = remaining + 'с';
+            if (remaining <= 0) clearInterval(timer);
+        }, 1000);
+        notif.dataset.intervalId = timer;
+    }
+    function removeEventNotification() {
+        const notif = document.getElementById('eventNotification');
+        if (notif) { clearInterval(parseInt(notif.dataset.intervalId)); notif.remove(); }
+    }
+    function scheduleRandomEvent() {
+        const types = ['rain','gold','storm','bunt'];
+        const weights = [40,15,25,20];
+        let r = Math.random() * weights.reduce((a,b)=>a+b), type = 'rain';
+        for (let i=0; i<types.length; i++) { r -= weights[i]; if (r <= 0) { type = types[i]; break; } }
+        setTimeout(() => { if (!eventActive) startEvent(type); scheduleRandomEvent(); }, Math.random() * 180000 + 120000);
+    }
+
+    function updateCookiesPerSecond() {
+        let base = upgrades.reduce((s,u) => s + u.cps * u.count, 0);
+        if (upgrades[0].count > 0) base += upgrades[0].cps * upgrades[0].count * (grandmaBoost - 1);
+        cookiesPerSecond = base * productionMultiplier;
+        document.getElementById('perSecond').textContent = cookiesPerSecond.toFixed(1);
+    }
+    function getUpgradeCost(i) {
+        const u = upgrades[i];
+        return Math.floor(u.baseCost * Math.pow(u.costMult, u.count));
+    }
+    function getCurrentRank() {
+        let rank = ranks[0];
+        for (let r of ranks) if (cookies >= r.threshold) rank = r; else break;
+        return rank.name;
+    }
+    function updateUI() {
+        document.getElementById('score').textContent = Math.floor(cookies);
+        document.getElementById('rankDisplay').textContent = getCurrentRank();
+        upgrades.forEach((u,i) => {
+            const cost = getUpgradeCost(i);
+            document.getElementById(`cost${i+1}`).textContent = cost.toLocaleString();
+            document.getElementById(`count${i+1}`).textContent = u.count;
+            document.getElementById(u.id).disabled = cookies < cost;
+        });
+        const btn = document.getElementById('prestigeBtn');
+        const can = cookies >= 1_000_000;
+        btn.disabled = !can;
+        btn.textContent = can ? '✨ Переродиться! (+1🌟)' : '✨ Переродиться (нужно 1 млн 🍪)';
+        document.getElementById('prestigeDisplay').textContent = `🌟 Очки престижа: ${prestigePoints}`;
+        document.getElementById('shopSection').style.display = prestigePoints > 0 ? 'block' : 'none';
+        document.getElementById('shopBuy1000').disabled = prestigePoints < 1;
+        document.getElementById('shopBuy10000').disabled = prestigePoints < 2;
+        document.getElementById('shopBuy1M').disabled = prestigePoints < 5;
+        checkAchievements();
+        saveGame();
+    }
+    function buyUpgrade(i) {
+        const u = upgrades[i];
+        const cost = getUpgradeCost(i);
+        if (cookies >= cost) {
+            cookies -= cost; u.count++;
+            if (i === 0 && u.count % 10 === 0) cookiesPerClick++;
+            updateCookiesPerSecond(); updateUI();
+        }
+    }
+    function showFloatingScore(x, y, amount) {
+        const el = document.createElement('div');
+        el.className = 'floating-score';
+        el.textContent = '+' + amount;
+        el.style.left = x + 'px'; el.style.top = y + 'px';
+        document.body.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+    }
     function performPrestige() {
         if (cookies >= 1_000_000 && confirm('Переродиться?')) {
             pushToLeaderboard(cookies);
@@ -535,31 +536,119 @@
             alert('Перерождение успешно!');
         }
     }
-
-    // Ивенты (без изменений)
-    function startEvent(type) { /* ... */ }
-    function showEventNotification(text, seconds, cls) { /* ... */ }
-    function removeEventNotification() { /* ... */ }
-    function scheduleRandomEvent() { /* ... */ }
-
-    // Остальные функции (updateUI, buyUpgrade и т.д.) остаются, добавим только обновление видимости спецкнопок
-    function updateAdminVisibility() {
-        const openAdmin = document.getElementById('openAdminBtn');
-        const activateFriend = document.getElementById('activateFriendBtn');
-        openAdmin.style.display = (isSpecialAdmin || isFriendAdmin) ? 'inline-block' : 'none';
-        activateFriend.style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
+    function buyShopItem(amount, cost) {
+        if (prestigePoints >= cost) { prestigePoints -= cost; cookies += amount; updateUI(); }
+    }
+    function toggleTheme() {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('cookieClickerTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    function checkAchievements() {
+        achievements.forEach(a => {
+            if (!unlockedAchievements.includes(a.id) && a.check()) {
+                unlockedAchievements.push(a.id);
+                localStorage.setItem('pechenkoAchievements', JSON.stringify(unlockedAchievements));
+                alert(`🎖️ Достижение разблокировано: ${a.name}`);
+            }
+        });
+    }
+    function renderAchievements() {
+        const list = document.getElementById('achievementList');
+        list.innerHTML = '';
+        achievements.forEach(a => {
+            const unlocked = unlockedAchievements.includes(a.id);
+            const li = document.createElement('li');
+            li.textContent = `${unlocked ? '✅' : '🔒'} ${a.name} – ${a.desc}`;
+            list.appendChild(li);
+        });
+    }
+    function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function renderChatMessage(msg) {
+        const container = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = 'chat-message';
+        let nameHtml = '';
+        if (msg.isSpecialAdmin) nameHtml = `<span class="admin-tag">[Фулл разраб]</span> <span class="gradient-nick">${escapeHtml(msg.name)}</span>`;
+        else if (msg.isFriendAdmin) nameHtml = `<span class="friend-tag">[Друн]</span> <span class="gradient-nick">${escapeHtml(msg.name)}</span>`;
+        else nameHtml = `<strong>${escapeHtml(msg.name)}</strong>`;
+        if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
+        div.innerHTML = `${nameHtml}: ${escapeHtml(msg.text)}`;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+    onChildAdded(chatRef, snap => { const m = snap.val(); if (m) renderChatMessage(m); });
+    function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        push(chatRef, {
+            name: playerName, text, isSpecialAdmin, isFriendAdmin,
+            rankPosition: getPlayerRankPosition(), timestamp: serverTimestamp()
+        });
+        input.value = '';
     }
 
-    // При открытии админ-панели показываем спецкнопки только для tr3haszz
+    function updateAdminVisibility() {
+        document.getElementById('openAdminBtn').style.display = (isSpecialAdmin || isFriendAdmin) ? 'inline-block' : 'none';
+        document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
+    }
+
+    function loadGame() {
+        const saved = localStorage.getItem('pechenkoClickerSave');
+        if (saved) {
+            const data = JSON.parse(saved);
+            cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1;
+            prestigePoints = data.prestigePoints || 0;
+            upgrades.forEach((u,i) => u.count = data.upgrades[i].count || 0);
+            updateCookiesPerSecond();
+        }
+        if (localStorage.getItem('cookieClickerTheme') === 'dark') document.body.classList.add('dark');
+        if (!playerName) {
+            playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним';
+            localStorage.setItem('pechenkoPlayerName', playerName);
+        }
+        if (isSpecialAdmin) playerName = 'tr3haszz';
+        if (isFriendAdmin) playerName = 't1nator';
+        updateAdminVisibility();
+        updateDailyUI();
+    }
+    function saveGame() {
+        localStorage.setItem('pechenkoClickerSave', JSON.stringify({
+            cookies, cookiesPerClick, prestigePoints,
+            upgrades: upgrades.map(u => ({ count: u.count }))
+        }));
+        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString());
+        localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
+    }
+
+    // Обработчики событий
+    document.getElementById('cookieBtn').addEventListener('click', (e) => {
+        const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1);
+        cookies += eff; totalClicks++;
+        updateUI();
+        showFloatingScore(e.clientX, e.clientY, eff);
+    });
+    upgrades.forEach((u,i) => document.getElementById(u.id).addEventListener('click', () => buyUpgrade(i)));
+    document.getElementById('prestigeBtn').addEventListener('click', performPrestige);
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('shopBuy1000').addEventListener('click', () => buyShopItem(1000,1));
+    document.getElementById('shopBuy10000').addEventListener('click', () => buyShopItem(10000,2));
+    document.getElementById('shopBuy1M').addEventListener('click', () => buyShopItem(1000000,5));
+    document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
+
     document.getElementById('openAdminBtn').addEventListener('click', () => {
         if (!isSpecialAdmin && !isFriendAdmin) return;
         document.getElementById('adminModal').classList.add('active');
         document.getElementById('addBillionCookiesBtn').classList.toggle('hidden', !isSpecialAdmin);
         document.getElementById('adminGive10CR').classList.toggle('hidden', !isSpecialAdmin);
     });
-
-    // Обработчики кнопок
+    document.getElementById('closeAdminModal').addEventListener('click', () => document.getElementById('adminModal').classList.remove('active'));
+    document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; updateUI(); });
+    document.getElementById('addManyCookiesBtn').addEventListener('click', () => { cookies += 1000000; updateUI(); });
     document.getElementById('addBillionCookiesBtn').addEventListener('click', () => { cookies += 1e9; updateUI(); });
+    document.getElementById('adminStartEvent').addEventListener('click', () => startEvent('rain'));
+    document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; updateUI(); });
+    document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; updateUI(); });
     document.getElementById('adminGive10CR').addEventListener('click', () => {
         prestigePoints += 10;
         pushToLeaderboardCR();
@@ -567,8 +656,46 @@
         updateUI();
         alert('+10 CR!');
     });
+    document.getElementById('adminFullReset').addEventListener('click', () => {
+        if (confirm('Полный сброс всего?')) { localStorage.clear(); location.reload(); }
+    });
 
-    // Кнопки кланов
+    document.getElementById('activateFriendBtn').addEventListener('click', () => {
+        if (isFriendAdmin) return;
+        const secret = prompt('Пароль для друга:');
+        if (secret === 'friend') {
+            isFriendAdmin = true; playerName = 't1nator';
+            localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator');
+            updateAdminVisibility(); updateUI();
+            alert('Доступ активирован! Теперь ты [Друн] t1nator.');
+        } else alert('Неверный пароль');
+    });
+
+    document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
+        document.getElementById('leaderboardModal').classList.add('active');
+        loadLeaderboard('cookies'); loadLeaderboard('cr');
+    });
+    document.getElementById('closeLeaderboardModal').addEventListener('click', () => document.getElementById('leaderboardModal').classList.remove('active'));
+    document.getElementById('showCookiesTop').addEventListener('click', () => {
+        document.getElementById('leaderboardCookiesTable').classList.remove('hidden');
+        document.getElementById('leaderboardCRTable').classList.add('hidden');
+    });
+    document.getElementById('showCRTop').addEventListener('click', () => {
+        document.getElementById('leaderboardCookiesTable').classList.add('hidden');
+        document.getElementById('leaderboardCRTable').classList.remove('hidden');
+    });
+
+    document.getElementById('openChatBtn').addEventListener('click', () => document.getElementById('chatModal').classList.add('active'));
+    document.getElementById('closeChatModal').addEventListener('click', () => document.getElementById('chatModal').classList.remove('active'));
+    document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
+    document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
+
+    document.getElementById('openAchievementsBtn').addEventListener('click', () => {
+        renderAchievements();
+        document.getElementById('achievementsModal').classList.add('active');
+    });
+    document.getElementById('closeAchievementsModal').addEventListener('click', () => document.getElementById('achievementsModal').classList.remove('active'));
+
     document.getElementById('openClanBtn').addEventListener('click', () => {
         updateClanUI();
         document.getElementById('clanModal').classList.add('active');
@@ -583,39 +710,32 @@
         if (name) joinClan(name);
     });
 
-    // Переключение таблиц лидеров
-    document.getElementById('showCookiesTop').addEventListener('click', () => {
-        document.getElementById('leaderboardCookiesTable').classList.remove('hidden');
-        document.getElementById('leaderboardCRTable').classList.add('hidden');
-    });
-    document.getElementById('showCRTop').addEventListener('click', () => {
-        document.getElementById('leaderboardCookiesTable').classList.add('hidden');
-        document.getElementById('leaderboardCRTable').classList.remove('hidden');
-    });
+    window.activateSpecialAdmin = function() {
+        if (isSpecialAdmin) return;
+        const secret = prompt('Секретный пароль:');
+        if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; }
+        const ip = prompt('IP для подтверждения:');
+        if (ip !== '94.181.23.61') { alert('Неверный IP'); return; }
+        isSpecialAdmin = true; playerName = 'tr3haszz';
+        localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz');
+        updateAdminVisibility(); updateUI();
+        alert('tr3haszz активирован!');
+    };
+    window.activateFriendAdmin = function() {
+        if (isFriendAdmin) return;
+        const secret = prompt('Пароль друга:');
+        if (secret !== 'friend') { alert('Неверный пароль'); return; }
+        isFriendAdmin = true; playerName = 't1nator';
+        localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator');
+        updateAdminVisibility(); updateUI();
+        alert('t1nator активирован как Друн!');
+    };
 
-    // Инициализация
-    function loadGame() {
-        const saved = localStorage.getItem('pechenkoClickerSave');
-        if (saved) {
-            const data = JSON.parse(saved);
-            cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1;
-            prestigePoints = data.prestigePoints || 0;
-            upgrades.forEach((u, i) => u.count = data.upgrades[i].count || 0);
-            updateCookiesPerSecond();
-        }
-        if (localStorage.getItem('cookieClickerTheme') === 'dark') document.body.classList.add('dark');
-        if (!playerName) {
-            playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним';
-            localStorage.setItem('pechenkoPlayerName', playerName);
-        }
-        if (isSpecialAdmin) playerName = 'tr3haszz';
-        if (isFriendAdmin) playerName = 't1nator';
-        updateAdminVisibility();
-        updateDailyUI();
-    }
-
-    // Добавь недостающие обработчики и setInterval как раньше.
-    // (Полный код для краткости опущен, но он полностью рабочий в предыдущих версиях.)
+    setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; updateUI(); } }, 100);
+    loadGame();
+    updateCookiesPerSecond();
+    updateUI();
+    scheduleRandomEvent();
 </script>
 </body>
 </html>
