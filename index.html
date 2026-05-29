@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.1.0</title>
+    <title>Печенько кликер v2.1.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -46,18 +46,6 @@
             animation: bgPulse 8s ease-in-out infinite alternate;
         }
         @keyframes bgPulse { 0%{background-size:100% 100%;} 100%{background-size:120% 120%;} }
-
-        /* Анимированный фон: падающие печеньки */
-        .falling-cookies {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
-        }
-        .cookie-particle {
-            position: absolute; font-size: 2rem; opacity: 0.6; animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100px) rotate(0deg); }
-            100% { transform: translateY(110vh) rotate(360deg); }
-        }
 
         .game-container {
             background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -350,12 +338,9 @@
     </style>
 </head>
 <body>
-<!-- Анимированный фон с падающими печеньками -->
-<div class="falling-cookies" id="fallingCookies"></div>
-
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.1.0</h1>
+    <h1>🍪 Печенько кликер v2.1.1</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -837,9 +822,13 @@
             rain: { text: '🌧️ ДОЖДЬ ИЗ ПЕЧЕНЕК! Клик x2', duration: 30, cls: 'rain', apply: ()=> eventMultiplier = 2 },
             gold: { text: '🟡 ЗОЛОТОЕ ПЕЧЕНЬЕ! Клик x5', duration: 10, cls: 'gold', apply: ()=> eventMultiplier = 5 },
             storm: { text: '🌪️ ПЕЧЕНЬКОВЫЙ ШТОРМ! Авто-доход x2', duration: 20, cls: 'storm', apply: ()=> productionMultiplier = 2, clear: ()=> productionMultiplier = 1 },
-            bunt: { text: '👵 БАБУШКИН БУНТ! Бабушки x3', duration: 15, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 }
+            bunt: { text: '👵 БАБУШКИН БУНТ! Бабушки x3', duration: 15, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 },
+            // Новые авто-ивенты
+            autoGoldenRain: { text: '🌟 АВТО-ЗОЛОТОЙ ДОЖДЬ! Клик x2 (8с)', duration: 8, cls: 'gold', apply: ()=> eventMultiplier = 2 },
+            autoGrandmaRage: { text: '👵 АВТО-ГНЕВ БАБУШЕК! Бабушки x3 (10с)', duration: 10, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 }
         };
-        const ev = events[type] || events.rain;
+        const ev = events[type];
+        if (!ev) return;
         showEventNotification(ev.text, ev.duration, ev.cls);
         ev.apply();
         totalEvents++;
@@ -851,6 +840,7 @@
         }, ev.duration * 1000);
         updateUI();
     }
+
     function showEventNotification(text, seconds, cls) {
         const old = document.getElementById('eventNotification'); if (old) old.remove();
         const notif = document.createElement('div');
@@ -873,8 +863,8 @@
     }
     function scheduleRandomEvent() {
         if (eventsFrozen) { setTimeout(scheduleRandomEvent, 60000); return; }
-        const types = ['rain','gold','storm','bunt'];
-        const weights = [40,15,25,20];
+        const types = ['rain','gold','storm','bunt', 'autoGoldenRain', 'autoGrandmaRage'];
+        const weights = [35, 10, 20, 15, 3, 3]; // очень редкие авто-навыки
         let r = Math.random() * weights.reduce((a,b)=>a+b), type = 'rain';
         for (let i=0; i<types.length; i++) { r -= weights[i]; if (r <= 0) { type = types[i]; break; } }
         setTimeout(() => { if (!eventActive) startEvent(type); scheduleRandomEvent(); }, Math.random() * 180000 + 120000);
@@ -1745,7 +1735,12 @@
     function updateAdminVisibility() {
         const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry);
         const showAdminBtn = isAdmin && !adminHidden;
-        document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
+        // Принудительно показываем для tr3haszz, если вдруг скрыто (на всякий случай)
+        if (playerName === 'tr3haszz' && isSpecialAdmin) {
+            document.getElementById('openAdminBtn').style.display = 'inline-block';
+        } else {
+            document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
+        }
         document.getElementById('openTesterBtn').style.display = (isTester && !isAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
@@ -1838,23 +1833,6 @@
         updateBossUI();
         applyAutoTheme(); // тема после загрузки
     });
-
-    // Анимированный фон (падающие печеньки)
-    function createFallingCookies() {
-        const container = document.getElementById('fallingCookies');
-        const emojis = ['🍪', '🍫', '🥠', '🍩'];
-        for (let i = 0; i < 15; i++) {
-            const particle = document.createElement('span');
-            particle.className = 'cookie-particle';
-            particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = Math.random() * 8 + 6 + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particle.style.fontSize = Math.random() * 1.5 + 1.5 + 'rem';
-            container.appendChild(particle);
-        }
-    }
-    createFallingCookies();
 
     setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; updateUI(); } }, 100);
 </script>
