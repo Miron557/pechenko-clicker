@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.14</title>
+    <title>Печенько кликер v2.1.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* полный CSS идентичен предыдущей версии, без изменений */
         :root {
             --bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0d0d2b 100%);
             --glass-bg: rgba(255, 248, 240, 0.06);
@@ -43,14 +42,28 @@
         body {
             font-family: var(--font); background: var(--bg-gradient); min-height:100vh;
             display:flex; justify-content:center; align-items:center; user-select:none; color:var(--text);
-            padding:20px; overflow-x:hidden;
+            padding:20px; overflow-x:hidden; position: relative;
             animation: bgPulse 8s ease-in-out infinite alternate;
         }
         @keyframes bgPulse { 0%{background-size:100% 100%;} 100%{background-size:120% 120%;} }
+
+        /* Анимированный фон: падающие печеньки */
+        .falling-cookies {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
+        }
+        .cookie-particle {
+            position: absolute; font-size: 2rem; opacity: 0.6; animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
+        }
+
         .game-container {
             background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border:1px solid var(--glass-border); border-radius:40px; padding:30px; box-shadow:var(--glass-shadow), 0 0 50px rgba(0,0,0,0.4);
-            text-align:center; max-width:900px; width:100%; position:relative; animation: fadeInUp 0.8s ease-out;
+            text-align:center; max-width:900px; width:100%; position:relative; z-index:1;
+            animation: fadeInUp 0.8s ease-out;
         }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
         .theme-toggle {
@@ -134,7 +147,7 @@
         }
         .shop-title { font-size:1.4rem; font-weight:700; margin-bottom:15px; color:var(--accent); }
         .shop-items { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
-        .shop-btn { flex:1 1 150px; max-width:200px; }
+        .shop-btn { flex: 1 1 150px; max-width:200px; }
         .daily-bonus {
             margin-top:25px; background:rgba(255,215,0,0.12); backdrop-filter: blur(10px);
             border-radius:25px; padding:15px; font-weight:700; border:1px solid rgba(255,215,0,0.3); color:#ffd700;
@@ -185,12 +198,12 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn, .market-btn, .stats-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn, .market-btn, .stats-btn, .skills-btn, .skins-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px; transition: all 0.2s ease;
         }
-        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .tagshop-btn:hover, .boss-btn:hover, .quests-btn:hover, .tester-btn:hover, .vip-btn:hover, .discord-btn:hover, .market-btn:hover, .stats-btn:hover {
+        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .tagshop-btn:hover, .boss-btn:hover, .quests-btn:hover, .tester-btn:hover, .vip-btn:hover, .discord-btn:hover, .market-btn:hover, .stats-btn:hover, .skills-btn:hover, .skins-btn:hover {
             transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
         .bottom-panel { margin-top:25px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
@@ -308,12 +321,41 @@
             position: absolute; background: var(--accent); color: white; border: none;
             border-radius: 8px; padding: 4px 12px; cursor: pointer; z-index: 100; display: none;
         }
+        /* Стили для активных навыков */
+        .skills-panel {
+            display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap;
+        }
+        .skill-btn {
+            background: var(--btn-bg); border: 2px solid var(--accent); border-radius: 50%;
+            width: 70px; height: 70px; font-size: 1.8rem; cursor: pointer; position: relative;
+            box-shadow: var(--crisp-shadow); transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column;
+        }
+        .skill-btn:hover:not(:disabled) { background: var(--btn-hover-bg); transform: scale(1.1); }
+        .skill-btn:disabled { opacity: 0.5; filter: grayscale(50%); cursor: not-allowed; }
+        .skill-cooldown {
+            position: absolute; bottom: 5px; font-size: 0.7rem; color: var(--accent); font-weight: 700;
+        }
+        /* Скины */
+        .skin-selector {
+            display: flex; gap: 10px; justify-content: center; margin: 15px 0;
+        }
+        .skin-option {
+            font-size: 3rem; cursor: pointer; border: 3px solid transparent; border-radius: 15px; padding: 5px;
+            transition: 0.2s;
+        }
+        .skin-option.active { border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .skin-option:hover { transform: scale(1.15); }
     </style>
 </head>
 <body>
+<!-- Анимированный фон с падающими печеньками -->
+<div class="falling-cookies" id="fallingCookies"></div>
+
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.14</h1>
+    <h1>🍪 Печенько кликер v2.1.0</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -321,6 +363,20 @@
         <span class="rank-badge" id="rankDisplay">Новичок</span>
     </div>
     <button class="cookie-btn" id="cookieBtn">🍪</button>
+
+    <!-- Панель активных навыков -->
+    <div class="skills-panel">
+        <button class="skill-btn" id="skillGoldRain" title="Золотой дождь (x2 клики, 10с)">
+            🌧️<span class="skill-cooldown" id="cdGoldRain"></span>
+        </button>
+        <button class="skill-btn" id="skillGrandmaRage" title="Бабушкин гнев (бабушки x3, 15с)">
+            👵<span class="skill-cooldown" id="cdGrandmaRage"></span>
+        </button>
+        <button class="skill-btn" id="skillQuantumLeap" title="Квантовый скачок (+10% печенек)">
+            ⚛️<span class="skill-cooldown" id="cdQuantumLeap"></span>
+        </button>
+    </div>
+
     <div class="upgrades" id="upgradesContainer"></div>
     <button class="prestige-btn" id="prestigeBtn" disabled>✨ Переродиться (нужно 1 млн 🍪)</button>
     <div class="prestige-display" id="prestigeDisplay">🌟 Очки престижа: 0</div>
@@ -330,6 +386,8 @@
             <button class="shop-btn" id="shopBuy1000"><span class="shop-name">💰 1 000 печенек</span><span class="shop-cost">Цена: 1 🌟</span></button>
             <button class="shop-btn" id="shopBuy10000"><span class="shop-name">💎 10 000 печенек</span><span class="shop-cost">Цена: 2 🌟</span></button>
             <button class="shop-btn" id="shopBuy1M"><span class="shop-name">👑 1 000 000 печенек</span><span class="shop-cost">Цена: 5 🌟</span></button>
+            <!-- Улучшаемый клик -->
+            <button class="shop-btn" id="shopBuyClickPower"><span class="shop-name">💪 Сила клика +1</span><span class="shop-cost">Цена: 10 🌟</span></button>
         </div>
     </div>
     <div class="daily-bonus" id="dailyBonusSection">
@@ -350,6 +408,7 @@
         <button class="vip-btn" id="openVIPBtn">💎 Магазин</button>
         <button class="market-btn" id="openMarketBtn">🏪 Рынок</button>
         <button class="stats-btn" id="openStatsBtn">📊 Статистика</button>
+        <button class="skins-btn" id="openSkinsBtn">🎨 Скины</button>
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
         <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
         <button class="activate-tester-btn" id="activateTesterBtn" style="display: none;">🔍 Активировать тестера</button>
@@ -504,10 +563,23 @@
         <button id="closeStatsModal" style="margin-top:10px;">Закрыть</button>
     </div>
 </div>
+<div class="modal" id="skinsModal">
+    <div class="modal-content" style="text-align:center;">
+        <h3>🎨 Скины печеньки</h3>
+        <div class="skin-selector" id="skinSelector">
+            <span class="skin-option" data-skin="🍪">🍪</span>
+            <span class="skin-option" data-skin="🍫">🍫</span>
+            <span class="skin-option" data-skin="🌟">🌟</span>
+            <span class="skin-option" data-skin="🌌">🌌</span>
+        </div>
+        <button id="closeSkinsModal" style="margin-top:15px;">Закрыть</button>
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, onChildAdded, serverTimestamp, set, get, query, orderByChild, limitToLast, onValue, update, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCKsCycC_nlvlvXonjZdBpViyIVE6yNHpM",
@@ -521,6 +593,7 @@
     };
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const auth = getAuth(app);
     const chatRef = ref(database, 'messages');
     const presenceRef = ref(database, 'presence');
     const leaderboardRef = ref(database, 'leaderboard');
@@ -549,6 +622,16 @@
     let adminHidden = localStorage.getItem('pechenkoAdminHidden') === 'true';
     let activeRoleTag = localStorage.getItem('pechenkoActiveRoleTag') || '';
     let activeRoleNick = localStorage.getItem('pechenkoActiveRoleNick') || '';
+    let clickPowerLevel = parseInt(localStorage.getItem('pechenkoClickPowerLevel') || '0'); // уровень силы клика
+    let selectedSkin = localStorage.getItem('pechenkoSelectedSkin') || '🍪';
+
+    // Активные навыки
+    let skillCooldowns = {
+        goldRain: 0,
+        grandmaRage: 0,
+        quantumLeap: 0
+    };
+    let skillTimers = {};
 
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); }
@@ -594,6 +677,10 @@
     let totalClicks = parseInt(localStorage.getItem('pechenkoTotalClicks') || '0');
     let totalEvents = parseInt(localStorage.getItem('pechenkoTotalEvents') || '0');
 
+    // Облачные данные
+    let uid = null;
+    let lastSaveTime = Date.now();
+
     const container = document.getElementById('upgradesContainer');
     upgrades.forEach((u, i) => {
         const btn = document.createElement('button');
@@ -621,6 +708,7 @@
     const favorites = JSON.parse(localStorage.getItem('pechenkoFavorites') || '[]');
     const chatTheme = localStorage.getItem('pechenkoChatTheme') || 'dark';
 
+    // ====== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ======
     function canClaimDaily() {
         const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
         if (now - last < oneDay) return false;
@@ -823,6 +911,7 @@
         document.getElementById('shopBuy1000').disabled = prestigePoints < 1;
         document.getElementById('shopBuy10000').disabled = prestigePoints < 2;
         document.getElementById('shopBuy1M').disabled = prestigePoints < 5;
+        document.getElementById('shopBuyClickPower').disabled = prestigePoints < 10;
         checkAchievements();
         saveGame();
     }
@@ -849,7 +938,7 @@
     function performPrestige() {
         if (cookies >= prestigeCost && confirm('Переродиться?')) {
             pushToLeaderboard(cookies);
-            cookies = 0; cookiesPerClick = 1;
+            cookies = 0; cookiesPerClick = 1 + clickPowerLevel; // сохраняем бонус силы клика
             upgrades.forEach(u => u.count = 0);
             updateCookiesPerSecond();
             prestigePoints++;
@@ -865,7 +954,39 @@
         }
     }
     function buyShopItem(amount, cost) { if (prestigePoints >= cost) { prestigePoints -= cost; cookies += amount; updateUI(); } }
-    function toggleTheme() { document.body.classList.toggle('light'); localStorage.setItem('cookieClickerTheme', document.body.classList.contains('light') ? 'light' : 'dark'); }
+    function buyClickPower() {
+        if (prestigePoints >= 10) {
+            prestigePoints -= 10;
+            clickPowerLevel++;
+            cookiesPerClick = 1 + clickPowerLevel;
+            localStorage.setItem('pechenkoClickPowerLevel', clickPowerLevel.toString());
+            updateUI();
+            alert('Сила клика увеличена!');
+        } else alert('Недостаточно CR');
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        const newTheme = document.body.classList.contains('light') ? 'light' : 'dark';
+        localStorage.setItem('cookieClickerTheme', newTheme);
+        localStorage.setItem('pechenkoThemePreference', 'manual'); // пользователь выбрал вручную
+    }
+
+    // Автоопределение темы
+    function applyAutoTheme() {
+        const pref = localStorage.getItem('pechenkoThemePreference');
+        if (pref === 'manual') return; // не переопределяем, если пользователь вручную переключал
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+            document.body.classList.remove('light');
+            localStorage.setItem('cookieClickerTheme', 'dark');
+        } else {
+            document.body.classList.add('light');
+            localStorage.setItem('cookieClickerTheme', 'light');
+        }
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyAutoTheme);
+
     function checkAchievements() {
         achievements.forEach(a => {
             if (!unlockedAchievements.includes(a.id) && a.check()) {
@@ -1085,7 +1206,6 @@
         allMessages.forEach(msg => renderChatMessage(msg));
     }
 
-    // Отправка сообщения (без картинок)
     function sendChatMessage() {
         const input = document.getElementById('chatInput');
         let text = input.value.trim();
@@ -1345,6 +1465,7 @@
     document.getElementById('shopBuy1000').addEventListener('click', () => buyShopItem(1000,1));
     document.getElementById('shopBuy10000').addEventListener('click', () => buyShopItem(10000,2));
     document.getElementById('shopBuy1M').addEventListener('click', () => buyShopItem(1000000,5));
+    document.getElementById('shopBuyClickPower').addEventListener('click', buyClickPower);
     document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
 
     document.getElementById('openAdminBtn').addEventListener('click', () => {
@@ -1487,6 +1608,78 @@
 
     document.getElementById('openDiscordBtn').addEventListener('click', () => { window.open('https://discord.gg/ВАШ_СЕРВЕР', '_blank'); });
 
+    // Скины
+    document.getElementById('openSkinsBtn').addEventListener('click', () => {
+        document.getElementById('skinsModal').classList.add('active');
+        updateSkinSelection();
+    });
+    document.getElementById('closeSkinsModal').addEventListener('click', () => closeModal(document.getElementById('skinsModal')));
+    document.querySelectorAll('.skin-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            const skin = opt.dataset.skin;
+            selectedSkin = skin;
+            localStorage.setItem('pechenkoSelectedSkin', skin);
+            document.getElementById('cookieBtn').textContent = skin;
+            updateSkinSelection();
+        });
+    });
+    function updateSkinSelection() {
+        document.querySelectorAll('.skin-option').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.skin === selectedSkin);
+        });
+    }
+    document.getElementById('cookieBtn').textContent = selectedSkin;
+
+    // Активные навыки
+    function activateSkill(skillName) {
+        if (skillCooldowns[skillName] > 0) return;
+        const now = Date.now();
+        switch(skillName) {
+            case 'goldRain':
+                eventMultiplier = 2;
+                skillCooldowns.goldRain = 60; // 60 сек кулдаун
+                alert('Золотой дождь активирован! Клики x2 на 10 секунд.');
+                setTimeout(() => { if (!eventActive) eventMultiplier = 1; }, 10000);
+                break;
+            case 'grandmaRage':
+                grandmaBoost = 3;
+                skillCooldowns.grandmaRage = 90;
+                alert('Бабушкин гнев! Бабушки дают x3 на 15 секунд.');
+                setTimeout(() => { grandmaBoost = 1; updateCookiesPerSecond(); }, 15000);
+                break;
+            case 'quantumLeap':
+                const gain = Math.floor(cookies * 0.1);
+                cookies += gain;
+                skillCooldowns.quantumLeap = 120;
+                alert(`Квантовый скачок! +${gain.toLocaleString()} печенек.`);
+                updateUI();
+                break;
+        }
+        startSkillCooldown(skillName);
+    }
+
+    function startSkillCooldown(skillName) {
+        const cdElement = document.getElementById(`cd${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
+        const btn = document.getElementById(`skill${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
+        btn.disabled = true;
+        let remaining = skillCooldowns[skillName];
+        cdElement.textContent = `${remaining}s`;
+        skillTimers[skillName] = setInterval(() => {
+            remaining--;
+            skillCooldowns[skillName] = remaining;
+            cdElement.textContent = `${remaining}s`;
+            if (remaining <= 0) {
+                clearInterval(skillTimers[skillName]);
+                btn.disabled = false;
+                cdElement.textContent = '';
+            }
+        }, 1000);
+    }
+
+    document.getElementById('skillGoldRain').addEventListener('click', () => activateSkill('goldRain'));
+    document.getElementById('skillGrandmaRage').addEventListener('click', () => activateSkill('grandmaRage'));
+    document.getElementById('skillQuantumLeap').addEventListener('click', () => activateSkill('quantumLeap'));
+
     function updateBossUI() {
         const infoDiv = document.getElementById('bossInfo');
         if (!currentClan) { infoDiv.innerHTML = 'Вы не в клане! Вступите, чтобы сражаться с боссом.'; document.getElementById('attackBossBtn').disabled = true; return; }
@@ -1565,26 +1758,105 @@
         setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
     }
 
-    function loadGame() {
-        const saved = localStorage.getItem('pechenkoClickerSave');
-        if (saved) { const data = JSON.parse(saved); cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1; prestigePoints = data.prestigePoints || 0; upgrades.forEach((u,i) => u.count = data.upgrades[i].count || 0); updateCookiesPerSecond(); }
-        if (localStorage.getItem('cookieClickerTheme') === 'light') document.body.classList.add('light');
-        if (!playerName) { playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним'; localStorage.setItem('pechenkoPlayerName', playerName); }
-        if (isSpecialAdmin) playerName = 'tr3haszz'; if (isFriendAdmin) playerName = 't1nator'; if (isTester && !isSpecialAdmin && !isFriendAdmin) playerName = 'Глист';
-        prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
-        if (activeRoleTag) { customTag = activeRoleTag; customNick = activeRoleNick; }
-        updateAdminVisibility(); updateDailyUI(); updateQuests(); updateBossUI();
-    }
-    function saveGame() {
-        localStorage.setItem('pechenkoClickerSave', JSON.stringify({ cookies, cookiesPerClick, prestigePoints, upgrades: upgrades.map(u => ({ count: u.count })) }));
-        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString()); localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
-        localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
+    // Облачное сохранение и загрузка
+    async function saveGameToCloud() {
+        if (!uid) return;
+        const saveData = {
+            cookies, cookiesPerClick, prestigePoints,
+            upgrades: upgrades.map(u => ({ count: u.count })),
+            totalClicks, totalEvents, prestigeCost,
+            clickPowerLevel, selectedSkin, lastSaveTime: Date.now()
+        };
+        await set(ref(database, `users/${uid}`), saveData);
+        localStorage.setItem('pechenkoClickerSave', JSON.stringify(saveData)); // локальный кэш
     }
 
+    async function loadGameFromCloud() {
+        if (!uid) return;
+        const snap = await get(ref(database, `users/${uid}`));
+        if (snap.exists()) {
+            const data = snap.val();
+            cookies = data.cookies || 0;
+            cookiesPerClick = data.cookiesPerClick || 1;
+            prestigePoints = data.prestigePoints || 0;
+            upgrades.forEach((u,i) => { u.count = data.upgrades[i]?.count || 0; });
+            totalClicks = data.totalClicks || 0;
+            totalEvents = data.totalEvents || 0;
+            prestigeCost = data.prestigeCost || 1000000;
+            clickPowerLevel = data.clickPowerLevel || 0;
+            selectedSkin = data.selectedSkin || '🍪';
+            lastSaveTime = data.lastSaveTime || Date.now();
+
+            // Оффлайн-прогресс
+            const now = Date.now();
+            const offlineMs = now - lastSaveTime;
+            const maxOfflineMs = 8 * 60 * 60 * 1000; // 8 часов
+            const effectiveMs = Math.min(offlineMs, maxOfflineMs);
+            if (effectiveMs > 10000 && cookiesPerSecond > 0) {
+                const offlineCookies = Math.floor(cookiesPerSecond * (effectiveMs / 1000));
+                cookies += offlineCookies;
+                alert(`Пока вас не было, вы заработали ${offlineCookies.toLocaleString()} печенек!`);
+            }
+            document.getElementById('cookieBtn').textContent = selectedSkin;
+        }
+        // Обновляем локальное хранилище тоже
+        saveGame();
+    }
+
+    function saveGame() {
+        localStorage.setItem('pechenkoClickerSave', JSON.stringify({
+            cookies, cookiesPerClick, prestigePoints,
+            upgrades: upgrades.map(u => ({ count: u.count })),
+            totalClicks, totalEvents, prestigeCost,
+            clickPowerLevel, selectedSkin
+        }));
+        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString());
+        localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
+        localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
+        localStorage.setItem('pechenkoClickPowerLevel', clickPowerLevel.toString());
+        // Запускаем облачное сохранение (будет выполнено, если uid есть)
+        saveGameToCloud();
+    }
+
+    // Аутентификация и инициализация
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            uid = user.uid;
+            await loadGameFromCloud();
+        } else {
+            await signInAnonymously(auth);
+        }
+        // После получения uid настраиваем остальное
+        updateCookiesPerSecond();
+        updateUI();
+        scheduleRandomEvent();
+        requestNotificationPermission();
+        setMyPresence(false);
+        updateAdminVisibility();
+        updateDailyUI();
+        updateQuests();
+        updateBossUI();
+        applyAutoTheme(); // тема после загрузки
+    });
+
+    // Анимированный фон (падающие печеньки)
+    function createFallingCookies() {
+        const container = document.getElementById('fallingCookies');
+        const emojis = ['🍪', '🍫', '🥠', '🍩'];
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('span');
+            particle.className = 'cookie-particle';
+            particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = Math.random() * 8 + 6 + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.fontSize = Math.random() * 1.5 + 1.5 + 'rem';
+            container.appendChild(particle);
+        }
+    }
+    createFallingCookies();
+
     setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; updateUI(); } }, 100);
-    loadGame(); updateCookiesPerSecond(); updateUI(); scheduleRandomEvent();
-    requestNotificationPermission();
-    setMyPresence(false);
 </script>
 </body>
 </html>
