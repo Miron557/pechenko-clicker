@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0</title>
+    <title>Печенько кликер v2.0.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -184,7 +184,7 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .wheel-btn, .tagshop-btn, .pets-btn, .boss-btn, .quests-btn, .bp-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .wheel-btn, .tagshop-btn, .pets-btn, .boss-btn, .quests-btn, .bp-btn, .tester-btn, .activate-tester-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
@@ -214,9 +214,44 @@
         }
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
-        .wheel-container { position:relative; width:300px; height:300px; margin:20px auto; }
-        .wheel { width:100%; height:100%; border-radius:50%; border:4px solid var(--accent); position:relative; overflow:hidden; transition: transform 4s cubic-bezier(0.2, 0.8, 0.3, 1); }
-        .wheel-segment { position:absolute; width:50%; height:50%; transform-origin:100% 100%; left:0; top:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:white; text-shadow:1px 1px 3px black; }
+        .wheel-container {
+            position:relative;
+            width:300px;
+            height:300px;
+            margin:20px auto;
+        }
+        .wheel {
+            width:100%;
+            height:100%;
+            border-radius:50%;
+            background: conic-gradient(
+                #e0a96d 0deg 45deg,
+                #bc6c25 45deg 90deg,
+                #e0a96d 90deg 135deg,
+                #bc6c25 135deg 180deg,
+                #e0a96d 180deg 225deg,
+                #bc6c25 225deg 270deg,
+                #e0a96d 270deg 315deg,
+                #bc6c25 315deg 360deg
+            );
+            position:relative;
+            transition: transform 4s cubic-bezier(0.2, 0.8, 0.3, 1);
+            border:4px solid var(--accent);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .wheel-text {
+            position:absolute;
+            width:50%;
+            left:50%;
+            top:50%;
+            transform-origin:0 0;
+            text-align:center;
+            font-weight:800;
+            font-size:14px;
+            color:white;
+            text-shadow:1px 1px 3px black;
+            pointer-events:none;
+        }
         @media (max-width:600px) {
             .game-container{padding:20px;}
             .cookie-btn{font-size:110px;}
@@ -230,7 +265,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0</h1>
+    <h1>🍪 Печенько кликер v2.0.2</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -256,6 +291,7 @@
     </div>
     <div class="bottom-panel">
         <button class="admin-btn" id="openAdminBtn" style="display: none;">⚙️ Админ</button>
+        <button class="tester-btn" id="openTesterBtn" style="display: none;">🔧 Тестер</button>
         <button class="leaderboard-btn" id="openLeaderboardBtn">🏆 Лидеры</button>
         <button class="chat-btn" id="openChatBtn">💬 Чат</button>
         <button class="achievements-btn" id="openAchievementsBtn">🎖️ Достижения</button>
@@ -268,6 +304,7 @@
         <button class="bp-btn" id="openBPBtn">📦 Battle Pass</button>
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
         <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
+        <button class="activate-tester-btn" id="activateTesterBtn" style="display: none;">🔍 Активировать тестера</button>
     </div>
 </div>
 
@@ -283,6 +320,14 @@
         <button id="adminSetClick2">Клик x2</button><button id="adminResetClick">Сброс клика</button>
         <button id="adminGive10CR" class="hidden">+10 CR</button><button id="adminFullReset">Полный сброс</button>
     </div><button id="closeAdminModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="testerModal">
+    <div class="modal-content" style="text-align:center;">
+        <h3>🔧 Панель тестера</h3>
+        <p>Если нашли баг, отправьте репорт прямо tr3haszz!</p>
+        <button id="sendBugReportBtn">📧 Отправить баг-репорт</button>
+        <button id="closeTesterModal" style="margin-top:15px;">Закрыть</button>
+    </div>
 </div>
 <div class="modal" id="leaderboardModal">
     <div class="modal-content"><h3>🏆 Таблицы лидеров</h3><button id="showCookiesTop">Топ по печенькам</button><button id="showCRTop">Топ по CR</button>
@@ -393,6 +438,7 @@
     let playerName = localStorage.getItem('pechenkoPlayerName') || '';
     let isSpecialAdmin = localStorage.getItem('pechenkoIsSpecialAdmin') === 'true';
     let isFriendAdmin = localStorage.getItem('pechenkoIsFriendAdmin') === 'true';
+    let isTester = localStorage.getItem('pechenkoIsTester') === 'true';
     let eventActive = false, eventMultiplier = 1, eventTimerId = null;
     let productionMultiplier = 1, grandmaBoost = 1;
     let currentClan = localStorage.getItem('pechenkoClan') || null;
@@ -402,39 +448,6 @@
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
     let wheelLastSpin = parseInt(localStorage.getItem('wheelLastSpin') || '0');
     const WHEEL_COOLDOWN = 4 * 60 * 60 * 1000;
-
-    // Питомцы
-    const pets = [
-        { id: 'cat', name: '🐱 Котопеченька', cost: 10000, bonusType: 'click', bonusPerLevel: 0.5, level: 0, maxLevel: 20 },
-        { id: 'dragon', name: '🐉 Драко-печенька', cost: 50000, bonusType: 'cps', bonusPerLevel: 0.02, level: 0, maxLevel: 20 },
-        { id: 'unicorn', name: '🦄 Единорог-печенька', cost: 200000, bonusType: 'all', bonusPerLevel: 0.01, level: 0, maxLevel: 20 }
-    ];
-    let petLevels = JSON.parse(localStorage.getItem('pechenkoPetLevels') || '{"cat":0,"dragon":0,"unicorn":0}');
-    let activePet = localStorage.getItem('pechenkoActivePet') || null;
-
-    // Босс
-    let bossHP = 0, bossMaxHP = 1000000, bossAlive = false;
-    const BOSS_COOLDOWN = 24 * 60 * 60 * 1000;
-    let lastBossKill = parseInt(localStorage.getItem('lastBossKill') || '0');
-
-    // Квесты и Battle Pass
-    let quests = [
-        { id: 'click100', desc: 'Кликнуть 100 раз', goal: 100, progress: 0, reward: 500 },
-        { id: 'buy5', desc: 'Купить 5 улучшений', goal: 5, progress: 0, reward: 1000 },
-        { id: 'prestige1', desc: 'Переродиться 1 раз', goal: 1, progress: 0, reward: 5 } // CR
-    ];
-    let bpXP = parseInt(localStorage.getItem('pechenkoBPXP') || '0');
-    let bpLevel = parseInt(localStorage.getItem('pechenkoBPLevel') || '1');
-    const bpMaxLevel = 20;
-    const xpPerLevel = 500;
-    let bpRewards = [
-        { level: 1, free: '500 🍪', premium: '1000 🍪 + Тег [Сезон 1]' },
-        { level: 5, free: '1 CR', premium: '5 CR' },
-        { level: 10, free: 'Питомец: Котопеченька (ур.5)', premium: 'Котопеченька ур.10' },
-        { level: 15, free: '10 000 🍪', premium: '100 000 🍪' },
-        { level: 20, free: 'Градиентный ник (30д)', premium: 'Градиентный ник навсегда' }
-    ];
-    let bpPremium = localStorage.getItem('pechenkoBPPremium') === 'true';
 
     const DAILY_KEY = 'pechenkoDaily';
     let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
@@ -480,85 +493,38 @@
         container.appendChild(btn);
     });
 
-    // Квесты и БП
-    function updateQuests() {
-        const qList = document.getElementById('questsList');
-        qList.innerHTML = '';
-        quests.forEach((q, idx) => {
-            const div = document.createElement('div');
-            div.style.margin = '10px 0';
-            const complete = q.progress >= q.goal;
-            div.innerHTML = `${q.desc} (${Math.min(q.progress, q.goal)}/${q.goal}) ${complete ? '✅' : ''} <button class="shop-btn claimQuestBtn" data-idx="${idx}" ${!complete ? 'disabled' : ''}>Забрать</button>`;
-            qList.appendChild(div);
-        });
-        document.querySelectorAll('.claimQuestBtn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const idx = parseInt(btn.dataset.idx);
-                const q = quests[idx];
-                if (q.progress >= q.goal) {
-                    q.progress = 0; // сброс
-                    if (q.reward <= 5 && q.id !== 'prestige1') { // CR
-                        prestigePoints += q.reward;
-                        pushToLeaderboardCR();
-                        if (currentClan) addCRToClan(q.reward);
-                    } else {
-                        cookies += q.reward;
-                    }
-                    addBPXP(50); // XP за квест
-                    updateUI();
-                    updateQuests();
-                    alert('Квест выполнен!');
-                }
-            });
-        });
-    }
-    function addBPXP(amount) {
-        bpXP += amount;
-        while (bpXP >= xpPerLevel && bpLevel < bpMaxLevel) {
-            bpXP -= xpPerLevel;
-            bpLevel++;
-            // Проверяем награды за уровень
-            const reward = bpRewards.find(r => r.level === bpLevel);
-            if (reward) {
-                const rewardText = bpPremium ? reward.premium : reward.free;
-                if (rewardText.includes('CR')) {
-                    const cr = parseInt(rewardText) || 1;
-                    prestigePoints += cr;
-                    pushToLeaderboardCR();
-                    if (currentClan) addCRToClan(cr);
-                } else if (rewardText.includes('🍪')) {
-                    const cookiesAmount = parseInt(rewardText.replace(/[^0-9]/g, '')) || 1000;
-                    cookies += cookiesAmount;
-                }
-                alert(`🎁 Новый уровень Battle Pass! Награда: ${rewardText}`);
-            }
-        }
-        localStorage.setItem('pechenkoBPXP', bpXP);
-        localStorage.setItem('pechenkoBPLevel', bpLevel);
-    }
-    function updateBPUI() {
-        const bpDiv = document.getElementById('bpInfo');
-        const currentXP = bpXP;
-        const currentLevel = bpLevel;
-        bpDiv.innerHTML = `
-            <p>Уровень: ${currentLevel}/${bpMaxLevel}</p>
-            <p>Опыт: ${currentXP}/${xpPerLevel}</p>
-            <div style="background:#333; border-radius:10px; height:20px; margin:10px 0;">
-                <div style="background:linear-gradient(90deg, #bb86fc, #6200ea); width:${(currentXP/xpPerLevel*100)}%; height:100%; border-radius:10px;"></div>
-            </div>
-            <button class="shop-btn" id="buyPremiumBP" ${bpPremium ? 'disabled' : ''}>Купить Premium (100 CR)</button>
-        `;
-        document.getElementById('buyPremiumBP')?.addEventListener('click', () => {
-            if (prestigePoints >= 100) {
-                prestigePoints -= 100;
-                bpPremium = true;
-                localStorage.setItem('pechenkoBPPremium', 'true');
-                updateUI();
-                updateBPUI();
-                alert('Premium Battle Pass активирован!');
-            } else alert('Недостаточно CR');
-        });
-    }
+    // Питомцы
+    const pets = [
+        { id: 'cat', name: '🐱 Котопеченька', cost: 10000, bonusType: 'click', bonusPerLevel: 0.5, level: 0, maxLevel: 20 },
+        { id: 'dragon', name: '🐉 Драко-печенька', cost: 50000, bonusType: 'cps', bonusPerLevel: 0.02, level: 0, maxLevel: 20 },
+        { id: 'unicorn', name: '🦄 Единорог-печенька', cost: 200000, bonusType: 'all', bonusPerLevel: 0.01, level: 0, maxLevel: 20 }
+    ];
+    let petLevels = JSON.parse(localStorage.getItem('pechenkoPetLevels') || '{"cat":0,"dragon":0,"unicorn":0}');
+    let activePet = localStorage.getItem('pechenkoActivePet') || null;
+
+    // Босс
+    let bossHP = 0, bossMaxHP = 1000000, bossAlive = false;
+    const BOSS_COOLDOWN = 24 * 60 * 60 * 1000;
+    let lastBossKill = parseInt(localStorage.getItem('lastBossKill') || '0');
+
+    // Квесты и Battle Pass
+    let quests = [
+        { id: 'click100', desc: 'Кликнуть 100 раз', goal: 100, progress: 0, reward: 500 },
+        { id: 'buy5', desc: 'Купить 5 улучшений', goal: 5, progress: 0, reward: 1000 },
+        { id: 'prestige1', desc: 'Переродиться 1 раз', goal: 1, progress: 0, reward: 5 }
+    ];
+    let bpXP = parseInt(localStorage.getItem('pechenkoBPXP') || '0');
+    let bpLevel = parseInt(localStorage.getItem('pechenkoBPLevel') || '1');
+    const bpMaxLevel = 20;
+    const xpPerLevel = 500;
+    let bpRewards = [
+        { level: 1, free: '500 🍪', premium: '1000 🍪 + Тег [Сезон 1]' },
+        { level: 5, free: '1 CR', premium: '5 CR' },
+        { level: 10, free: 'Питомец: Котопеченька (ур.5)', premium: 'Котопеченька ур.10' },
+        { level: 15, free: '10 000 🍪', premium: '100 000 🍪' },
+        { level: 20, free: 'Градиентный ник (30д)', premium: 'Градиентный ник навсегда' }
+    ];
+    let bpPremium = localStorage.getItem('pechenkoBPPremium') === 'true';
 
     function canClaimDaily() {
         const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
@@ -784,7 +750,6 @@
             cookies -= cost; u.count++;
             if (i === 0 && u.count % 10 === 0) cookiesPerClick++;
             updateCookiesPerSecond(); updateUI();
-            // квест на покупку улучшений
             const qBuy = quests.find(q => q.id === 'buy5');
             if (qBuy) qBuy.progress = Math.min(qBuy.goal, qBuy.progress + 1);
             updateQuests();
@@ -848,11 +813,13 @@
         const container = document.getElementById('chatMessages');
         const div = document.createElement('div');
         div.className = 'chat-message';
-        const displayTag = msg.customTag || (msg.isSpecialAdmin ? '[Фулл разраб]' : (msg.isFriendAdmin ? '[Друн]' : ''));
+        const displayTag = msg.customTag || (msg.isSpecialAdmin ? '[Фулл разраб]' : (msg.isFriendAdmin ? '[Друн]' : (msg.isTester ? '[Тестер]' : '')));
         const displayName = msg.customNick || msg.name;
         let nameHtml = '';
         if (msg.isSpecialAdmin || msg.isFriendAdmin) {
             nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
+        } else if (msg.isTester) {
+            nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`;
         } else {
             nameHtml = `<strong>${escapeHtml(displayName)}</strong>`;
         }
@@ -872,6 +839,7 @@
             text: text,
             isSpecialAdmin: isSpecialAdmin,
             isFriendAdmin: isFriendAdmin,
+            isTester: isTester,
             rankPosition: getPlayerRankPosition(),
             customTag: customTag,
             customNick: customNick,
@@ -883,8 +851,10 @@
 
     function updateAdminVisibility() {
         document.getElementById('openAdminBtn').style.display = (isSpecialAdmin || isFriendAdmin) ? 'inline-block' : 'none';
+        document.getElementById('openTesterBtn').style.display = isTester ? 'inline-block' : 'none';
         document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
+        document.getElementById('activateTesterBtn').style.display = (!isTester && !isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
     }
 
     function closeModal(modal) {
@@ -912,14 +882,14 @@
         wheel.innerHTML = '';
         const n = wheelPrizes.length;
         const angle = 360 / n;
-        wheelPrizes.forEach((prize, i) => {
-            const seg = document.createElement('div');
-            seg.className = 'wheel-segment';
-            seg.style.transform = `rotate(${i * angle}deg) skewY(${90 - angle}deg)`;
-            seg.style.background = i % 2 === 0 ? '#e0a96d' : '#bc6c25';
-            seg.innerHTML = `<span style="transform: skewY(${angle - 90}deg) rotate(${angle/2}deg); display:block;">${prize.label}</span>`;
-            wheel.appendChild(seg);
-        });
+        for (let i = 0; i < n; i++) {
+            const textEl = document.createElement('div');
+            textEl.className = 'wheel-text';
+            const rotation = i * angle + angle/2;
+            textEl.style.transform = `rotate(${rotation}deg) translate(0, -140px) rotate(-${rotation}deg)`;
+            textEl.textContent = wheelPrizes[i].label;
+            wheel.appendChild(textEl);
+        }
     }
     buildWheel();
     function spinWheel() {
@@ -1058,6 +1028,85 @@
         updateUI();
     }
 
+    // Квесты и БП
+    function updateQuests() {
+        const qList = document.getElementById('questsList');
+        qList.innerHTML = '';
+        quests.forEach((q, idx) => {
+            const div = document.createElement('div');
+            div.style.margin = '10px 0';
+            const complete = q.progress >= q.goal;
+            div.innerHTML = `${q.desc} (${Math.min(q.progress, q.goal)}/${q.goal}) ${complete ? '✅' : ''} <button class="shop-btn claimQuestBtn" data-idx="${idx}" ${!complete ? 'disabled' : ''}>Забрать</button>`;
+            qList.appendChild(div);
+        });
+        document.querySelectorAll('.claimQuestBtn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.idx);
+                const q = quests[idx];
+                if (q.progress >= q.goal) {
+                    q.progress = 0;
+                    if (q.reward <= 5 && q.id !== 'prestige1') {
+                        prestigePoints += q.reward;
+                        pushToLeaderboardCR();
+                        if (currentClan) addCRToClan(q.reward);
+                    } else {
+                        cookies += q.reward;
+                    }
+                    addBPXP(50);
+                    updateUI();
+                    updateQuests();
+                    alert('Квест выполнен!');
+                }
+            });
+        });
+    }
+    function addBPXP(amount) {
+        bpXP += amount;
+        while (bpXP >= xpPerLevel && bpLevel < bpMaxLevel) {
+            bpXP -= xpPerLevel;
+            bpLevel++;
+            const reward = bpRewards.find(r => r.level === bpLevel);
+            if (reward) {
+                const rewardText = bpPremium ? reward.premium : reward.free;
+                if (rewardText.includes('CR')) {
+                    const cr = parseInt(rewardText) || 1;
+                    prestigePoints += cr;
+                    pushToLeaderboardCR();
+                    if (currentClan) addCRToClan(cr);
+                } else if (rewardText.includes('🍪')) {
+                    const cookiesAmount = parseInt(rewardText.replace(/[^0-9]/g, '')) || 1000;
+                    cookies += cookiesAmount;
+                }
+                alert(`🎁 Новый уровень Battle Pass! Награда: ${rewardText}`);
+            }
+        }
+        localStorage.setItem('pechenkoBPXP', bpXP);
+        localStorage.setItem('pechenkoBPLevel', bpLevel);
+    }
+    function updateBPUI() {
+        const bpDiv = document.getElementById('bpInfo');
+        const currentXP = bpXP;
+        const currentLevel = bpLevel;
+        bpDiv.innerHTML = `
+            <p>Уровень: ${currentLevel}/${bpMaxLevel}</p>
+            <p>Опыт: ${currentXP}/${xpPerLevel}</p>
+            <div style="background:#333; border-radius:10px; height:20px; margin:10px 0;">
+                <div style="background:linear-gradient(90deg, #bb86fc, #6200ea); width:${(currentXP/xpPerLevel*100)}%; height:100%; border-radius:10px;"></div>
+            </div>
+            <button class="shop-btn" id="buyPremiumBP" ${bpPremium ? 'disabled' : ''}>Купить Premium (100 CR)</button>
+        `;
+        document.getElementById('buyPremiumBP')?.addEventListener('click', () => {
+            if (prestigePoints >= 100) {
+                prestigePoints -= 100;
+                bpPremium = true;
+                localStorage.setItem('pechenkoBPPremium', 'true');
+                updateUI();
+                updateBPUI();
+                alert('Premium Battle Pass активирован!');
+            } else alert('Недостаточно CR');
+        });
+    }
+
     // Обработчики
     document.querySelectorAll('.modal').forEach(modal => {
         const closeBtn = modal.querySelector('[id^="close"]');
@@ -1067,7 +1116,6 @@
     document.getElementById('cookieBtn').addEventListener('click', (e) => {
         const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (1 + getPetBonus('click'));
         cookies += eff; totalClicks++;
-        // квест на клики
         const qClick = quests.find(q => q.id === 'click100');
         if (qClick) qClick.progress = Math.min(qClick.goal, qClick.progress + 1);
         updateUI();
@@ -1142,6 +1190,33 @@
         localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz');
         updateAdminVisibility(); updateUI();
         alert('tr3haszz активирован!');
+    });
+
+    document.getElementById('activateTesterBtn').addEventListener('click', () => {
+        if (isTester) return;
+        const secret = prompt('Пароль тестера:');
+        if (secret === 'tester') {
+            isTester = true;
+            playerName = 'Глист';
+            localStorage.setItem('pechenkoIsTester', 'true');
+            localStorage.setItem('pechenkoPlayerName', 'Глист');
+            updateAdminVisibility();
+            updateUI();
+            alert('Доступ тестера активирован!');
+        } else alert('Неверный пароль');
+    });
+
+    document.getElementById('openTesterBtn').addEventListener('click', () => {
+        document.getElementById('testerModal').classList.add('active');
+    });
+    document.getElementById('closeTesterModal').addEventListener('click', () => closeModal(document.getElementById('testerModal')));
+
+    // Отправка баг-репорта (почта tr3haszz)
+    document.getElementById('sendBugReportBtn').addEventListener('click', () => {
+        const adminEmail = 'miron.s3113@gmail.com';
+        const subject = encodeURIComponent('Баг-репорт от Глист');
+        const body = encodeURIComponent('Опишите найденный баг:\n\n1. Что делали?\n2. Что ожидали?\n3. Что получили?\n\nСпасибо!');
+        window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
     });
 
     document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
@@ -1275,6 +1350,7 @@
         }
         if (isSpecialAdmin) playerName = 'tr3haszz';
         if (isFriendAdmin) playerName = 't1nator';
+        if (isTester) playerName = 'Глист';
         prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
         updateAdminVisibility();
         updateDailyUI();
