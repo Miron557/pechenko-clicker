@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.8</title>
+    <title>Печенько кликер v2.0.9</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -47,8 +47,8 @@
         }
         @keyframes bgPulse { 0%{background-size:100% 100%;} 100%{background-size:120% 120%;} }
         .game-container {
-            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border:1px solid var(--glass-border); border-radius:40px; padding:30px; box-shadow:var(--glass-shadow);
+            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border:1px solid var(--glass-border); border-radius:40px; padding:30px; box-shadow:var(--glass-shadow), 0 0 50px rgba(0,0,0,0.4);
             text-align:center; max-width:900px; width:100%; position:relative; animation: fadeInUp 0.8s ease-out;
         }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
@@ -65,7 +65,7 @@
             text-shadow: var(--accent-glow); letter-spacing:2px;
         }
         .score-display {
-            background:var(--card-bg); backdrop-filter: blur(15px); border-radius:25px;
+            background:var(--card-bg); backdrop-filter: blur(20px); border-radius:25px;
             padding:25px 170px 25px 35px;
             margin:20px 0; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15);
             border:1px solid var(--glass-border); position:relative; overflow:hidden;
@@ -184,7 +184,7 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .pets-btn, .boss-btn, .quests-btn, .bp-btn, .tester-btn, .activate-tester-btn, .vip-btn, .temp-admin-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .pets-btn, .boss-btn, .quests-btn, .bp-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
@@ -211,10 +211,7 @@
             font-weight: 900;
             letter-spacing: 1px;
         }
-        @keyframes vipShine {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
+        @keyframes vipShine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
         .moder-tag {
             background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff);
             background-size: 200% auto;
@@ -237,50 +234,27 @@
             animation: gradientShift 3s ease infinite; font-weight:600;
         }
         .vip-text {
-            background: linear-gradient(90deg, #ffd700, #ffb347, #ffd700);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: vipShine 1.5s linear infinite;
-            font-weight: 600;
+            background: linear-gradient(90deg, #ffd700, #ffb347, #ffd700); background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: vipShine 1.5s linear infinite; font-weight: 600;
         }
         .moder-text {
-            background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: vipShine 1.5s linear infinite;
-            font-weight: 600;
+            background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff); background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: vipShine 1.5s linear infinite; font-weight: 600;
         }
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
         .emoji-picker {
-            display: none;
-            position: absolute;
-            bottom: 60px;
-            left: 10px;
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 10px;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 5px;
-            z-index: 3100;
-            max-height: 200px;
-            overflow-y: auto;
-            backdrop-filter: blur(20px);
+            display: none; position: absolute; bottom: 60px; left: 10px; background: var(--card-bg);
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 10px;
+            grid-template-columns: repeat(8, 1fr); gap: 5px; z-index: 3100;
+            max-height: 200px; overflow-y: auto; backdrop-filter: blur(20px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .emoji-btn {
-            background: transparent;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 10px;
-            transition: background 0.2s;
+            background: transparent; border: none; font-size: 1.4rem; cursor: pointer; padding: 5px;
+            border-radius: 10px; transition: background 0.2s;
             font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
         }
         .emoji-btn:hover { background: var(--btn-hover-bg); }
@@ -292,10 +266,7 @@
         }
         .chat-btn { position: relative; }
         .msg-time { font-size:0.7rem; color:gray; margin-left:8px; }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         @media (max-width:600px) {
             .game-container{padding:20px;}
             .cookie-btn{font-size:110px;}
@@ -310,7 +281,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.8</h1>
+    <h1>🍪 Печенько кликер v2.0.9</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -350,6 +321,7 @@
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
         <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
         <button class="activate-tester-btn" id="activateTesterBtn" style="display: none;">🔍 Активировать тестера</button>
+        <button class="discord-btn" id="openDiscordBtn">🛠️ Дискорд</button>
     </div>
 </div>
 
@@ -530,13 +502,14 @@
     let gradientColor = localStorage.getItem('pechenkoGradientColor') || '#ff4757, #ff6b81';
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
 
-    // Автоматический VIP для админов
+    // Автоматический VIP для админов и временных админов
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) {
             isVIP = true;
             localStorage.setItem('pechenkoIsVIP', 'true');
         }
     }
+    // Проверка истечения временной админки
     if (isTemporaryAdmin && Date.now() > tempAdminExpiry) {
         isTemporaryAdmin = false;
         localStorage.removeItem('pechenkoIsTemporaryAdmin');
@@ -566,6 +539,7 @@
         { id: 'upgrade8', name: '🌑 Тёмная материя', baseCost: 1500000, cps: 50000, count: 0, costMult: 1.35 },
         { id: 'upgrade9', name: '⏳ Временной коллапс', baseCost: 5000000, cps: 250000, count: 0, costMult: 1.38 },
         { id: 'upgrade10', name: '🍪 Вселенная печенья', baseCost: 20000000, cps: 1500000, count: 0, costMult: 1.40 },
+        // Божественные (открываются после покупки всех 10 обычных)
         { id: 'upgrade11', name: '✨ Божественный клик', baseCost: 100000000, cps: 5000000, count: 0, costMult: 1.42, requiresAll: true },
         { id: 'upgrade12', name: '🔮 Печенье судьбы', baseCost: 500000000, cps: 20000000, count: 0, costMult: 1.44, requiresAll: true },
         { id: 'upgrade13', name: '🌠 Звёздная пыль', baseCost: 2000000000, cps: 80000000, count: 0, costMult: 1.46, requiresAll: true },
@@ -1045,7 +1019,6 @@
         const input = document.getElementById('chatInput');
         let text = input.value.trim();
         if (!text) return;
-        // Команды
         if (text.startsWith('/me ')) {
             text = text.replace('/me ', '');
             text = `* ${customNick || playerName} ${text}`;
@@ -1352,8 +1325,6 @@
     document.getElementById('openAdminBtn').addEventListener('click', () => {
         if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
         document.getElementById('adminModal').classList.add('active');
-        document.getElementById('addBillionCookiesBtn').classList.toggle('hidden', !isSpecialAdmin && !isFriendAdmin);
-        document.getElementById('adminGive10CR').classList.toggle('hidden', !isSpecialAdmin && !isFriendAdmin);
         document.getElementById('customTagInput').value = customTag;
         document.getElementById('customNickInput').value = customNick;
         document.getElementById('gradientTextCheckbox').checked = gradientTextEnabled;
@@ -1552,7 +1523,10 @@
     });
     document.getElementById('closeBPModal').addEventListener('click', () => closeModal(document.getElementById('bpModal')));
 
-    // Убраны глобальные функции activateSpecialAdmin и activateFriendAdmin
+    // Discord кнопка
+    document.getElementById('openDiscordBtn').addEventListener('click', () => {
+        window.open('https://discord.gg/ВАШ_СЕРВЕР', '_blank');
+    });
 
     function loadGame() {
         const saved = localStorage.getItem('pechenkoClickerSave');
