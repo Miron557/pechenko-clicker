@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v1.04.6 Fix</title>
+    <title>Печенько кликер v1.05.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -184,12 +184,12 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .wheel-btn, .tagshop-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
         }
-        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .activate-special-btn:hover {
+        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .activate-special-btn:hover, .wheel-btn:hover, .tagshop-btn:hover {
             background:var(--accent); color:white; border-color:var(--accent);
         }
         .bottom-panel { margin-top:25px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
@@ -217,6 +217,10 @@
         }
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
+        /* Колесо */
+        .wheel-container { position:relative; width:300px; height:300px; margin:20px auto; }
+        .wheel { width:100%; height:100%; border-radius:50%; border:4px solid var(--accent); position:relative; overflow:hidden; transition: transform 4s cubic-bezier(0.2, 0.8, 0.3, 1); }
+        .wheel-segment { position:absolute; width:50%; height:50%; transform-origin:100% 100%; left:0; top:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:white; text-shadow:1px 1px 3px black; }
         @media (max-width:600px) {
             .game-container{padding:20px;}
             .cookie-btn{font-size:110px;}
@@ -260,12 +264,14 @@
         <button class="chat-btn" id="openChatBtn">💬 Чат</button>
         <button class="achievements-btn" id="openAchievementsBtn">🎖️ Достижения</button>
         <button class="clan-btn" id="openClanBtn">👥 Кланы</button>
+        <button class="wheel-btn" id="openWheelBtn">🎡 Колесо</button>
+        <button class="tagshop-btn" id="openTagShopBtn">🏷️ Теги</button>
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
         <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
     </div>
 </div>
 
-<!-- Модальные окна (без изменений) -->
+<!-- Модальные окна -->
 <div class="modal" id="adminModal">
     <div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls">
         <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
@@ -300,6 +306,30 @@
         <table id="clanLeaderboardTable"><thead><tr><th>#</th><th>Клан</th><th>Общий CR</th></tr></thead><tbody></tbody></table>
         <button id="closeClanModal" style="margin-top:15px;">Закрыть</button></div>
 </div>
+<div class="modal" id="wheelModal">
+    <div class="modal-content" style="text-align:center;">
+        <h3>🎡 Колесо фортуны</h3>
+        <div class="wheel-container">
+            <div class="wheel" id="wheel"></div>
+        </div>
+        <div id="wheelTimer" style="margin:10px 0; font-weight:600;"></div>
+        <button id="spinWheelBtn">Крутить</button>
+        <button id="closeWheelModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
+<div class="modal" id="tagShopModal">
+    <div class="modal-content">
+        <h3>🏷️ Магазин тегов</h3>
+        <p>Купите тег, который будет виден в чате всем!</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin:15px 0;">
+            <button class="shop-btn buyTagBtn" data-tag="[Новичок]" data-cost="1000">[Новичок] - 1 000 🍪</button>
+            <button class="shop-btn buyTagBtn" data-tag="[Пекарь]" data-cost="10000">[Пекарь] - 10 000 🍪</button>
+            <button class="shop-btn buyTagBtn" data-tag="[Магнат]" data-cost="100000">[Магнат] - 100 000 🍪</button>
+            <button class="shop-btn" id="buyCustomTagBtn">Свой тег - 1 000 000 🍪</button>
+        </div>
+        <button id="closeTagShopModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -333,6 +363,8 @@
     let customNick = localStorage.getItem('pechenkoCustomNick') || '';
     let gradientTextEnabled = localStorage.getItem('pechenkoGradientText') === 'true';
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
+    let wheelLastSpin = parseInt(localStorage.getItem('wheelLastSpin') || '0');
+    const WHEEL_COOLDOWN = 4 * 60 * 60 * 1000;
 
     const DAILY_KEY = 'pechenkoDaily';
     let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
@@ -693,6 +725,89 @@
         setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
     }
 
+    // Колесо фортуны
+    const wheelPrizes = [
+        { label: '500 🍪', value: ()=> { cookies += 500; updateUI(); } },
+        { label: '1000 🍪', value: ()=> { cookies += 1000; updateUI(); } },
+        { label: '5000 🍪', value: ()=> { cookies += 5000; updateUI(); } },
+        { label: '+1 CR', value: ()=> { prestigePoints++; pushToLeaderboardCR(); updateUI(); } },
+        { label: '+10 CR', value: ()=> { prestigePoints += 10; pushToLeaderboardCR(); updateUI(); } },
+        { label: 'x2 клик 30с', value: ()=> startEvent('rain') },
+        { label: 'x5 клик 10с', value: ()=> startEvent('gold') },
+        { label: 'Ничего', value: ()=> {} }
+    ];
+    function buildWheel() {
+        const wheel = document.getElementById('wheel');
+        wheel.innerHTML = '';
+        const n = wheelPrizes.length;
+        const angle = 360 / n;
+        wheelPrizes.forEach((prize, i) => {
+            const seg = document.createElement('div');
+            seg.className = 'wheel-segment';
+            seg.style.transform = `rotate(${i * angle}deg) skewY(${90 - angle}deg)`;
+            seg.style.background = i % 2 === 0 ? '#e0a96d' : '#bc6c25';
+            seg.innerHTML = `<span style="transform: skewY(${angle - 90}deg) rotate(${angle/2}deg); display:block;">${prize.label}</span>`;
+            wheel.appendChild(seg);
+        });
+    }
+    buildWheel();
+    function spinWheel() {
+        if (!canSpinWheel()) return;
+        const wheel = document.getElementById('wheel');
+        const currentRotation = parseFloat(wheel.dataset.rotation || '0');
+        const extraSpins = 5 + Math.floor(Math.random() * 5);
+        const segmentAngle = 360 / wheelPrizes.length;
+        const randomSegment = Math.floor(Math.random() * wheelPrizes.length);
+        const targetRotation = currentRotation + extraSpins * 360 + (randomSegment * segmentAngle) + (segmentAngle / 2);
+        wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
+        wheel.style.transform = `rotate(${targetRotation}deg)`;
+        wheel.dataset.rotation = targetRotation;
+        document.getElementById('spinWheelBtn').disabled = true;
+        setTimeout(() => {
+            const prize = wheelPrizes[randomSegment];
+            prize.value();
+            alert(`Вы выиграли: ${prize.label}`);
+            wheelLastSpin = Date.now();
+            localStorage.setItem('wheelLastSpin', wheelLastSpin);
+            updateWheelTimer();
+            document.getElementById('spinWheelBtn').disabled = false;
+        }, 4200);
+    }
+    function canSpinWheel() {
+        if (isSpecialAdmin || isFriendAdmin) return true;
+        return Date.now() - wheelLastSpin >= WHEEL_COOLDOWN;
+    }
+    function updateWheelTimer() {
+        const timerDiv = document.getElementById('wheelTimer');
+        if (isSpecialAdmin || isFriendAdmin) {
+            timerDiv.textContent = 'Админ – без ограничений';
+            document.getElementById('spinWheelBtn').disabled = false;
+            return;
+        }
+        const remaining = WHEEL_COOLDOWN - (Date.now() - wheelLastSpin);
+        if (remaining <= 0) {
+            timerDiv.textContent = 'Можно крутить!';
+            document.getElementById('spinWheelBtn').disabled = false;
+        } else {
+            const h = Math.floor(remaining / 3600000);
+            const m = Math.floor((remaining % 3600000) / 60000);
+            timerDiv.textContent = `До следующей попытки: ${h}ч ${m}м`;
+            document.getElementById('spinWheelBtn').disabled = true;
+            setTimeout(updateWheelTimer, 10000);
+        }
+    }
+
+    // Магазин тегов
+    function buyTag(tag, cost) {
+        if (cookies < cost) { alert('Недостаточно печенек!'); return; }
+        cookies -= cost;
+        customTag = tag;
+        localStorage.setItem('pechenkoCustomTag', customTag);
+        updateUI();
+        alert(`Тег "${tag}" куплен!`);
+    }
+
+    // Обработчики событий
     document.querySelectorAll('.modal').forEach(modal => {
         const closeBtn = modal.querySelector('[id^="close"]');
         if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
@@ -809,6 +924,32 @@
         if (name) joinClan(name);
     });
 
+    // Колесо фортуны
+    document.getElementById('openWheelBtn').addEventListener('click', () => {
+        document.getElementById('wheelModal').classList.add('active');
+        updateWheelTimer();
+    });
+    document.getElementById('spinWheelBtn').addEventListener('click', spinWheel);
+    document.getElementById('closeWheelModal').addEventListener('click', () => closeModal(document.getElementById('wheelModal')));
+
+    // Магазин тегов
+    document.getElementById('openTagShopBtn').addEventListener('click', () => document.getElementById('tagShopModal').classList.add('active'));
+    document.getElementById('closeTagShopModal').addEventListener('click', () => closeModal(document.getElementById('tagShopModal')));
+    document.querySelectorAll('.buyTagBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tag = btn.dataset.tag;
+            const cost = parseInt(btn.dataset.cost);
+            buyTag(tag, cost);
+        });
+    });
+    document.getElementById('buyCustomTagBtn').addEventListener('click', () => {
+        const newTag = prompt('Введите свой тег (до 12 символов):');
+        if (!newTag) return;
+        const formatted = newTag.startsWith('[') ? newTag : `[${newTag}]`;
+        if (formatted.length > 14) { alert('Слишком длинный!'); return; }
+        buyTag(formatted, 1000000);
+    });
+
     window.activateSpecialAdmin = function() {
         if (isSpecialAdmin) return;
         const secret = prompt('Секретный пароль:');
@@ -865,6 +1006,7 @@
     updateCookiesPerSecond();
     updateUI();
     scheduleRandomEvent();
+    updateWheelTimer();
 </script>
 </body>
 </html>
