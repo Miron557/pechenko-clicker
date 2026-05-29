@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.6</title>
+    <title>Печенько кликер v2.0.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -282,6 +282,7 @@
             padding: 5px;
             border-radius: 10px;
             transition: background 0.2s;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
         }
         .emoji-btn:hover {
             background: var(--btn-hover-bg);
@@ -332,7 +333,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.6</h1>
+    <h1>🍪 Печенько кликер v2.0.7</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -375,7 +376,7 @@
     </div>
 </div>
 
-<!-- Модальные окна (все из v2.0.5 fix) -->
+<!-- Модальные окна (все из v2.0.6) -->
 <div class="modal" id="adminModal">
     <div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls">
         <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
@@ -927,16 +928,29 @@
     let audioCtx = null;
     function playNotificationSound() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.frequency.value = 800;
-        oscillator.type = 'sine';
-        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.1);
+        const now = audioCtx.currentTime;
+        // Первый тон
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.frequency.value = 880;
+        osc1.type = 'sine';
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc1.start(now);
+        osc1.stop(now + 0.08);
+        // Второй тон
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.frequency.value = 1100;
+        osc2.type = 'sine';
+        gain2.gain.setValueAtTime(0.3, now + 0.08);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+        osc2.start(now + 0.08);
+        osc2.stop(now + 0.16);
     }
 
     let unreadCount = 0;
@@ -1390,7 +1404,7 @@
     });
     document.getElementById('closeChatModal').addEventListener('click', () => {
         chatModalActive = false;
-        // closeModal будет вызвана автоматически через общий обработчик, но мы можем и сами
+        // closeModal будет вызвана автоматически через общий обработчик
     });
     document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
     document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
