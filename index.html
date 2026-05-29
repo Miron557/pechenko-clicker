@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.8</title>
+    <title>Печенько кликер v2.0.9.9</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -173,7 +173,7 @@
         .modal.closing { opacity:0; }
         .modal-content {
             background:var(--glass-bg); backdrop-filter:blur(30px); border:1px solid var(--glass-border);
-            border-radius:35px; padding:35px; max-width:650px; width:90%;
+            border-radius:35px; padding:35px; max-width:650px; width:90%; max-height:80vh; overflow-y:auto;
             box-shadow:0 25px 60px rgba(0,0,0,0.7); text-align:left; color:var(--text);
             animation:modalPop 0.4s ease;
         }
@@ -250,7 +250,6 @@
         .bold-text { font-weight: 900; }
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
-        /* эмодзи-пикер удалён */
         .chat-input-area { position: relative; display: flex; align-items: center; gap: 5px; }
         .unread-badge {
             position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; border-radius: 50%;
@@ -275,7 +274,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.8</h1>
+    <h1>🍪 Печенько кликер v2.0.9.9</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -491,7 +490,9 @@
     let customTag = localStorage.getItem('pechenkoCustomTag') || '';
     let customNick = localStorage.getItem('pechenkoCustomNick') || '';
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
-    let adminHidden = false;
+    let adminHidden = localStorage.getItem('pechenkoAdminHidden') === 'true';
+    let activeRoleTag = localStorage.getItem('pechenkoActiveRoleTag') || '';
+    let activeRoleNick = localStorage.getItem('pechenkoActiveRoleNick') || '';
 
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); }
@@ -853,13 +854,17 @@
         const div = document.createElement('div'); div.className = 'chat-message';
         let displayTag = msg.customTag || '';
         if (!displayTag) {
-            if (msg.isSpecialAdmin) displayTag = '[Фулл разраб]'; else if (msg.isFriendAdmin) displayTag = '[Друн]';
-            else if (msg.isTester) displayTag = '[Тестер]'; else if (msg.isModer) displayTag = '[Модер]'; else if (msg.isVIP) displayTag = '[VIP]';
+            if (msg.isSpecialAdmin && !adminHidden) displayTag = '[Фулл разраб]';
+            else if (msg.isFriendAdmin && !adminHidden) displayTag = '[Друн]';
+            else if (msg.isTester) displayTag = '[Тестер]';
+            else if (msg.isModer) displayTag = '[Модер]';
+            else if (msg.isVIP) displayTag = '[VIP]';
         }
         const displayName = msg.customNick || msg.name;
         let nameHtml = '';
-        if (msg.isSpecialAdmin || msg.isFriendAdmin) { nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
-        else if (msg.isModer) { nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
+        if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) {
+            nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
+        } else if (msg.isModer) { nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
         else if (msg.isVIP) { nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
         else if (msg.isTester) { nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`; }
         else { nameHtml = `<strong>${escapeHtml(displayName)}</strong>`; }
@@ -867,7 +872,7 @@
         let textHtml = escapeHtml(msg.text);
         if (msg.isVIP) textHtml = `<span class="vip-text">${escapeHtml(msg.text)}</span>`;
         if (msg.isModer) textHtml = `<span class="moder-text">${escapeHtml(msg.text)}</span>`;
-        if (msg.isSpecialAdmin || msg.isFriendAdmin) { textHtml = `<span class="bold-text">${textHtml}</span>`; }
+        if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) { textHtml = `<span class="bold-text">${textHtml}</span>`; }
         div.innerHTML = `${nameHtml}: ${textHtml} <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
         container.appendChild(div); container.scrollTop = container.scrollHeight;
     }
@@ -883,9 +888,10 @@
     }
 
     function updateAdminVisibility() {
-        const show = (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) && !adminHidden;
-        document.getElementById('openAdminBtn').style.display = show ? 'inline-block' : 'none';
-        document.getElementById('openTesterBtn').style.display = isTester ? 'inline-block' : 'none';
+        const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry);
+        const showAdminBtn = isAdmin && !adminHidden;
+        document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
+        document.getElementById('openTesterBtn').style.display = (isTester && !isAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateTesterBtn').style.display = (!isTester && !isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
@@ -1025,30 +1031,43 @@
     document.getElementById('adminFreezeEvents').addEventListener('click', () => { eventsFrozen = true; alert('Ивенты заморожены.'); });
     document.getElementById('adminUnfreezeEvents').addEventListener('click', () => { eventsFrozen = false; alert('Ивенты разморожены.'); });
 
-    // Переключение ролей
+    // Переключение ролей (не трогаем isSpecialAdmin/isFriendAdmin)
     document.getElementById('switchToModer').addEventListener('click', () => {
-        if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
-        isModer = true; moderExpiry = Date.now() + 30 * 86400000;
-        localStorage.setItem('pechenkoIsModer', 'true');
-        localStorage.setItem('pechenkoModerExpiry', moderExpiry.toString());
-        updateUI(); alert('Роль изменена на Модера');
+        activeRoleTag = '[Модер]';
+        activeRoleNick = playerName;
+        localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag);
+        localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick);
+        customTag = activeRoleTag; customNick = activeRoleNick;
+        updateUI();
+        alert('Теперь вы отображаетесь как Модер');
     });
     document.getElementById('switchToTester').addEventListener('click', () => {
-        isTester = true;
-        localStorage.setItem('pechenkoIsTester', 'true');
-        updateUI(); alert('Роль изменена на Тестера');
+        activeRoleTag = '[Тестер]';
+        activeRoleNick = 'Глист';
+        localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag);
+        localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick);
+        customTag = activeRoleTag; customNick = activeRoleNick;
+        updateUI();
+        alert('Теперь вы отображаетесь как Тестер');
     });
     document.getElementById('switchToAdmin').addEventListener('click', () => {
-        isModer = false; localStorage.removeItem('pechenkoIsModer'); localStorage.removeItem('pechenkoModerExpiry');
-        isTester = false; localStorage.removeItem('pechenkoIsTester');
-        updateUI(); alert('Вернули админские права');
+        activeRoleTag = '';
+        activeRoleNick = '';
+        localStorage.removeItem('pechenkoActiveRoleTag');
+        localStorage.removeItem('pechenkoActiveRoleNick');
+        customTag = ''; customNick = '';
+        updateUI();
+        alert('Отображение сброшено, вы снова админ');
     });
-    // Скрыть админку
     document.getElementById('hideAdminBtn').addEventListener('click', () => {
         adminHidden = !adminHidden;
+        localStorage.setItem('pechenkoAdminHidden', adminHidden.toString());
         updateAdminVisibility();
+        if (adminHidden) { document.body.classList.add('admin-hidden'); }
+        else { document.body.classList.remove('admin-hidden'); }
         document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
     });
+    if (adminHidden) { document.body.classList.add('admin-hidden'); }
 
     document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
 
@@ -1117,8 +1136,9 @@
         if (saved) { const data = JSON.parse(saved); cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1; prestigePoints = data.prestigePoints || 0; upgrades.forEach((u,i) => u.count = data.upgrades[i].count || 0); updateCookiesPerSecond(); }
         if (localStorage.getItem('cookieClickerTheme') === 'light') document.body.classList.add('light');
         if (!playerName) { playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним'; localStorage.setItem('pechenkoPlayerName', playerName); }
-        if (isSpecialAdmin) playerName = 'tr3haszz'; if (isFriendAdmin) playerName = 't1nator'; if (isTester) playerName = 'Глист';
+        if (isSpecialAdmin) playerName = 'tr3haszz'; if (isFriendAdmin) playerName = 't1nator'; if (isTester && !isSpecialAdmin && !isFriendAdmin) playerName = 'Глист';
         prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
+        if (activeRoleTag) { customTag = activeRoleTag; customNick = activeRoleNick; }
         updateAdminVisibility(); updateDailyUI(); updateQuests(); updateBossUI();
     }
     function saveGame() {
