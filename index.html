@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.5 fix</title>
+    <title>Печенько кликер v2.0.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -256,6 +256,69 @@
         }
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
+        /* Чат-фичи */
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 10px;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            z-index: 3100;
+            max-height: 200px;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .emoji-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+        .emoji-btn:hover {
+            background: var(--btn-hover-bg);
+        }
+        .chat-input-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .unread-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .chat-btn {
+            position: relative;
+        }
+        .msg-time {
+            font-size:0.7rem;
+            color:gray;
+            margin-left:8px;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
         @media (max-width:600px) {
             .game-container{padding:20px;}
             .cookie-btn{font-size:110px;}
@@ -269,7 +332,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.5 fix</h1>
+    <h1>🍪 Печенько кликер v2.0.6</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -312,7 +375,7 @@
     </div>
 </div>
 
-<!-- Модальные окна -->
+<!-- Модальные окна (все из v2.0.5 fix) -->
 <div class="modal" id="adminModal">
     <div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls">
         <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
@@ -341,9 +404,17 @@
         <button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button></div>
 </div>
 <div class="modal" id="chatModal">
-    <div class="modal-content"><h3>💬 Мировой чат</h3><div class="chat-messages" id="chatMessages"></div>
-        <input type="text" id="chatInput" placeholder="Введите сообщение..." style="width:70%;"><button id="sendChatBtn">Отправить</button>
-        <button id="closeChatModal" style="margin-top:15px;">Закрыть</button></div>
+    <div class="modal-content">
+        <h3>💬 Мировой чат</h3>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <button id="emojiPickerBtn" style="font-size:1.4rem; background:transparent; border:none; cursor:pointer;">😀</button>
+            <div class="emoji-picker" id="emojiPicker"></div>
+            <input type="text" id="chatInput" placeholder="Введите сообщение..." style="flex:1;">
+            <button id="sendChatBtn">Отправить</button>
+        </div>
+        <button id="closeChatModal" style="margin-top:10px;">Закрыть</button>
+    </div>
 </div>
 <div class="modal" id="achievementsModal">
     <div class="modal-content"><h3>🎖️ Достижения</h3><ul class="achievement-list" id="achievementList"></ul><button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button></div>
@@ -536,14 +607,12 @@
     ];
     let bpPremium = localStorage.getItem('pechenkoBPPremium') === 'true';
 
-    // Проверка срока модератора
     if (isModer && Date.now() > moderExpiry) {
         isModer = false;
         localStorage.removeItem('pechenkoIsModer');
         localStorage.removeItem('pechenkoModerExpiry');
     }
 
-    // ... (все функции ниже должны быть скопированы из рабочей версии 2.0.4 полностью)
     function canClaimDaily() {
         const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
         if (now - last < oneDay) return false;
@@ -830,6 +899,64 @@
         });
     }
     function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // Чат: эмодзи, время, уведомления
+    const emojiList = ['😀','😂','😍','🥺','😎','🤔','😴','😡','👍','👎','🎉','🍪','💎','🌟','💬','❤️','🔥','⭐','🎁','📧','💡','⌛','🚀','🍕','🎂','☕','🌈','🎵','🎮','⚽','📱','💻','🖥️','📷','🔑','💰','🛒','🎡','🏆','🐱','🐶','🦊','🐼','🐨','🐸','🦄','🐙','🍎','🍊','🍋','🍉','🍇','🍓','🍒','🥝','🍔','🌮','🍩','🍿','🥤','🍹','🍾','🎄','🎃','🎈','🎊','🎀','🎁','🏅','🥇','🥈','🥉','💍','🕶️','👑','💣','🧨','🎯','🔮','📌','✂️','🖊️','📅'];
+    const emojiPicker = document.getElementById('emojiPicker');
+    emojiList.forEach(emoji => {
+        const btn = document.createElement('button');
+        btn.className = 'emoji-btn';
+        btn.textContent = emoji;
+        btn.addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            input.value += emoji;
+            input.focus();
+            emojiPicker.style.display = 'none';
+        });
+        emojiPicker.appendChild(btn);
+    });
+    document.getElementById('emojiPickerBtn').addEventListener('click', () => {
+        emojiPicker.style.display = emojiPicker.style.display === 'grid' ? 'none' : 'grid';
+    });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.chat-input-area')) {
+            emojiPicker.style.display = 'none';
+        }
+    });
+
+    let audioCtx = null;
+    function playNotificationSound() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.1);
+    }
+
+    let unreadCount = 0;
+    let chatModalActive = false;
+    const chatBtn = document.getElementById('openChatBtn');
+    const badge = document.createElement('span');
+    badge.className = 'unread-badge hidden';
+    badge.textContent = '0';
+    chatBtn.style.position = 'relative';
+    chatBtn.appendChild(badge);
+
+    function updateBadge() {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+
     function renderChatMessage(msg) {
         const container = document.getElementById('chatMessages');
         const div = document.createElement('div');
@@ -859,11 +986,23 @@
         let textHtml = msg.gradientText ? `<span class="gradient-text">${escapeHtml(msg.text)}</span>` : escapeHtml(msg.text);
         if (!msg.gradientText && msg.isVIP) textHtml = `<span class="vip-text">${escapeHtml(msg.text)}</span>`;
         if (!msg.gradientText && msg.isModer) textHtml = `<span class="moder-text">${escapeHtml(msg.text)}</span>`;
-        div.innerHTML = `${nameHtml}: ${textHtml}`;
+        div.innerHTML = `${nameHtml}: ${textHtml} <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
     }
-    onChildAdded(chatRef, snap => { const m = snap.val(); if (m) renderChatMessage(m); });
+
+    onChildAdded(chatRef, snap => {
+        const m = snap.val();
+        if (m) {
+            renderChatMessage(m);
+            if (!chatModalActive) {
+                unreadCount++;
+                updateBadge();
+                playNotificationSound();
+            }
+        }
+    });
+
     function sendChatMessage() {
         const input = document.getElementById('chatInput');
         const text = input.value.trim();
@@ -1243,9 +1382,21 @@
         document.getElementById('leaderboardCRTable').classList.remove('hidden');
     });
 
-    document.getElementById('openChatBtn').addEventListener('click', () => document.getElementById('chatModal').classList.add('active'));
+    document.getElementById('openChatBtn').addEventListener('click', () => {
+        document.getElementById('chatModal').classList.add('active');
+        chatModalActive = true;
+        unreadCount = 0;
+        updateBadge();
+    });
+    document.getElementById('closeChatModal').addEventListener('click', () => {
+        chatModalActive = false;
+        // closeModal будет вызвана автоматически через общий обработчик, но мы можем и сами
+    });
     document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
     document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
+    document.getElementById('chatInput').addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key === 'Enter') sendChatMessage();
+    });
 
     document.getElementById('openAchievementsBtn').addEventListener('click', () => {
         renderAchievements();
