@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.9</title>
+    <title>Печенько кликер v2.0.9.10</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -274,7 +274,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.9</h1>
+    <h1>🍪 Печенько кликер v2.0.9.10</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -824,7 +824,7 @@
     }
     function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-    // Чат (без эмодзи)
+    // Чат
     let audioCtx = null;
     function playNotificationSound() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1063,11 +1063,9 @@
         adminHidden = !adminHidden;
         localStorage.setItem('pechenkoAdminHidden', adminHidden.toString());
         updateAdminVisibility();
-        if (adminHidden) { document.body.classList.add('admin-hidden'); }
-        else { document.body.classList.remove('admin-hidden'); }
         document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
     });
-    if (adminHidden) { document.body.classList.add('admin-hidden'); }
+    if (adminHidden) { /* никаких классов на body не вешаем, управляем через JS */ }
 
     document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
 
