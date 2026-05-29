@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9</title>
+    <title>Печенько кликер v2.0.9.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -281,7 +281,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9</h1>
+    <h1>🍪 Печенько кликер v2.0.9.1</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -341,6 +341,7 @@
                 <button id="addManyCookiesBtn">+1 000 000 печенек</button>
                 <button id="addBillionCookiesBtn">+1 000 000 000 печенек</button>
                 <button id="addTrillionCookiesBtn">+1 000 000 000 000 печенек</button>
+                <button id="add100BillionBtn">+100 000 000 000 печенек</button>
                 <button id="adminStartEvent">Дождь x2</button>
                 <button id="adminSetClick2">Клик x2</button>
                 <button id="adminResetClick">Сброс клика</button>
@@ -502,14 +503,12 @@
     let gradientColor = localStorage.getItem('pechenkoGradientColor') || '#ff4757, #ff6b81';
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
 
-    // Автоматический VIP для админов и временных админов
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) {
             isVIP = true;
             localStorage.setItem('pechenkoIsVIP', 'true');
         }
     }
-    // Проверка истечения временной админки
     if (isTemporaryAdmin && Date.now() > tempAdminExpiry) {
         isTemporaryAdmin = false;
         localStorage.removeItem('pechenkoIsTemporaryAdmin');
@@ -539,7 +538,6 @@
         { id: 'upgrade8', name: '🌑 Тёмная материя', baseCost: 1500000, cps: 50000, count: 0, costMult: 1.35 },
         { id: 'upgrade9', name: '⏳ Временной коллапс', baseCost: 5000000, cps: 250000, count: 0, costMult: 1.38 },
         { id: 'upgrade10', name: '🍪 Вселенная печенья', baseCost: 20000000, cps: 1500000, count: 0, costMult: 1.40 },
-        // Божественные (открываются после покупки всех 10 обычных)
         { id: 'upgrade11', name: '✨ Божественный клик', baseCost: 100000000, cps: 5000000, count: 0, costMult: 1.42, requiresAll: true },
         { id: 'upgrade12', name: '🔮 Печенье судьбы', baseCost: 500000000, cps: 20000000, count: 0, costMult: 1.44, requiresAll: true },
         { id: 'upgrade13', name: '🌠 Звёздная пыль', baseCost: 2000000000, cps: 80000000, count: 0, costMult: 1.46, requiresAll: true },
@@ -1347,6 +1345,7 @@
     document.getElementById('addManyCookiesBtn').addEventListener('click', () => { cookies += 1000000; updateUI(); });
     document.getElementById('addBillionCookiesBtn').addEventListener('click', () => { cookies += 1e9; updateUI(); });
     document.getElementById('addTrillionCookiesBtn').addEventListener('click', () => { cookies += 1e12; updateUI(); });
+    document.getElementById('add100BillionBtn').addEventListener('click', () => { cookies += 1e11; updateUI(); alert('100 миллиардов печенек добавлено!'); });
     document.getElementById('adminStartEvent').addEventListener('click', () => startEvent('rain'));
     document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; updateUI(); });
     document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; updateUI(); });
