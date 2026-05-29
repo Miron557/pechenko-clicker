@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.6</title>
+    <title>Печенько кликер v2.0.9.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -229,9 +229,7 @@
         }
         @keyframes gradientShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
         .gradient-text {
-            background: linear-gradient(45deg, #ff4757, #ff6b81, #ff4757); background-size:200% 200%;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: gradientShift 3s ease infinite; font-weight:600;
+            /* Убран градиент, оставлен жирный текст */
         }
         .vip-text {
             background: linear-gradient(90deg, #ffd700, #ffb347, #ffd700); background-size: 200% auto;
@@ -243,6 +241,7 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             animation: vipShine 1.5s linear infinite; font-weight: 600;
         }
+        .bold-text { font-weight: 900; } /* Жирный текст для админов */
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
         .emoji-picker {
@@ -281,7 +280,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.6</h1>
+    <h1>🍪 Печенько кликер v2.0.9.7</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -330,29 +329,13 @@
         <div id="adminControls">
             <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
             <div style="margin-bottom:12px;"><label>Кастомный ник: <input type="text" id="customNickInput" placeholder="Никнейм" maxlength="16"></label></div>
-            <div style="margin-bottom:12px;"><label><input type="checkbox" id="gradientTextCheckbox"> Градиентный текст сообщений</label></div>
-            <div style="margin-bottom:12px;"><label>Цвет градиента (CSS): <input type="text" id="gradientColorInput" placeholder="#ff4757, #ff6b81" value="#ff4757, #ff6b81"></label></div>
             <button id="saveCustomBtn">Сохранить настройки</button>
             <hr style="margin:15px 0; border-color:var(--glass-border);">
             <div class="admin-grid">
                 <button id="addCookiesBtn">+1 000 печенек</button>
-                <button id="addManyCookiesBtn">+1 000 000 печенек</button>
-                <button id="addBillionCookiesBtn">+1 000 000 000 печенек</button>
                 <button id="addTrillionCookiesBtn">+1 000 000 000 000 печенек</button>
-                <button id="add100BillionBtn">+100 000 000 000 печенек</button>
-                <div style="display:flex; gap:5px; margin-top:5px;">
-                    <input type="number" id="customAmountInput" placeholder="Своя сумма" style="flex:1; padding:10px; border-radius:15px; border:1px solid var(--btn-border); background:var(--btn-bg); color:var(--text);" min="1" step="any">
-                    <button id="addCustomAmountBtn" style="padding:10px 15px;">Выдать</button>
-                </div>
-                <button id="adminStartEvent">Дождь x2</button>
                 <button id="adminSetClick2">Клик x2</button>
                 <button id="adminResetClick">Сброс клика</button>
-                <button id="adminGive10CR">+10 CR</button>
-                <button id="adminFreezeEvents">Заморозить ивенты</button>
-                <button id="adminUnfreezeEvents">Разморозить ивенты</button>
-                <button id="adminClearChat">Очистить чат (локально)</button>
-                <button id="adminSimulateOffline">Симулировать 1ч оффлайн</button>
-                <button id="adminFullReset">Полный сброс</button>
                 <button id="adminGiftT1nator">🎁 Подарок для t1nator (+1 трлн)</button>
             </div>
         </div>
@@ -487,8 +470,6 @@
     let currentClan = localStorage.getItem('pechenkoClan') || null;
     let customTag = localStorage.getItem('pechenkoCustomTag') || '';
     let customNick = localStorage.getItem('pechenkoCustomNick') || '';
-    let gradientTextEnabled = localStorage.getItem('pechenkoGradientText') === 'true';
-    let gradientColor = localStorage.getItem('pechenkoGradientColor') || '#ff4757, #ff6b81';
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
 
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
@@ -874,9 +855,11 @@
         else if (msg.isTester) { nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`; }
         else { nameHtml = `<strong>${escapeHtml(displayName)}</strong>`; }
         if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
-        let textHtml = msg.gradientText ? `<span class="gradient-text" style="background: linear-gradient(45deg, ${gradientColor}); background-size:200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 3s ease infinite; font-weight:600;">${escapeHtml(msg.text)}</span>` : escapeHtml(msg.text);
-        if (!msg.gradientText && msg.isVIP) textHtml = `<span class="vip-text">${escapeHtml(msg.text)}</span>`;
-        if (!msg.gradientText && msg.isModer) textHtml = `<span class="moder-text">${escapeHtml(msg.text)}</span>`;
+        // Убрали градиент, текст сообщений админов теперь просто жирный
+        let textHtml = escapeHtml(msg.text);
+        if (msg.isVIP) textHtml = `<span class="vip-text">${escapeHtml(msg.text)}</span>`;
+        if (msg.isModer) textHtml = `<span class="moder-text">${escapeHtml(msg.text)}</span>`;
+        if (msg.isSpecialAdmin || msg.isFriendAdmin) { textHtml = `<span class="bold-text">${textHtml}</span>`; }
         div.innerHTML = `${nameHtml}: ${textHtml} <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
         container.appendChild(div); container.scrollTop = container.scrollHeight;
     }
@@ -887,7 +870,7 @@
         const input = document.getElementById('chatInput'); let text = input.value.trim(); if (!text) return;
         if (text.startsWith('/me ')) { text = text.replace('/me ', ''); text = `* ${customNick || playerName} ${text}`; }
         else if (text === '/cookie') { text = '🍪 Печенька!'; } else if (text === '/dance') { text = '🕺💃🕺💃'; }
-        push(chatRef, { name: customNick || playerName, text: text, isSpecialAdmin: isSpecialAdmin, isFriendAdmin: isFriendAdmin, isTester: isTester, isVIP: isVIP, isModer: isModer, rankPosition: getPlayerRankPosition(), customTag: customTag, customNick: customNick, gradientText: gradientTextEnabled, timestamp: serverTimestamp() });
+        push(chatRef, { name: customNick || playerName, text: text, isSpecialAdmin: isSpecialAdmin, isFriendAdmin: isFriendAdmin, isTester: isTester, isVIP: isVIP, isModer: isModer, rankPosition: getPlayerRankPosition(), customTag: customTag, customNick: customNick, timestamp: serverTimestamp() });
         input.value = '';
     }
 
@@ -1010,36 +993,18 @@
         if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
         document.getElementById('adminModal').classList.add('active');
         document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick;
-        document.getElementById('gradientTextCheckbox').checked = gradientTextEnabled; document.getElementById('gradientColorInput').value = gradientColor;
     });
 
     document.getElementById('saveCustomBtn').addEventListener('click', () => {
         customTag = document.getElementById('customTagInput').value.trim(); customNick = document.getElementById('customNickInput').value.trim();
-        gradientTextEnabled = document.getElementById('gradientTextCheckbox').checked; gradientColor = document.getElementById('gradientColorInput').value.trim();
         localStorage.setItem('pechenkoCustomTag', customTag); localStorage.setItem('pechenkoCustomNick', customNick);
-        localStorage.setItem('pechenkoGradientText', gradientTextEnabled.toString()); localStorage.setItem('pechenkoGradientColor', gradientColor);
         alert('Сохранено!');
     });
 
     document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; updateUI(); });
-    document.getElementById('addManyCookiesBtn').addEventListener('click', () => { cookies += 1000000; updateUI(); });
-    document.getElementById('addBillionCookiesBtn').addEventListener('click', () => { cookies += 1e9; updateUI(); });
     document.getElementById('addTrillionCookiesBtn').addEventListener('click', () => { cookies += 1e12; updateUI(); });
-    document.getElementById('add100BillionBtn').addEventListener('click', () => { cookies += 1e11; updateUI(); alert('100 миллиардов печенек добавлено!'); });
-    document.getElementById('addCustomAmountBtn').addEventListener('click', () => {
-        const amount = parseFloat(document.getElementById('customAmountInput').value);
-        if (!isNaN(amount) && amount > 0) { cookies += amount; updateUI(); alert(`Выдано ${amount.toLocaleString()} печенек.`); }
-        else { alert('Введите корректную сумму.'); }
-    });
-    document.getElementById('adminStartEvent').addEventListener('click', () => startEvent('rain'));
     document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; updateUI(); });
     document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; updateUI(); });
-    document.getElementById('adminGive10CR').addEventListener('click', () => { prestigePoints += 10; pushToLeaderboardCR(); if (currentClan) addCRToClan(10); updateUI(); alert('+10 CR!'); });
-    document.getElementById('adminFreezeEvents').addEventListener('click', () => { eventsFrozen = true; alert('Ивенты заморожены.'); });
-    document.getElementById('adminUnfreezeEvents').addEventListener('click', () => { eventsFrozen = false; alert('Ивенты разморожены.'); });
-    document.getElementById('adminClearChat').addEventListener('click', () => { document.getElementById('chatMessages').innerHTML = ''; alert('Чат очищен (локально).'); });
-    document.getElementById('adminSimulateOffline').addEventListener('click', () => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond * 3600; updateUI(); alert('Симулирован 1 час оффлайн-прогресса.'); } });
-    document.getElementById('adminFullReset').addEventListener('click', () => { if (confirm('Полный сброс всего? Это удалит весь прогресс и админ-доступ.')) { localStorage.clear(); location.reload(); } });
     document.getElementById('adminGiftT1nator').addEventListener('click', () => {
         if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
             cookies += 1e12;
