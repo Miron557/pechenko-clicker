@@ -274,6 +274,7 @@
             color:white;
             text-shadow:1px 1px 3px black;
             pointer-events:none;
+            line-height: 1.2;
         }
         @media (max-width:600px) {
             .game-container{padding:20px;}
@@ -907,7 +908,7 @@
         setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
     }
 
-    // Колесо
+    // Колесо фортуны (исправленное)
     const wheelPrizes = [
         { label: '500 🍪', value: ()=> { cookies += 500; updateUI(); } },
         { label: '1000 🍪', value: ()=> { cookies += 1000; updateUI(); } },
@@ -927,7 +928,7 @@
             const textEl = document.createElement('div');
             textEl.className = 'wheel-text';
             const rotation = i * angle + angle/2;
-            textEl.style.transform = `rotate(${rotation}deg) translate(0, -140px) rotate(-${rotation}deg)`;
+            textEl.style.transform = `rotate(${rotation}deg) translate(0, -115px) rotate(-${rotation}deg)`;
             textEl.textContent = wheelPrizes[i].label;
             wheel.appendChild(textEl);
         }
