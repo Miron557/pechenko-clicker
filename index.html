@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.11</title>
+    <title>Печенько кликер v2.0.9.12</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ⚡ Полный CSS (стили идентичны v2.0.9.10, добавлены новые для чата) */
+        /* Весь CSS из v2.0.9.10 + новые стили чата */
         :root {
             --bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0d0d2b 100%);
             --glass-bg: rgba(255, 248, 240, 0.06);
@@ -201,7 +201,7 @@
             max-height:350px; overflow-y:auto; margin:15px 0; padding:15px;
             background:var(--card-bg); border-radius:20px; box-shadow:inset 0 2px 15px rgba(0,0,0,0.4);
         }
-        .chat-message { margin:12px 0; word-break:break-word; animation:fadeIn 0.2s; }
+        .chat-message { margin:12px 0; word-break:break-word; animation:fadeIn 0.2s; position:relative; }
         @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
         .admin-tag { color:#ff4757; font-weight:800; }
         .friend-tag { color:#ff4757; font-weight:800; }
@@ -269,67 +269,51 @@
         }
         .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
         .role-switcher { display: flex; gap: 5px; margin: 10px 0; flex-wrap: wrap; }
-        /* Новые стили для чата */
-        .pinned-message {
-            background: rgba(255,215,0,0.15);
-            border-left: 3px solid gold;
-            padding: 8px;
-            margin: 5px 0;
-            font-size: 0.9rem;
+        .msg-actions-btn {
+            cursor: pointer; font-size: 1.2rem; opacity: 0.6; margin-left: 6px; transition: opacity 0.2s;
         }
-        .reply-preview {
-            background: rgba(255,255,255,0.05);
-            border-left: 2px solid var(--accent);
-            padding: 4px 8px;
-            margin-bottom: 4px;
-            font-size: 0.8rem;
-            opacity: 0.8;
+        .msg-actions-btn:hover { opacity: 1; }
+        .msg-menu {
+            display: none; position: absolute; right: 20px; background: var(--card-bg);
+            backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px;
+            padding: 6px 0; z-index: 10; min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
-        .chat-image {
-            max-width: 200px;
-            max-height: 200px;
-            border-radius: 10px;
-            margin-top: 5px;
+        .msg-menu.active { display: block; animation: fadeIn 0.2s; }
+        .msg-menu button {
+            display: block; width: 100%; background: transparent; border: none; color: var(--text);
+            padding: 8px 16px; text-align: left; cursor: pointer; font-size: 0.9rem;
         }
-        .search-bar {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 8px;
+        .msg-menu button:hover { background: var(--btn-hover-bg); }
+        .mention-suggestions {
+            position: absolute; bottom: 50px; left: 10px; background: var(--card-bg);
+            border: 1px solid var(--glass-border); border-radius: 12px; max-height: 120px;
+            overflow-y: auto; z-index: 20; width: 200px;
         }
-        .search-bar input {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--btn-border);
-            background: var(--btn-bg);
-            color: var(--text);
+        .mention-suggestions div { padding: 6px 12px; cursor: pointer; }
+        .mention-suggestions div:hover { background: var(--btn-hover-bg); }
+        .chat-light { --text: #582f0e; --card-bg: rgba(254,250,224,0.8); --glass-bg: rgba(255,248,240,0.8); }
+        .typing-indicator { font-size: 0.8rem; opacity: 0.7; padding: 4px 8px; }
+        .youtube-preview { margin-top: 6px; border-radius: 8px; overflow: hidden; }
+        .youtube-preview iframe { width: 100%; max-width: 300px; height: 169px; border: none; }
+        .poll-options { margin-top: 6px; }
+        .poll-options button {
+            margin: 3px 5px 3px 0; padding: 4px 12px; border-radius: 12px;
+            border: 1px solid var(--accent); background: transparent; color: var(--text); cursor: pointer;
         }
-        .private-chat-users {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-        .private-chat-users button {
-            padding: 5px 10px;
-            border-radius: 15px;
-            border: 1px solid var(--btn-border);
-            background: var(--btn-bg);
-            color: var(--text);
-            cursor: pointer;
-        }
-        .mention {
-            background: rgba(187,134,252,0.3);
-            border-radius: 4px;
-            padding: 0 2px;
-            font-weight: 600;
+        .poll-options button:hover { background: var(--accent); color: white; }
+        .poll-results { font-size: 0.8rem; margin-top: 4px; }
+        .favorite-star { cursor: pointer; }
+        .favorites-list { margin: 10px 0; }
+        .quote-btn {
+            position: absolute; background: var(--accent); color: white; border: none;
+            border-radius: 8px; padding: 4px 12px; cursor: pointer; z-index: 100; display: none;
         }
     </style>
 </head>
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.11</h1>
+    <h1>🍪 Печенько кликер v2.0.9.12</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -418,29 +402,27 @@
 <div class="modal" id="chatModal">
     <div class="modal-content" style="max-width:700px;">
         <h3>💬 Мировой чат</h3>
-        <!-- Закреплённые сообщения -->
-        <div id="pinnedMessages" style="max-height:100px; overflow-y:auto; margin-bottom:8px;"></div>
-        <!-- Поиск -->
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span>Тема чата: <button id="chatThemeToggle">🌗</button></span>
+            <button id="invisibleToggle">👻 Невидимка</button>
+        </div>
+        <div id="typingIndicator" class="typing-indicator" style="display:none;"></div>
         <div class="search-bar">
             <input type="text" id="chatSearch" placeholder="🔍 Поиск...">
         </div>
-        <!-- Сообщения -->
         <div class="chat-messages" id="chatMessages"></div>
-        <!-- Предпросмотр ответа -->
         <div id="replyPreview" style="display:none;" class="reply-preview"></div>
-        <!-- Поле ввода картинки -->
         <div style="display:flex; gap:5px; margin:5px 0;">
             <input type="text" id="imageUrlInput" placeholder="🔗 URL картинки (необязательно)" style="flex:1;">
         </div>
-        <!-- Поле ввода текста -->
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Введите сообщение..." style="flex:1;">
             <button id="sendChatBtn">Отправить</button>
         </div>
-        <!-- Кнопки личных сообщений -->
         <div style="display:flex; gap:5px; margin-top:8px;">
             <button id="privateChatBtn">✉️ ЛС</button>
             <button id="closePrivateChatBtn" style="display:none;">🔓 Закрыть ЛС</button>
+            <button id="showFavoritesBtn">⭐ Избранное</button>
         </div>
         <div id="privateUsersList" class="private-chat-users" style="display:none;"></div>
         <button id="closeChatModal" style="margin-top:10px;">Закрыть</button>
@@ -528,7 +510,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, serverTimestamp, set, get, query, orderByChild, limitToLast, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, serverTimestamp, set, get, query, orderByChild, limitToLast, onValue, update, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCKsCycC_nlvlvXonjZdBpViyIVE6yNHpM",
@@ -543,12 +525,12 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const chatRef = ref(database, 'messages');
-    const pinnedRef = ref(database, 'pinnedMessages');
+    const presenceRef = ref(database, 'presence');
     const leaderboardRef = ref(database, 'leaderboard');
     const leaderboardCRRef = ref(database, 'leaderboardCR');
     const clansRef = ref(database, 'clans');
 
-    // Глобальные переменные игры
+    // ====== ИГРОВЫЕ ПЕРЕМЕННЫЕ ======
     let cookies = 0, cookiesPerClick = 1, cookiesPerSecond = 0, prestigePoints = 0;
     let playerName = localStorage.getItem('pechenkoPlayerName') || '';
     let isSpecialAdmin = localStorage.getItem('pechenkoIsSpecialAdmin') === 'true';
@@ -571,6 +553,15 @@
     let activeRoleTag = localStorage.getItem('pechenkoActiveRoleTag') || '';
     let activeRoleNick = localStorage.getItem('pechenkoActiveRoleNick') || '';
 
+    // Чат-переменные
+    let allMessages = [];
+    let replyTo = null;
+    let privateChatUser = null;
+    let invisibleMode = false;
+    const mutedPlayers = JSON.parse(localStorage.getItem('pechenkoMutedPlayers') || '[]');
+    const favorites = JSON.parse(localStorage.getItem('pechenkoFavorites') || '[]');
+    const chatTheme = localStorage.getItem('pechenkoChatTheme') || 'dark';
+
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); }
     }
@@ -584,7 +575,6 @@
 
     const DAILY_KEY = 'pechenkoDaily';
     let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
-
     const upgrades = [
         { id: 'upgrade1', name: '👆 Бабушка', baseCost: 15, cps: 0.5, count: 0, costMult: 1.15 },
         { id: 'upgrade2', name: '🏭 Фабрика', baseCost: 100, cps: 4, count: 0, costMult: 1.18 },
@@ -628,142 +618,13 @@
     let bossHP = 0, bossMaxHP = 1000000, bossAlive = false;
     const BOSS_COOLDOWN = 24 * 60 * 60 * 1000;
     let lastBossKill = parseInt(localStorage.getItem('lastBossKill') || '0');
-
     let quests = [
         { id: 'click100', desc: 'Кликнуть 100 раз', goal: 100, progress: 0, reward: 500 },
         { id: 'buy5', desc: 'Купить 5 улучшений', goal: 5, progress: 0, reward: 1000 },
         { id: 'prestige1', desc: 'Переродиться 1 раз', goal: 1, progress: 0, reward: 5 }
     ];
 
-    // Чат-бот
-    function processBotCommand(text) {
-        const parts = text.split(' ');
-        const cmd = parts[0].toLowerCase();
-        if (cmd === '/help') return '🤖 Команды: /ping, /cookie, /top, /help';
-        if (cmd === '/ping') return '🏓 Понг!';
-        if (cmd === '/top') {
-            const lb = JSON.parse(localStorage.getItem('pechenkoLeaderboard') || '[]');
-            if (lb.length === 0) return 'Топ пока пуст.';
-            const top3 = lb.slice(0,3).map((e,i) => `${i+1}. ${e.name} – ${e.score.toLocaleString()} 🍪`).join('; ');
-            return `🏆 Топ-3: ${top3}`;
-        }
-        return null;
-    }
-
-    // Рендер сообщений
-    let allMessages = [];
-    let replyTo = null;
-    let privateChatUser = null;
-
-    function renderChatMessage(msg, prepend = false) {
-        const container = document.getElementById('chatMessages');
-        if (privateChatUser) {
-            const isPrivate = (msg.name === playerName && msg.privateTo === privateChatUser) ||
-                              (msg.name === privateChatUser && msg.privateTo === playerName);
-            if (!isPrivate) return;
-        }
-
-        const div = document.createElement('div');
-        div.className = 'chat-message';
-        div.dataset.id = msg.id || '';
-        div.dataset.name = msg.name || '';
-        div.dataset.text = msg.text || '';
-
-        let displayTag = msg.customTag || '';
-        if (!displayTag) {
-            if (msg.isSpecialAdmin) displayTag = '[Фулл разраб]';
-            else if (msg.isFriendAdmin) displayTag = '[Друн]';
-            else if (msg.isModer) displayTag = '[Модер]';
-            else if (msg.isVIP) displayTag = '[VIP]';
-            else if (msg.isTester) displayTag = '[Тестер]';
-        }
-        const displayName = msg.customNick || msg.name;
-
-        let nameHtml = '';
-        if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) {
-            nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isModer) {
-            nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isVIP) {
-            nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isTester) {
-            nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`;
-        } else {
-            nameHtml = `<strong>${escapeHtml(displayName)}</strong>`;
-        }
-        if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
-
-        let textHtml = escapeHtml(msg.text).replace(/@(\w+)/g, (match, user) => {
-            return `<span class="mention">@${user}</span>`;
-        });
-        if (msg.isVIP) textHtml = `<span class="vip-text">${textHtml}</span>`;
-        else if (msg.isModer) textHtml = `<span class="moder-text">${textHtml}</span>`;
-        else if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) {
-            textHtml = `<span class="bold-text">${textHtml}</span>`;
-        }
-
-        let replyHtml = '';
-        if (msg.replyTo) {
-            replyHtml = `<div class="reply-preview">↩️ В ответ ${escapeHtml(msg.replyTo.name)}: ${escapeHtml(msg.replyTo.text).substring(0,50)}</div>`;
-        }
-
-        let imageHtml = '';
-        if (msg.imageUrl) {
-            imageHtml = `<img src="${escapeHtml(msg.imageUrl)}" class="chat-image" onerror="this.style.display='none'"/>`;
-        }
-
-        div.innerHTML = `
-            ${replyHtml}
-            ${nameHtml}: ${textHtml}
-            ${imageHtml}
-            <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
-            <span class="msg-actions" style="margin-left:5px;">
-                <button class="reply-btn" title="Ответить">↩️</button>
-                ${msg.name === playerName ? '<button class="edit-btn" title="Редактировать">✏️</button><button class="delete-btn" title="Удалить">🗑️</button>' : ''}
-                ${(isSpecialAdmin || isFriendAdmin || isModer) ? '<button class="pin-btn" title="Закрепить">📌</button>' : ''}
-            </span>
-        `;
-
-        if (prepend) {
-            container.prepend(div);
-        } else {
-            container.appendChild(div);
-        }
-        container.scrollTop = container.scrollHeight;
-
-        // Обработчики кнопок
-        div.querySelector('.reply-btn')?.addEventListener('click', () => {
-            replyTo = { id: msg.id, name: msg.name, text: msg.text };
-            document.getElementById('replyPreview').style.display = 'block';
-            document.getElementById('replyPreview').textContent = `Ответ для ${msg.name}: ${msg.text.substring(0,60)}`;
-            document.getElementById('chatInput').focus();
-        });
-        div.querySelector('.edit-btn')?.addEventListener('click', () => {
-            const newText = prompt('Редактировать сообщение:', msg.text);
-            if (newText && newText.trim()) {
-                update(ref(database, `messages/${msg.id}`), { text: newText.trim(), edited: true });
-            }
-        });
-        div.querySelector('.delete-btn')?.addEventListener('click', () => {
-            if (confirm('Удалить сообщение?')) {
-                remove(ref(database, `messages/${msg.id}`));
-            }
-        });
-        div.querySelector('.pin-btn')?.addEventListener('click', () => {
-            push(pinnedRef, {
-                name: msg.name,
-                text: msg.text,
-                timestamp: msg.timestamp,
-                pinnedBy: playerName,
-                pinnedAt: serverTimestamp()
-            });
-            alert('Сообщение закреплено!');
-        });
-    }
-
-    function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-    // ========== ОСНОВНЫЕ ФУНКЦИИ ИГРЫ ==========
+    // Функции игры
     function canClaimDaily() {
         const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
         if (now - last < oneDay) return false;
@@ -1028,100 +889,287 @@
             list.appendChild(li);
         });
     }
+    function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-    // Чат: уведомления
-    let audioCtx = null;
-    function playNotificationSound() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = audioCtx.currentTime;
-        const osc1 = audioCtx.createOscillator(); const gain1 = audioCtx.createGain();
-        osc1.connect(gain1); gain1.connect(audioCtx.destination);
-        osc1.frequency.value = 880; osc1.type = 'sine';
-        gain1.gain.setValueAtTime(0.3, now); gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        osc1.start(now); osc1.stop(now + 0.08);
-        const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain();
-        osc2.connect(gain2); gain2.connect(audioCtx.destination);
-        osc2.frequency.value = 1100; osc2.type = 'sine';
-        gain2.gain.setValueAtTime(0.3, now + 0.08); gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
-        osc2.start(now + 0.08); osc2.stop(now + 0.16);
+    // Присутствие
+    const myPresenceRef = ref(database, 'presence/' + encodeURIComponent(playerName));
+    function setMyPresence(typing = false) {
+        if (invisibleMode) return;
+        set(myPresenceRef, { name: playerName, typing: typing, lastSeen: serverTimestamp() });
+    }
+    onDisconnect(myPresenceRef).remove();
+
+    let typingUsers = {};
+    onValue(presenceRef, (snapshot) => {
+        const newTypingUsers = {};
+        snapshot.forEach(child => {
+            const data = child.val();
+            if (data && data.name !== playerName && data.typing) {
+                newTypingUsers[data.name] = true;
+            }
+        });
+        typingUsers = newTypingUsers;
+        updateTypingIndicator();
+    });
+
+    function updateTypingIndicator() {
+        const indicator = document.getElementById('typingIndicator');
+        const names = Object.keys(typingUsers);
+        if (names.length > 0) {
+            indicator.textContent = names.join(', ') + ' печатает...';
+            indicator.style.display = 'block';
+        } else {
+            indicator.style.display = 'none';
+        }
     }
 
-    let unreadCount = 0, chatModalActive = false;
-    const chatBtn = document.getElementById('openChatBtn');
-    const badge = document.createElement('span');
-    badge.className = 'unread-badge hidden'; badge.textContent = '0';
-    chatBtn.style.position = 'relative'; chatBtn.appendChild(badge);
+    function requestNotificationPermission() {
+        if (Notification.permission === 'default') Notification.requestPermission();
+    }
+    function showDesktopNotification(title, body) {
+        if (Notification.permission === 'granted') {
+            new Notification(title, { body, icon: '🍪' });
+        }
+    }
 
-    function updateBadge() { if (unreadCount > 0) { badge.textContent = unreadCount > 99 ? '99+' : unreadCount; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
+    // Рендер сообщения
+    function renderChatMessage(msg, prepend = false) {
+        const container = document.getElementById('chatMessages');
+        if (privateChatUser) {
+            const isPrivate = (msg.name === playerName && msg.privateTo === privateChatUser) ||
+                              (msg.name === privateChatUser && msg.privateTo === playerName);
+            if (!isPrivate) return;
+        }
+        if (mutedPlayers.includes(msg.name)) return;
 
+        const div = document.createElement('div');
+        div.className = 'chat-message';
+        div.dataset.id = msg.id || '';
+        div.dataset.name = msg.name || '';
+        div.dataset.text = msg.text || '';
+
+        let displayTag = msg.customTag || '';
+        if (!displayTag) {
+            if (msg.isSpecialAdmin) displayTag = '[Фулл разраб]';
+            else if (msg.isFriendAdmin) displayTag = '[Друн]';
+            else if (msg.isModer) displayTag = '[Модер]';
+            else if (msg.isVIP) displayTag = '[VIP]';
+            else if (msg.isTester) displayTag = '[Тестер]';
+        }
+        const displayName = msg.customNick || msg.name;
+        let nameHtml = '';
+        if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) {
+            nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
+        } else if (msg.isModer) {
+            nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
+        } else if (msg.isVIP) {
+            nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
+        } else if (msg.isTester) {
+            nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`;
+        } else {
+            nameHtml = `<strong>${escapeHtml(displayName)}</strong>`;
+        }
+        if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
+
+        let textHtml = escapeHtml(msg.text).replace(/@(\w+)/g, (match, user) => {
+            return `<span class="mention">@${user}</span>`;
+        });
+        if (msg.isVIP) textHtml = `<span class="vip-text">${textHtml}</span>`;
+        else if (msg.isModer) textHtml = `<span class="moder-text">${textHtml}</span>`;
+        else if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) {
+            textHtml = `<span class="bold-text">${textHtml}</span>`;
+        }
+
+        let replyHtml = '';
+        if (msg.replyTo) {
+            replyHtml = `<div class="reply-preview">↩️ В ответ ${escapeHtml(msg.replyTo.name)}: ${escapeHtml(msg.replyTo.text).substring(0,50)}</div>`;
+        }
+
+        let videoHtml = '';
+        if (msg.text) {
+            const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = msg.text.match(youtubeRegex);
+            if (match) {
+                const videoId = match[1];
+                videoHtml = `<div class="youtube-preview"><iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe></div>`;
+            }
+        }
+
+        let imageHtml = '';
+        if (msg.imageUrl) {
+            imageHtml = `<img src="${escapeHtml(msg.imageUrl)}" class="chat-image" onerror="this.style.display='none'"/>`;
+        }
+
+        let pollHtml = '';
+        if (msg.poll) {
+            const poll = msg.poll;
+            const divPoll = document.createElement('div');
+            divPoll.className = 'poll-options';
+            Object.keys(poll.options).forEach(opt => {
+                const btn = document.createElement('button');
+                btn.textContent = `${opt} (${poll.options[opt]})`;
+                btn.addEventListener('click', () => {
+                    if (!poll.voters[playerName]) {
+                        update(ref(database, `messages/${msg.id}/poll`), {
+                            options: { ...poll.options, [opt]: poll.options[opt] + 1 },
+                            voters: { ...poll.voters, [playerName]: true }
+                        });
+                    }
+                });
+                divPoll.appendChild(btn);
+            });
+            pollHtml = divPoll.outerHTML;
+        }
+
+        const isFavorite = favorites.includes(msg.id);
+        const favStar = isFavorite ? '★' : '☆';
+
+        div.innerHTML = `
+            ${replyHtml}
+            ${nameHtml}: ${textHtml}
+            ${videoHtml}
+            ${imageHtml}
+            ${pollHtml}
+            <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+            <span class="msg-actions-btn" title="Действия">⋯</span>
+            <span class="favorite-star" style="cursor:pointer; margin-left:5px;">${favStar}</span>
+            <div class="msg-menu">
+                <button class="menu-reply-btn">↩️ Ответить</button>
+                ${msg.name === playerName ? '<button class="menu-edit-btn">✏️ Редактировать</button><button class="menu-delete-btn">🗑️ Удалить</button>' : ''}
+                <button class="menu-fav-btn">⭐ В избранное</button>
+                ${(isSpecialAdmin || isFriendAdmin || isModer) ? '<button class="menu-mute-btn">🔇 Mute</button>' : ''}
+            </div>
+        `;
+
+        if (prepend) container.prepend(div);
+        else container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+
+        // Обработчики меню
+        const actionsBtn = div.querySelector('.msg-actions-btn');
+        const menu = div.querySelector('.msg-menu');
+        actionsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.toggle('active');
+        });
+        document.addEventListener('click', () => {
+            menu.classList.remove('active');
+        });
+        div.querySelector('.menu-reply-btn')?.addEventListener('click', () => {
+            replyTo = { id: msg.id, name: msg.name, text: msg.text };
+            document.getElementById('replyPreview').style.display = 'block';
+            document.getElementById('replyPreview').textContent = `Ответ для ${msg.name}: ${msg.text.substring(0,60)}`;
+            document.getElementById('chatInput').focus();
+        });
+        div.querySelector('.menu-edit-btn')?.addEventListener('click', () => {
+            const newText = prompt('Редактировать:', msg.text);
+            if (newText && newText.trim()) {
+                update(ref(database, `messages/${msg.id}`), { text: newText.trim(), edited: true });
+            }
+        });
+        div.querySelector('.menu-delete-btn')?.addEventListener('click', () => {
+            if (confirm('Удалить?')) remove(ref(database, `messages/${msg.id}`));
+        });
+        div.querySelector('.menu-fav-btn')?.addEventListener('click', () => toggleFavorite(msg.id));
+        div.querySelector('.menu-mute-btn')?.addEventListener('click', () => {
+            const idx = mutedPlayers.indexOf(msg.name);
+            if (idx === -1) mutedPlayers.push(msg.name);
+            else mutedPlayers.splice(idx, 1);
+            localStorage.setItem('pechenkoMutedPlayers', JSON.stringify(mutedPlayers));
+            alert(`${idx === -1 ? 'Заглушен' : 'Разглушен'} ${msg.name}`);
+        });
+        div.querySelector('.favorite-star')?.addEventListener('click', () => toggleFavorite(msg.id));
+    }
+
+    function toggleFavorite(msgId) {
+        const idx = favorites.indexOf(msgId);
+        if (idx === -1) favorites.push(msgId);
+        else favorites.splice(idx, 1);
+        localStorage.setItem('pechenkoFavorites', JSON.stringify(favorites));
+        renderAllMessages();
+    }
+
+    function renderAllMessages() {
+        const container = document.getElementById('chatMessages');
+        container.innerHTML = '';
+        allMessages.forEach(msg => renderChatMessage(msg));
+    }
+
+    // Отправка
     function sendChatMessage() {
         const input = document.getElementById('chatInput');
         const imageUrl = document.getElementById('imageUrlInput').value.trim();
         let text = input.value.trim();
         if (!text && !imageUrl) return;
 
-        if (text.startsWith('/')) {
-            const botReply = processBotCommand(text);
-            if (botReply) text = botReply;
+        let privateTo = privateChatUser || null;
+        if (text.startsWith('/w ')) {
+            const parts = text.split(' ');
+            const target = parts[1];
+            const whisperText = parts.slice(2).join(' ');
+            if (target && whisperText) {
+                privateTo = target;
+                text = whisperText;
+            }
         }
 
-        const msgData = {
+        if (text === '/ping') text = '🏓 Понг!';
+        else if (text === '/help') text = '🤖 Команды: /ping, /cookie, /top, /help, /w';
+        else if (text.startsWith('/poll ')) {
+            const parts = text.substring(6).split('?');
+            if (parts.length === 2) {
+                const question = parts[0].trim();
+                const options = parts[1].split(' ').filter(o => o.trim());
+                if (options.length >= 2) {
+                    const pollData = {
+                        question: question,
+                        options: options.reduce((acc, opt) => { acc[opt] = 0; return acc; }, {}),
+                        voters: {}
+                    };
+                    push(chatRef, {
+                        name: customNick || playerName,
+                        text: text,
+                        poll: pollData,
+                        isSpecialAdmin, isFriendAdmin, isTester, isVIP, isModer,
+                        rankPosition: getPlayerRankPosition(),
+                        customTag, customNick,
+                        privateTo: null,
+                        timestamp: serverTimestamp()
+                    });
+                    input.value = '';
+                    return;
+                }
+            }
+        }
+
+        push(chatRef, {
             name: customNick || playerName,
             text: text,
-            isSpecialAdmin: isSpecialAdmin,
-            isFriendAdmin: isFriendAdmin,
-            isTester: isTester,
-            isVIP: isVIP,
-            isModer: isModer,
+            isSpecialAdmin, isFriendAdmin, isTester, isVIP, isModer,
             rankPosition: getPlayerRankPosition(),
-            customTag: customTag,
-            customNick: customNick,
+            customTag, customNick,
             imageUrl: imageUrl || null,
             replyTo: replyTo ? { id: replyTo.id, name: replyTo.name, text: replyTo.text } : null,
-            privateTo: privateChatUser || null,
+            privateTo: privateTo,
             timestamp: serverTimestamp()
-        };
-
-        push(chatRef, msgData);
+        });
         input.value = '';
         document.getElementById('imageUrlInput').value = '';
         replyTo = null;
         document.getElementById('replyPreview').style.display = 'none';
-
-        const mentions = text.match(/@(\w+)/g);
-        if (mentions) {
-            mentions.forEach(m => {
-                const user = m.substring(1);
-                if (user === playerName) {
-                    playNotificationSound();
-                    alert(`Вас упомянули в чате!`);
-                }
-            });
-        }
+        setMyPresence(false);
     }
 
-    // Обновление видимости админки
-    function updateAdminVisibility() {
-        const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry);
-        const showAdminBtn = isAdmin && !adminHidden;
-        document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
-        document.getElementById('openTesterBtn').style.display = (isTester && !isAdmin) ? 'inline-block' : 'none';
-        document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
-        document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
-        document.getElementById('activateTesterBtn').style.display = (!isTester && !isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
-    }
+    let typingTimeout;
+    document.getElementById('chatInput').addEventListener('input', () => {
+        setMyPresence(true);
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => setMyPresence(false), 2000);
+    });
 
-    function closeModal(modal) {
-        modal.classList.add('closing');
-        modal.addEventListener('transitionend', function handler() { modal.classList.remove('active', 'closing'); modal.removeEventListener('transitionend', handler); }, { once: true });
-        setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
-    }
-
-    // Обработчики модальных окон
-    document.querySelectorAll('.modal').forEach(modal => { const closeBtn = modal.querySelector('[id^="close"]'); if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal)); });
-    document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
-
-    // Кнопки чата
+    // Обработчики чата
+    document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
+    document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
     document.getElementById('chatSearch').addEventListener('input', function() {
         const term = this.value.toLowerCase();
         document.querySelectorAll('.chat-message').forEach(msg => {
@@ -1156,29 +1204,95 @@
         document.getElementById('privateUsersList').style.display = 'none';
     });
 
-    document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
-    document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
-
-    // Открытие чата
-    document.getElementById('openChatBtn').addEventListener('click', () => {
-        document.getElementById('chatModal').classList.add('active');
-        chatModalActive = true;
-        unreadCount = 0;
-        updateBadge();
-    });
-    document.getElementById('closeChatModal').addEventListener('click', () => { chatModalActive = false; });
-
-    // Закреплённые сообщения
-    onValue(pinnedRef, (snapshot) => {
-        const container = document.getElementById('pinnedMessages');
-        container.innerHTML = '';
-        snapshot.forEach(child => {
-            const msg = child.val();
-            const div = document.createElement('div');
-            div.className = 'pinned-message';
-            div.innerHTML = `📌 <strong>${escapeHtml(msg.name)}</strong>: ${escapeHtml(msg.text)}`;
-            container.appendChild(div);
+    document.getElementById('showFavoritesBtn').addEventListener('click', () => {
+        document.getElementById('chatMessages').innerHTML = '';
+        allMessages.forEach(msg => {
+            if (favorites.includes(msg.id)) renderChatMessage(msg);
         });
+    });
+
+    document.getElementById('chatThemeToggle').addEventListener('click', () => {
+        const chatContent = document.querySelector('#chatModal .modal-content');
+        chatContent.classList.toggle('chat-light');
+        const newTheme = chatContent.classList.contains('chat-light') ? 'light' : 'dark';
+        localStorage.setItem('pechenkoChatTheme', newTheme);
+    });
+    if (chatTheme === 'light') {
+        document.querySelector('#chatModal .modal-content').classList.add('chat-light');
+    }
+
+    document.getElementById('invisibleToggle').addEventListener('click', function() {
+        invisibleMode = !invisibleMode;
+        this.textContent = invisibleMode ? '👁 Видимый' : '👻 Невидимка';
+        if (invisibleMode) {
+            set(myPresenceRef, null);
+        } else {
+            setMyPresence(false);
+        }
+        alert(`Режим невидимки: ${invisibleMode ? 'вкл' : 'выкл'}`);
+    });
+
+    // Автодополнение @ника
+    const mentionSuggestions = document.createElement('div');
+    mentionSuggestions.className = 'mention-suggestions hidden';
+    document.querySelector('.chat-input-area').appendChild(mentionSuggestions);
+    document.getElementById('chatInput').addEventListener('input', function() {
+        const val = this.value;
+        const atIndex = val.lastIndexOf('@');
+        if (atIndex !== -1 && val.substring(atIndex + 1).indexOf(' ') === -1) {
+            const partial = val.substring(atIndex + 1).toLowerCase();
+            const users = [...new Set(allMessages.map(m => m.name).filter(n => n !== playerName && n.toLowerCase().startsWith(partial)))];
+            mentionSuggestions.innerHTML = '';
+            if (users.length > 0 && partial.length > 0) {
+                users.forEach(user => {
+                    const div = document.createElement('div');
+                    div.textContent = user;
+                    div.addEventListener('click', () => {
+                        this.value = val.substring(0, atIndex) + '@' + user + ' ';
+                        mentionSuggestions.innerHTML = '';
+                        this.focus();
+                    });
+                    mentionSuggestions.appendChild(div);
+                });
+                mentionSuggestions.classList.remove('hidden');
+            } else {
+                mentionSuggestions.classList.add('hidden');
+            }
+        } else {
+            mentionSuggestions.classList.add('hidden');
+        }
+    });
+
+    // Цитата выделением
+    document.addEventListener('mouseup', (e) => {
+        const selection = window.getSelection().toString().trim();
+        if (selection && e.target.closest('.chat-message')) {
+            const quoteBtn = document.getElementById('quoteBtn');
+            if (!quoteBtn) {
+                const btn = document.createElement('div');
+                btn.id = 'quoteBtn';
+                btn.className = 'quote-btn';
+                btn.textContent = 'Цитировать';
+                document.body.appendChild(btn);
+                btn.addEventListener('click', () => {
+                    const text = btn.dataset.text;
+                    const name = btn.dataset.msgName;
+                    const input = document.getElementById('chatInput');
+                    input.value += `> ${name}: ${text}\n`;
+                    input.focus();
+                    btn.style.display = 'none';
+                });
+            }
+            const btn = document.getElementById('quoteBtn');
+            btn.style.display = 'block';
+            btn.style.top = (e.clientY - 30) + 'px';
+            btn.style.left = (e.clientX + 10) + 'px';
+            btn.dataset.text = selection;
+            btn.dataset.msgName = e.target.closest('.chat-message').dataset.name;
+        } else {
+            const btn = document.getElementById('quoteBtn');
+            if (btn) btn.style.display = 'none';
+        }
     });
 
     // Основной чат
@@ -1186,17 +1300,278 @@
         const msg = snap.val();
         msg.id = snap.key;
         allMessages.push(msg);
-        renderChatMessage(msg);
+        if (!chatModalActive && document.hidden) {
+            showDesktopNotification(`Новое сообщение от ${msg.name}`, msg.text.substring(0, 100));
+        }
         if (!chatModalActive) {
             unreadCount++;
             updateBadge();
             playNotificationSound();
         }
+        renderChatMessage(msg);
     });
 
-    // Обработчики игры (кликер, админка, магазин и т.д.) полностью идентичны v2.0.9.10 и здесь опущены для краткости, но они есть в полном коде.
-    // В реальном файле должны быть все обработчики из предыдущей версии.
-    // ...
+    // Звук уведомления
+    let audioCtx = null;
+    function playNotificationSound() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioCtx.currentTime;
+        const osc1 = audioCtx.createOscillator(); const gain1 = audioCtx.createGain();
+        osc1.connect(gain1); gain1.connect(audioCtx.destination);
+        osc1.frequency.value = 880; osc1.type = 'sine';
+        gain1.gain.setValueAtTime(0.3, now); gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc1.start(now); osc1.stop(now + 0.08);
+        const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain();
+        osc2.connect(gain2); gain2.connect(audioCtx.destination);
+        osc2.frequency.value = 1100; osc2.type = 'sine';
+        gain2.gain.setValueAtTime(0.3, now + 0.08); gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+        osc2.start(now + 0.08); osc2.stop(now + 0.16);
+    }
+
+    let unreadCount = 0, chatModalActive = false;
+    const chatBtn = document.getElementById('openChatBtn');
+    const badge = document.createElement('span');
+    badge.className = 'unread-badge hidden'; badge.textContent = '0';
+    chatBtn.style.position = 'relative'; chatBtn.appendChild(badge);
+
+    function updateBadge() { if (unreadCount > 0) { badge.textContent = unreadCount > 99 ? '99+' : unreadCount; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
+
+    // Остальные обработчики игры
+    document.querySelectorAll('.modal').forEach(modal => { const closeBtn = modal.querySelector('[id^="close"]'); if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal)); });
+    document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
+
+    document.getElementById('cookieBtn').addEventListener('click', (e) => {
+        let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
+        const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (1 + getPetBonus('click')) * clickMult;
+        cookies += eff; totalClicks++;
+        const qClick = quests.find(q => q.id === 'click100'); if (qClick) qClick.progress = Math.min(qClick.goal, qClick.progress + 1);
+        updateUI(); showFloatingScore(e.clientX, e.clientY, eff);
+    });
+    upgrades.forEach((u,i) => document.getElementById(u.id).addEventListener('click', () => buyUpgrade(i)));
+    document.getElementById('prestigeBtn').addEventListener('click', performPrestige);
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('shopBuy1000').addEventListener('click', () => buyShopItem(1000,1));
+    document.getElementById('shopBuy10000').addEventListener('click', () => buyShopItem(10000,2));
+    document.getElementById('shopBuy1M').addEventListener('click', () => buyShopItem(1000000,5));
+    document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
+
+    document.getElementById('openAdminBtn').addEventListener('click', () => {
+        if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
+        document.getElementById('adminModal').classList.add('active');
+        document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick;
+        document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
+    });
+
+    document.getElementById('saveCustomBtn').addEventListener('click', () => {
+        customTag = document.getElementById('customTagInput').value.trim(); customNick = document.getElementById('customNickInput').value.trim();
+        localStorage.setItem('pechenkoCustomTag', customTag); localStorage.setItem('pechenkoCustomNick', customNick);
+        alert('Сохранено!');
+    });
+
+    document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; updateUI(); });
+    document.getElementById('addTrillionCookiesBtn').addEventListener('click', () => { cookies += 1e12; updateUI(); });
+    document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; updateUI(); });
+    document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; updateUI(); });
+    document.getElementById('adminGiftT1nator').addEventListener('click', () => {
+        if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
+            cookies += 1e12;
+            updateUI();
+            alert('🎁 Подарок для t1nator: +1 000 000 000 000 печенек!');
+        }
+    });
+    document.getElementById('adminFreezeEvents').addEventListener('click', () => { eventsFrozen = true; alert('Ивенты заморожены.'); });
+    document.getElementById('adminUnfreezeEvents').addEventListener('click', () => { eventsFrozen = false; alert('Ивенты разморожены.'); });
+
+    document.getElementById('switchToModer').addEventListener('click', () => {
+        activeRoleTag = '[Модер]';
+        activeRoleNick = playerName;
+        localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag);
+        localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick);
+        customTag = activeRoleTag; customNick = activeRoleNick;
+        updateUI();
+        alert('Теперь вы отображаетесь как Модер');
+    });
+    document.getElementById('switchToTester').addEventListener('click', () => {
+        activeRoleTag = '[Тестер]';
+        activeRoleNick = 'Глист';
+        localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag);
+        localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick);
+        customTag = activeRoleTag; customNick = activeRoleNick;
+        updateUI();
+        alert('Теперь вы отображаетесь как Тестер');
+    });
+    document.getElementById('switchToAdmin').addEventListener('click', () => {
+        activeRoleTag = '';
+        activeRoleNick = '';
+        localStorage.removeItem('pechenkoActiveRoleTag');
+        localStorage.removeItem('pechenkoActiveRoleNick');
+        customTag = ''; customNick = '';
+        updateUI();
+        alert('Отображение сброшено, вы снова админ');
+    });
+    document.getElementById('hideAdminBtn').addEventListener('click', () => {
+        adminHidden = !adminHidden;
+        localStorage.setItem('pechenkoAdminHidden', adminHidden.toString());
+        updateAdminVisibility();
+        if (adminHidden) { document.body.classList.add('admin-hidden'); }
+        else { document.body.classList.remove('admin-hidden'); }
+        document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
+    });
+    if (adminHidden) { document.body.classList.add('admin-hidden'); }
+
+    document.getElementById('activateFriendBtn').addEventListener('click', () => { if (isFriendAdmin) return; const secret = prompt('Пароль для друга:'); if (secret === 'friend') { isFriendAdmin = true; playerName = 't1nator'; localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator'); updateAdminVisibility(); updateUI(); alert('Доступ активирован! Теперь ты [Друн] t1nator.'); } else alert('Неверный пароль'); });
+    document.getElementById('activateSpecialBtn').addEventListener('click', () => { if (isSpecialAdmin) return; const secret = prompt('Секретный пароль:'); if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; } const ip = prompt('IP для подтверждения:'); if (ip !== '94.181.23.61') { alert('Неверный IP'); return; } isSpecialAdmin = true; playerName = 'tr3haszz'; localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz'); updateAdminVisibility(); updateUI(); alert('tr3haszz активирован!'); });
+    document.getElementById('activateTesterBtn').addEventListener('click', () => { if (isTester) return; const secret = prompt('Пароль тестера:'); if (secret === 'tester') { isTester = true; playerName = 'Глист'; localStorage.setItem('pechenkoIsTester', 'true'); localStorage.setItem('pechenkoPlayerName', 'Глист'); updateAdminVisibility(); updateUI(); alert('Доступ тестера активирован!'); } else alert('Неверный пароль'); });
+
+    document.getElementById('openTesterBtn').addEventListener('click', () => { document.getElementById('testerModal').classList.add('active'); });
+    document.getElementById('closeTesterModal').addEventListener('click', () => closeModal(document.getElementById('testerModal')));
+    document.getElementById('sendBugReportBtn').addEventListener('click', () => { const adminEmail = 'miron.s3113@gmail.com'; const subject = encodeURIComponent('Баг-репорт от Глист'); const body = encodeURIComponent('Опишите найденный баг:\n\n1. Что делали?\n2. Что ожидали?\n3. Что получили?\n\nСпасибо!'); window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`; });
+
+    document.getElementById('openLeaderboardBtn').addEventListener('click', () => { document.getElementById('leaderboardModal').classList.add('active'); loadLeaderboard('cookies'); loadLeaderboard('cr'); });
+    document.getElementById('showCookiesTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.remove('hidden'); document.getElementById('leaderboardCRTable').classList.add('hidden'); });
+    document.getElementById('showCRTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.add('hidden'); document.getElementById('leaderboardCRTable').classList.remove('hidden'); });
+
+    document.getElementById('openChatBtn').addEventListener('click', () => { document.getElementById('chatModal').classList.add('active'); chatModalActive = true; unreadCount = 0; updateBadge(); });
+    document.getElementById('closeChatModal').addEventListener('click', () => { chatModalActive = false; });
+
+    document.getElementById('openAchievementsBtn').addEventListener('click', () => { renderAchievements(); document.getElementById('achievementsModal').classList.add('active'); });
+
+    document.getElementById('openClanBtn').addEventListener('click', () => { updateClanUI(); document.getElementById('clanModal').classList.add('active'); });
+    document.getElementById('createClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) createClan(name); });
+    document.getElementById('joinClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) joinClan(name); });
+
+    document.getElementById('openTagShopBtn').addEventListener('click', () => document.getElementById('tagShopModal').classList.add('active'));
+    document.getElementById('closeTagShopModal').addEventListener('click', () => closeModal(document.getElementById('tagShopModal')));
+    document.querySelectorAll('.buyTagBtn').forEach(btn => { btn.addEventListener('click', () => { const tag = btn.dataset.tag; const cost = parseInt(btn.dataset.cost); if (cookies < cost) { alert('Недостаточно печенек!'); return; } cookies -= cost; customTag = tag; localStorage.setItem('pechenkoCustomTag', customTag); updateUI(); alert(`Тег "${tag}" куплен!`); }); });
+    document.getElementById('buyCustomTagBtn').addEventListener('click', () => { const newTag = prompt('Введите свой тег (до 12 символов):'); if (!newTag) return; const formatted = newTag.startsWith('[') ? newTag : `[${newTag}]`; if (formatted.length > 14) { alert('Слишком длинный!'); return; } if (cookies < 1000000) { alert('Недостаточно печенек!'); return; } cookies -= 1000000; customTag = formatted; localStorage.setItem('pechenkoCustomTag', customTag); updateUI(); alert(`Тег "${formatted}" куплен!`); });
+
+    document.getElementById('openBossBtn').addEventListener('click', () => { updateBossUI(); document.getElementById('bossModal').classList.add('active'); });
+    document.getElementById('attackBossBtn').addEventListener('click', attackBoss);
+    document.getElementById('closeBossModal').addEventListener('click', () => closeModal(document.getElementById('bossModal')));
+
+    document.getElementById('openQuestsBtn').addEventListener('click', () => { updateQuests(); document.getElementById('questsModal').classList.add('active'); });
+    document.getElementById('closeQuestsModal').addEventListener('click', () => closeModal(document.getElementById('questsModal')));
+
+    document.getElementById('openVIPBtn').addEventListener('click', () => { updateShopStatus(); document.getElementById('vipModal').classList.add('active'); });
+    document.getElementById('closeVIPModal').addEventListener('click', () => closeModal(document.getElementById('vipModal')));
+    document.getElementById('buyVIPCookies').addEventListener('click', () => { if (isVIP) { alert('VIP уже активирован!'); return; } if (cookies >= 100000000) { cookies -= 100000000; isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); updateUI(); updateShopStatus(); alert('Поздравляем! VIP активирован!'); } else alert('Недостаточно печенек (нужно 100 000 000)'); });
+    document.getElementById('buyVIPMoney').addEventListener('click', () => alert('Оплата временно недоступна.'));
+    document.getElementById('buyX3Money').addEventListener('click', () => { if (isX3) { alert('x3 уже активирован!'); return; } alert('Оплата временно недоступна.'); });
+    document.getElementById('buyModerMoney').addEventListener('click', () => { if (isModer) { alert('Модер уже активирован!'); return; } alert('Оплата временно недоступна.'); });
+    document.getElementById('buyModerCookies').addEventListener('click', () => {
+        if (isModer) { alert('Модер уже активирован!'); return; }
+        if (cookies >= 100000000) {
+            cookies -= 100000000;
+            isModer = true;
+            moderExpiry = Date.now() + 30 * 86400000;
+            localStorage.setItem('pechenkoIsModer', 'true');
+            localStorage.setItem('pechenkoModerExpiry', moderExpiry.toString());
+            updateUI();
+            updateShopStatus();
+            alert('Модер активирован на 30 дней!');
+        } else alert('Недостаточно печенек (нужно 100 000 000)');
+    });
+    document.getElementById('buyTempAdmin').addEventListener('click', () => { if (isSpecialAdmin || isFriendAdmin) { alert('У вас уже постоянная админка!'); return; } if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { alert('Временная админка уже активна!'); return; } if (cookies >= 1e12) { cookies -= 1e12; isTemporaryAdmin = true; tempAdminExpiry = Date.now() + 86400000; localStorage.setItem('pechenkoIsTemporaryAdmin', 'true'); localStorage.setItem('pechenkoTempAdminExpiry', tempAdminExpiry.toString()); if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); } updateUI(); updateAdminVisibility(); updateShopStatus(); alert('Временная админка активирована на 24 часа!'); } else { alert('Недостаточно печенек (нужно 1 000 000 000 000)'); } });
+
+    document.getElementById('openMarketBtn').addEventListener('click', () => document.getElementById('marketModal').classList.add('active'));
+    document.getElementById('closeMarketModal').addEventListener('click', () => closeModal(document.getElementById('marketModal')));
+    document.getElementById('exchangeCRtoCookies').addEventListener('click', () => {
+        if (prestigePoints >= 1) { prestigePoints--; cookies += 1000000; updateUI(); alert('Обменяно 1 CR → 1 000 000 🍪'); }
+        else alert('Недостаточно CR');
+    });
+    document.getElementById('exchangeCookiestoCR').addEventListener('click', () => {
+        if (cookies >= 10000000) { cookies -= 10000000; prestigePoints++; pushToLeaderboardCR(); updateUI(); alert('Обменяно 10 000 000 🍪 → 1 CR'); }
+        else alert('Недостаточно печенек');
+    });
+
+    document.getElementById('openStatsBtn').addEventListener('click', () => {
+        document.getElementById('statClicks').textContent = totalClicks.toLocaleString();
+        document.getElementById('statPrestiges').textContent = prestigePoints;
+        const totalUpgrades = upgrades.reduce((sum, u) => sum + u.count, 0);
+        document.getElementById('statUpgrades').textContent = totalUpgrades;
+        document.getElementById('statsModal').classList.add('active');
+    });
+    document.getElementById('closeStatsModal').addEventListener('click', () => closeModal(document.getElementById('statsModal')));
+
+    document.getElementById('openDiscordBtn').addEventListener('click', () => { window.open('https://discord.gg/ВАШ_СЕРВЕР', '_blank'); });
+
+    function updateBossUI() {
+        const infoDiv = document.getElementById('bossInfo');
+        if (!currentClan) { infoDiv.innerHTML = 'Вы не в клане! Вступите, чтобы сражаться с боссом.'; document.getElementById('attackBossBtn').disabled = true; return; }
+        const now = Date.now();
+        if (!bossAlive && (now - lastBossKill >= BOSS_COOLDOWN)) { bossAlive = true; bossHP = bossMaxHP; }
+        if (bossAlive) {
+            infoDiv.innerHTML = `<p>Клановый босс: 🍪 Гигантское Печенье</p><p>Награда: +5 CR всем участникам</p>`;
+            document.getElementById('bossHP').textContent = Math.floor(bossHP).toLocaleString();
+            document.getElementById('bossHPBar').style.width = (bossHP / bossMaxHP * 100) + '%';
+            document.getElementById('attackBossBtn').disabled = false;
+        } else {
+            const remaining = BOSS_COOLDOWN - (now - lastBossKill);
+            const h = Math.floor(remaining / 3600000), m = Math.floor((remaining % 3600000) / 60000);
+            infoDiv.innerHTML = `Босс побеждён! Следующий через ${h}ч ${m}м`;
+            document.getElementById('attackBossBtn').disabled = true;
+        }
+    }
+    function attackBoss() {
+        if (!bossAlive || !currentClan) return;
+        let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
+        const clickDmg = cookiesPerClick * (eventActive ? eventMultiplier : 1) * clickMult;
+        const autoDmg = cookiesPerSecond * 0.1;
+        bossHP -= clickDmg + autoDmg;
+        if (bossHP <= 0) {
+            bossAlive = false; lastBossKill = Date.now(); localStorage.setItem('lastBossKill', lastBossKill);
+            prestigePoints += 5; pushToLeaderboardCR(); addCRToClan(5);
+            alert('Босс побеждён! Вы получили +5 CR!');
+        }
+        updateBossUI(); updateUI();
+    }
+
+    function updateQuests() {
+        const qList = document.getElementById('questsList'); qList.innerHTML = '';
+        quests.forEach((q, idx) => {
+            const div = document.createElement('div'); div.style.margin = '10px 0';
+            const complete = q.progress >= q.goal;
+            div.innerHTML = `${q.desc} (${Math.min(q.progress, q.goal)}/${q.goal}) ${complete ? '✅' : ''} <button class="shop-btn claimQuestBtn" data-idx="${idx}" ${!complete ? 'disabled' : ''}>Забрать</button>`;
+            qList.appendChild(div);
+        });
+        document.querySelectorAll('.claimQuestBtn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.idx); const q = quests[idx];
+                if (q.progress >= q.goal) {
+                    q.progress = 0;
+                    if (q.reward <= 5 && q.id !== 'prestige1') { prestigePoints += q.reward; pushToLeaderboardCR(); if (currentClan) addCRToClan(q.reward); }
+                    else { cookies += q.reward; }
+                    updateUI(); updateQuests(); alert('Квест выполнен!');
+                }
+            });
+        });
+    }
+
+    function updateShopStatus() {
+        const statusEl = document.getElementById('shopStatus'); let status = '';
+        if (isVIP) status += '✅ VIP активен (x2). ';
+        if (isX3) status += '✅ x3 активен (постоянный). ';
+        if (isModer) { const remaining = Math.max(0, Math.floor((moderExpiry - Date.now()) / 86400000)); status += `✅ Модер активен (осталось ${remaining} дн.). `; }
+        if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { const remaining = Math.max(0, Math.floor((tempAdminExpiry - Date.now()) / 3600000)); status += `✅ Временная админка (осталось ${remaining} ч.). `; }
+        if (!status) status = 'Нет активных покупок.';
+        statusEl.textContent = status;
+    }
+
+    function updateAdminVisibility() {
+        const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry);
+        const showAdminBtn = isAdmin && !adminHidden;
+        document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
+        document.getElementById('openTesterBtn').style.display = (isTester && !isAdmin) ? 'inline-block' : 'none';
+        document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
+        document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
+        document.getElementById('activateTesterBtn').style.display = (!isTester && !isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
+    }
+
+    function closeModal(modal) {
+        modal.classList.add('closing');
+        modal.addEventListener('transitionend', function handler() { modal.classList.remove('active', 'closing'); modal.removeEventListener('transitionend', handler); }, { once: true });
+        setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
+    }
 
     function loadGame() {
         const saved = localStorage.getItem('pechenkoClickerSave');
@@ -1216,6 +1591,8 @@
 
     setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; updateUI(); } }, 100);
     loadGame(); updateCookiesPerSecond(); updateUI(); scheduleRandomEvent();
+    requestNotificationPermission();
+    setMyPresence(false);
 </script>
 </body>
 </html>
