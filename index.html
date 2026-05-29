@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.7</title>
+    <title>Печенько кликер v2.0.9.8</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -92,14 +92,15 @@
             animation: float 3s ease-in-out infinite;
         }
         @keyframes float { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-12px);} }
-        .cookie-btn:active { transform:scale(0.85); filter: drop-shadow(0 0 60px rgba(240, 184, 122, 1)); }
+        .cookie-btn:active { animation: cookiePop 0.1s ease; }
+        @keyframes cookiePop { 0%{transform:scale(1);} 50%{transform:scale(0.9);} 100%{transform:scale(1);} }
         .cookie-btn:hover { transform:scale(1.1); filter: drop-shadow(0 0 70px rgba(240, 184, 122, 1)); }
         .upgrades { display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap:15px; margin-top:30px; }
         .upgrade-btn, .shop-btn {
             background:var(--btn-bg); backdrop-filter: blur(10px); border:1px solid var(--btn-border);
             border-radius:20px; padding:18px 12px; cursor:pointer; font-weight:700; color:var(--text);
             box-shadow:var(--crisp-shadow); font-size:0.9rem; letter-spacing:0.5px;
-            position:relative; overflow:hidden;
+            position:relative; overflow:hidden; transition: all 0.2s ease;
         }
         .upgrade-btn::before, .shop-btn::before {
             content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
@@ -184,10 +185,13 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn, .market-btn, .stats-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
-            margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
+            margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px; transition: all 0.2s ease;
+        }
+        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .tagshop-btn:hover, .boss-btn:hover, .quests-btn:hover, .tester-btn:hover, .vip-btn:hover, .discord-btn:hover, .market-btn:hover, .stats-btn:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
         .bottom-panel { margin-top:25px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
         table { width:100%; border-collapse:collapse; margin-top:20px; }
@@ -202,12 +206,12 @@
         .admin-tag { color:#ff4757; font-weight:800; }
         .friend-tag { color:#ff4757; font-weight:800; }
         .vip-tag {
-            background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
+            background: linear-gradient(90deg, #ff0000, #000000, #ff0000);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: vipShine 1.5s linear infinite;
+            animation: vipShine 3s linear infinite;
             font-weight: 900;
             letter-spacing: 1px;
         }
@@ -228,35 +232,25 @@
             animation: gradientShift 2s ease infinite; font-weight:800;
         }
         @keyframes gradientShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
-        .gradient-text {
-            /* Убран градиент, оставлен жирный текст */
-        }
         .vip-text {
-            background: linear-gradient(90deg, #ffd700, #ffb347, #ffd700); background-size: 200% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: vipShine 1.5s linear infinite; font-weight: 600;
+            background: linear-gradient(90deg, #ff0000, #000000, #ff0000);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: vipShine 3s linear infinite;
+            font-weight: 900;
+            font-size: 1.05em;
         }
         .moder-text {
             background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff); background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             animation: vipShine 1.5s linear infinite; font-weight: 600;
         }
-        .bold-text { font-weight: 900; } /* Жирный текст для админов */
+        .bold-text { font-weight: 900; }
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
-        .emoji-picker {
-            display: none; position: absolute; bottom: 60px; left: 10px; background: var(--card-bg);
-            border: 1px solid var(--glass-border); border-radius: 20px; padding: 10px;
-            grid-template-columns: repeat(8, 1fr); gap: 5px; z-index: 3100;
-            max-height: 200px; overflow-y: auto; backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .emoji-btn {
-            background: transparent; border: none; font-size: 1.4rem; cursor: pointer; padding: 5px;
-            border-radius: 10px; transition: background 0.2s;
-            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
-        }
-        .emoji-btn:hover { background: var(--btn-hover-bg); }
+        /* эмодзи-пикер удалён */
         .chat-input-area { position: relative; display: flex; align-items: center; gap: 5px; }
         .unread-badge {
             position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; border-radius: 50%;
@@ -275,12 +269,13 @@
             .upgrades{grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));}
         }
         .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+        .role-switcher { display: flex; gap: 5px; margin: 10px 0; flex-wrap: wrap; }
     </style>
 </head>
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.7</h1>
+    <h1>🍪 Печенько кликер v2.0.9.8</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -315,6 +310,8 @@
         <button class="boss-btn" id="openBossBtn">🥊 Босс</button>
         <button class="quests-btn" id="openQuestsBtn">📋 Квесты</button>
         <button class="vip-btn" id="openVIPBtn">💎 Магазин</button>
+        <button class="market-btn" id="openMarketBtn">🏪 Рынок</button>
+        <button class="stats-btn" id="openStatsBtn">📊 Статистика</button>
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
         <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
         <button class="activate-tester-btn" id="activateTesterBtn" style="display: none;">🔍 Активировать тестера</button>
@@ -337,6 +334,14 @@
                 <button id="adminSetClick2">Клик x2</button>
                 <button id="adminResetClick">Сброс клика</button>
                 <button id="adminGiftT1nator">🎁 Подарок для t1nator (+1 трлн)</button>
+                <button id="adminFreezeEvents">Заморозить ивенты</button>
+                <button id="adminUnfreezeEvents">Разморозить ивенты</button>
+            </div>
+            <div class="role-switcher">
+                <button id="switchToModer">👑 Модер</button>
+                <button id="switchToTester">🔧 Тестер</button>
+                <button id="switchToAdmin">⚙️ Админ (себя)</button>
+                <button id="hideAdminBtn">🙈 Скрыть админку</button>
             </div>
         </div>
         <button id="closeAdminModal" style="margin-top:15px;">Закрыть</button>
@@ -347,7 +352,6 @@
         <h3>🔧 Панель тестера</h3>
         <p>Если нашли баг, отправьте репорт прямо tr3haszz!</p>
         <button id="sendBugReportBtn">📧 Отправить баг-репорт</button>
-        <p style="margin-top:12px; font-size:0.9rem;">При нажатии откроется почтовый клиент. Опишите, что делали, что ожидали и что получили.</p>
         <button id="closeTesterModal" style="margin-top:15px;">Закрыть</button>
     </div>
 </div>
@@ -362,8 +366,6 @@
         <h3>💬 Мировой чат</h3>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input-area">
-            <button id="emojiPickerBtn" style="font-size:1.4rem; background:transparent; border:none; cursor:pointer;">😀</button>
-            <div class="emoji-picker" id="emojiPicker"></div>
             <input type="text" id="chatInput" placeholder="Введите сообщение..." style="flex:1;">
             <button id="sendChatBtn">Отправить</button>
         </div>
@@ -431,6 +433,24 @@
         <button id="closeVIPModal" style="margin-top:10px;">Закрыть</button>
     </div>
 </div>
+<div class="modal" id="marketModal">
+    <div class="modal-content">
+        <h3>🏪 Рынок</h3>
+        <p>Обменяйте CR на печеньки или наоборот.</p>
+        <button id="exchangeCRtoCookies">1 CR → 1 000 000 🍪</button>
+        <button id="exchangeCookiestoCR">10 000 000 🍪 → 1 CR</button>
+        <button id="closeMarketModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
+<div class="modal" id="statsModal">
+    <div class="modal-content">
+        <h3>📊 Статистика</h3>
+        <p>Всего кликов: <span id="statClicks">0</span></p>
+        <p>Перерождений: <span id="statPrestiges">0</span></p>
+        <p>Куплено улучшений: <span id="statUpgrades">0</span></p>
+        <button id="closeStatsModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -471,6 +491,7 @@
     let customTag = localStorage.getItem('pechenkoCustomTag') || '';
     let customNick = localStorage.getItem('pechenkoCustomNick') || '';
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
+    let adminHidden = false;
 
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); }
@@ -802,19 +823,7 @@
     }
     function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-    // Чат
-    const emojiList = ['😀','😂','😍','🥺','😎','🤔','😴','😡','👍','👎','🎉','🍪','💎','🌟','💬','❤️','🔥','⭐','🎁','📧','💡','⌛','🚀','🍕','🎂','☕','🌈','🎵','🎮','⚽','📱','💻','🖥️','📷','🔑','💰','🛒','🎡','🏆','🐱','🐶','🦊','🐼','🐨','🐸','🦄','🐙','🍎','🍊','🍋','🍉','🍇','🍓','🍒','🥝','🍔','🌮','🍩','🍿','🥤','🍹','🍾','🎄','🎃','🎈','🎊','🎀','🎁','🏅','🥇','🥈','🥉','💍','🕶️','👑','💣','🧨','🎯','🔮','📌','✂️','🖊️','📅'];
-    const emojiPicker = document.getElementById('emojiPicker');
-    emojiList.forEach(emoji => {
-        const btn = document.createElement('button');
-        btn.className = 'emoji-btn';
-        btn.textContent = emoji;
-        btn.addEventListener('click', () => { const input = document.getElementById('chatInput'); input.value += emoji; input.focus(); emojiPicker.style.display = 'none'; });
-        emojiPicker.appendChild(btn);
-    });
-    document.getElementById('emojiPickerBtn').addEventListener('click', () => { emojiPicker.style.display = emojiPicker.style.display === 'grid' ? 'none' : 'grid'; });
-    document.addEventListener('click', (e) => { if (!e.target.closest('.chat-input-area')) { emojiPicker.style.display = 'none'; } });
-
+    // Чат (без эмодзи)
     let audioCtx = null;
     function playNotificationSound() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -855,7 +864,6 @@
         else if (msg.isTester) { nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`; }
         else { nameHtml = `<strong>${escapeHtml(displayName)}</strong>`; }
         if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
-        // Убрали градиент, текст сообщений админов теперь просто жирный
         let textHtml = escapeHtml(msg.text);
         if (msg.isVIP) textHtml = `<span class="vip-text">${escapeHtml(msg.text)}</span>`;
         if (msg.isModer) textHtml = `<span class="moder-text">${escapeHtml(msg.text)}</span>`;
@@ -875,7 +883,8 @@
     }
 
     function updateAdminVisibility() {
-        document.getElementById('openAdminBtn').style.display = (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) ? 'inline-block' : 'none';
+        const show = (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) && !adminHidden;
+        document.getElementById('openAdminBtn').style.display = show ? 'inline-block' : 'none';
         document.getElementById('openTesterBtn').style.display = isTester ? 'inline-block' : 'none';
         document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
@@ -993,6 +1002,7 @@
         if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
         document.getElementById('adminModal').classList.add('active');
         document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick;
+        document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
     });
 
     document.getElementById('saveCustomBtn').addEventListener('click', () => {
@@ -1012,11 +1022,35 @@
             alert('🎁 Подарок для t1nator: +1 000 000 000 000 печенек!');
         }
     });
+    document.getElementById('adminFreezeEvents').addEventListener('click', () => { eventsFrozen = true; alert('Ивенты заморожены.'); });
+    document.getElementById('adminUnfreezeEvents').addEventListener('click', () => { eventsFrozen = false; alert('Ивенты разморожены.'); });
 
-    // Явная обработка кнопки "Закрыть" в админ-панели
-    document.getElementById('closeAdminModal').addEventListener('click', () => {
-        closeModal(document.getElementById('adminModal'));
+    // Переключение ролей
+    document.getElementById('switchToModer').addEventListener('click', () => {
+        if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
+        isModer = true; moderExpiry = Date.now() + 30 * 86400000;
+        localStorage.setItem('pechenkoIsModer', 'true');
+        localStorage.setItem('pechenkoModerExpiry', moderExpiry.toString());
+        updateUI(); alert('Роль изменена на Модера');
     });
+    document.getElementById('switchToTester').addEventListener('click', () => {
+        isTester = true;
+        localStorage.setItem('pechenkoIsTester', 'true');
+        updateUI(); alert('Роль изменена на Тестера');
+    });
+    document.getElementById('switchToAdmin').addEventListener('click', () => {
+        isModer = false; localStorage.removeItem('pechenkoIsModer'); localStorage.removeItem('pechenkoModerExpiry');
+        isTester = false; localStorage.removeItem('pechenkoIsTester');
+        updateUI(); alert('Вернули админские права');
+    });
+    // Скрыть админку
+    document.getElementById('hideAdminBtn').addEventListener('click', () => {
+        adminHidden = !adminHidden;
+        updateAdminVisibility();
+        document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
+    });
+
+    document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
 
     document.getElementById('activateFriendBtn').addEventListener('click', () => { if (isFriendAdmin) return; const secret = prompt('Пароль для друга:'); if (secret === 'friend') { isFriendAdmin = true; playerName = 't1nator'; localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator'); updateAdminVisibility(); updateUI(); alert('Доступ активирован! Теперь ты [Друн] t1nator.'); } else alert('Неверный пароль'); });
     document.getElementById('activateSpecialBtn').addEventListener('click', () => { if (isSpecialAdmin) return; const secret = prompt('Секретный пароль:'); if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; } const ip = prompt('IP для подтверждения:'); if (ip !== '94.181.23.61') { alert('Неверный IP'); return; } isSpecialAdmin = true; playerName = 'tr3haszz'; localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz'); updateAdminVisibility(); updateUI(); alert('tr3haszz активирован!'); });
@@ -1053,6 +1087,28 @@
 
     document.getElementById('openQuestsBtn').addEventListener('click', () => { updateQuests(); document.getElementById('questsModal').classList.add('active'); });
     document.getElementById('closeQuestsModal').addEventListener('click', () => closeModal(document.getElementById('questsModal')));
+
+    // Рынок
+    document.getElementById('openMarketBtn').addEventListener('click', () => document.getElementById('marketModal').classList.add('active'));
+    document.getElementById('closeMarketModal').addEventListener('click', () => closeModal(document.getElementById('marketModal')));
+    document.getElementById('exchangeCRtoCookies').addEventListener('click', () => {
+        if (prestigePoints >= 1) { prestigePoints--; cookies += 1000000; updateUI(); alert('Обменяно 1 CR → 1 000 000 🍪'); }
+        else alert('Недостаточно CR');
+    });
+    document.getElementById('exchangeCookiestoCR').addEventListener('click', () => {
+        if (cookies >= 10000000) { cookies -= 10000000; prestigePoints++; pushToLeaderboardCR(); updateUI(); alert('Обменяно 10 000 000 🍪 → 1 CR'); }
+        else alert('Недостаточно печенек');
+    });
+
+    // Статистика
+    document.getElementById('openStatsBtn').addEventListener('click', () => {
+        document.getElementById('statClicks').textContent = totalClicks.toLocaleString();
+        document.getElementById('statPrestiges').textContent = prestigePoints;
+        const totalUpgrades = upgrades.reduce((sum, u) => sum + u.count, 0);
+        document.getElementById('statUpgrades').textContent = totalUpgrades;
+        document.getElementById('statsModal').classList.add('active');
+    });
+    document.getElementById('closeStatsModal').addEventListener('click', () => closeModal(document.getElementById('statsModal')));
 
     document.getElementById('openDiscordBtn').addEventListener('click', () => { window.open('https://discord.gg/ВАШ_СЕРВЕР', '_blank'); });
 
