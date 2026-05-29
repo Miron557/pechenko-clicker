@@ -4,189 +4,238 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v1.04.1</title>
+    <title>Печенько кликер v1.04.5 Release</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: linear-gradient(135deg, #f5e3c3 0%, #d4a373 100%);
-            --container-bg: rgba(255, 248, 240, 0.9);
-            --text: #582f0e;
+            --bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0d0d2b 100%);
+            --glass-bg: rgba(255, 248, 240, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --accent: #f0b87a;
+            --accent-glow: 0 0 25px rgba(240, 184, 122, 0.7);
+            --text: #f0e0c8;
+            --card-bg: rgba(20, 20, 40, 0.8);
+            --btn-bg: rgba(255, 248, 240, 0.08);
+            --btn-border: rgba(255, 255, 255, 0.15);
+            --btn-hover-bg: rgba(255, 248, 240, 0.2);
+            --prestige-color: #bb86fc;
+            --prestige-bg: rgba(187, 134, 252, 0.15);
+            --font: 'Montserrat', sans-serif;
+            --crisp-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        body.light {
+            --bg-gradient: linear-gradient(135deg, #f5e3c3 0%, #d4a373 100%);
+            --glass-bg: rgba(255, 248, 240, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
             --accent: #bc6c25;
-            --accent-light: #d4a373;
-            --card: #fefae0;
-            --shadow: 0 25px 60px rgba(0,0,0,0.2);
+            --accent-glow: 0 0 20px rgba(188, 108, 37, 0.4);
+            --text: #582f0e;
+            --card-bg: rgba(254, 250, 224, 0.8);
             --btn-bg: white;
             --btn-border: #d4a373;
             --btn-hover-bg: #fefae0;
-            --inset-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
-            --prestige-color: #9c27b0;
             --prestige-bg: #f3e5f5;
         }
-        body.dark {
-            --bg: linear-gradient(135deg, #2c1e16 0%, #1a0f0a 100%);
-            --container-bg: rgba(30, 20, 15, 0.95);
-            --text: #f0e0c8;
-            --accent: #e0a96d;
-            --accent-light: #b07d5b;
-            --card: #3e2e24;
-            --shadow: 0 25px 60px rgba(0,0,0,0.6);
-            --btn-bg: #4a382e;
-            --btn-border: #8b6b50;
-            --btn-hover-bg: #5e4a3a;
-            --inset-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
-            --prestige-bg: #2a1a2e;
-        }
-        * { transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        * { margin:0; padding:0; box-sizing:border-box; transition: background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s; }
         body {
-            margin: 0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg); min-height: 100vh; display: flex; justify-content: center;
-            align-items: center; user-select: none; color: var(--text);
+            font-family: var(--font); background: var(--bg-gradient); min-height:100vh;
+            display:flex; justify-content:center; align-items:center; user-select:none; color:var(--text);
+            padding:20px; overflow-x:hidden;
+            animation: bgPulse 8s ease-in-out infinite alternate;
         }
+        @keyframes bgPulse { 0%{background-size:100% 100%;} 100%{background-size:120% 120%;} }
         .game-container {
-            background: var(--container-bg); backdrop-filter: blur(10px); border-radius: 40px;
-            padding: 30px; box-shadow: var(--shadow); text-align: center; max-width: 800px;
-            width: 95%; position: relative;
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border:1px solid var(--glass-border); border-radius:40px; padding:30px; box-shadow:var(--glass-shadow);
+            text-align:center; max-width:850px; width:100%; position:relative; animation: fadeInUp 0.8s ease-out;
         }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
         .theme-toggle {
-            position: absolute; top: 20px; right: 20px; background: var(--btn-bg);
-            border: 2px solid var(--btn-border); color: var(--accent); border-radius: 50%;
-            width: 45px; height: 45px; font-size: 1.5rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: var(--inset-shadow); z-index: 2;
+            position:absolute; top:20px; right:20px; background:var(--btn-bg); border:1px solid var(--btn-border);
+            color:var(--accent); border-radius:50%; width:45px; height:45px; font-size:1.5rem; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; box-shadow:var(--crisp-shadow); z-index:2;
+            backdrop-filter: blur(10px);
         }
-        h1 { color: var(--accent); margin-top: 0; font-size: 2.5rem; text-shadow: 2px 2px 0 rgba(255,255,255,0.3); }
-        .dark h1 { text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+        h1 {
+            font-weight:900; font-size:3rem; margin:0 0 25px;
+            background: linear-gradient(135deg, var(--accent), #ffb347);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            text-shadow: var(--accent-glow); letter-spacing:2px;
+        }
         .score-display {
-            background: var(--card); border-radius: 20px; padding: 15px 30px;
-            margin: 20px 0; box-shadow: var(--inset-shadow); position: relative;
+            background:var(--card-bg); backdrop-filter: blur(15px); border-radius:25px;
+            padding:25px 170px 25px 35px;   /* увеличен правый отступ, чтобы ранг не перекрывал */
+            margin:20px 0; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15);
+            border:1px solid var(--glass-border); position:relative; overflow:hidden;
+            display:flex; flex-direction:column; align-items:center;
         }
         .rank-badge {
-            position: absolute; top: 10px; right: 15px; background: var(--accent-light);
-            color: white; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;
+            position:absolute; top:18px; right:20px; background: linear-gradient(135deg, var(--accent), #ff8c42);
+            color:white; padding:8px 18px; border-radius:30px; font-weight:700; font-size:0.9rem;
+            box-shadow:0 4px 15px rgba(0,0,0,0.3); letter-spacing:1px;
+            max-width: 140px; white-space: normal; text-align: center;
         }
-        .score-label { font-size: 1.2rem; color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
-        .score { font-size: 3.5rem; font-weight: 900; color: var(--text); display: block; line-height: 1.2; }
-        .per-second { font-size: 1rem; margin-top: 5px; opacity: 0.8; }
+        .score-label {
+            font-size:1rem; text-transform:uppercase; letter-spacing:4px; color:var(--accent);
+            font-weight:600; margin-bottom:5px;
+        }
+        .score {
+            font-size:4.5rem; font-weight:900; color:var(--text); line-height:1.1;
+            text-shadow:0 2px 15px rgba(0,0,0,0.5); margin-bottom:5px;
+        }
+        .per-second { font-size:1rem; opacity:0.8; }
         .cookie-btn {
-            background: none; border: none; cursor: pointer; font-size: 150px;
-            transition: transform 0.05s ease; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.3));
-            outline: none; line-height: 1; padding: 10px;
+            background:none; border:none; cursor:pointer; font-size:170px; transition: transform 0.1s ease;
+            filter: drop-shadow(0 0 40px rgba(240, 184, 122, 0.9)); outline:none; padding:15px;
+            animation: float 3s ease-in-out infinite;
         }
-        .cookie-btn:active { transform: scale(0.9); filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3)); }
-        .cookie-btn:hover { transform: scale(1.05); filter: drop-shadow(0 18px 25px rgba(0,0,0,0.35)); }
-        .upgrades { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 25px; }
+        @keyframes float { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-12px);} }
+        .cookie-btn:active { transform:scale(0.85); filter: drop-shadow(0 0 60px rgba(240, 184, 122, 1)); }
+        .cookie-btn:hover { transform:scale(1.1); filter: drop-shadow(0 0 70px rgba(240, 184, 122, 1)); }
+        .upgrades { display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap:15px; margin-top:30px; }
         .upgrade-btn, .shop-btn {
-            background: var(--btn-bg); border: 2px solid var(--btn-border); border-radius: 20px;
-            padding: 12px 8px; cursor: pointer; font-weight: bold; color: var(--text);
-            transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-size: 0.9rem;
+            background:var(--btn-bg); backdrop-filter: blur(10px); border:1px solid var(--btn-border);
+            border-radius:20px; padding:18px 12px; cursor:pointer; font-weight:700; color:var(--text);
+            box-shadow:var(--crisp-shadow); font-size:0.9rem; letter-spacing:0.5px;
+            position:relative; overflow:hidden;
         }
+        .upgrade-btn::before, .shop-btn::before {
+            content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        .upgrade-btn:hover::before, .shop-btn:hover::before { left:100%; }
         .upgrade-btn:hover:not(:disabled), .shop-btn:hover:not(:disabled) {
-            background: var(--btn-hover-bg); border-color: var(--accent); transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            background:var(--btn-hover-bg); border-color:var(--accent); transform:translateY(-4px);
+            box-shadow:0 15px 30px rgba(0,0,0,0.5);
         }
-        .upgrade-btn:disabled, .shop-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(40%); }
-        .upgrade-name, .shop-name { display: block; font-size: 1.1rem; }
-        .upgrade-cost, .shop-cost { display: block; font-size: 0.8rem; color: var(--accent); margin-top: 4px; }
+        .upgrade-btn:disabled, .shop-btn:disabled { opacity:0.4; filter:grayscale(50%); cursor:not-allowed; }
+        .upgrade-name, .shop-name { display:block; font-size:1.2rem; margin-bottom:5px; }
+        .upgrade-cost, .shop-cost { display:block; font-size:0.85rem; color:var(--accent); }
         .upgrade-count, .shop-count {
-            background: var(--accent-light); color: white; border-radius: 10px; padding: 3px 8px;
-            font-size: 0.75rem; display: inline-block; margin-top: 4px;
+            background:rgba(0,0,0,0.4); color:white; border-radius:15px; padding:4px 12px;
+            font-size:0.8rem; display:inline-block; margin-top:5px;
         }
         .prestige-btn {
-            margin-top: 20px; background: var(--prestige-bg); border: 2px solid var(--prestige-color);
-            color: var(--prestige-color); padding: 12px 25px; border-radius: 20px;
-            cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.2s;
+            margin-top:25px; background:var(--prestige-bg); border:2px solid var(--prestige-color);
+            color:var(--prestige-color); padding:15px 35px; border-radius:35px; cursor:pointer;
+            font-weight:800; font-size:1.2rem; letter-spacing:1px; box-shadow:0 4px 20px rgba(187,134,252,0.4);
         }
-        .prestige-btn:hover:not(:disabled) { background: var(--prestige-color); color: white; }
-        .prestige-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .prestige-display { margin-top: 10px; font-weight: bold; color: var(--prestige-color); }
+        .prestige-btn:hover:not(:disabled) { background:var(--prestige-color); color:white; box-shadow:0 8px 30px rgba(187,134,252,0.7); }
+        .prestige-btn:disabled { opacity:0.3; }
+        .prestige-display { margin-top:12px; font-weight:700; color:var(--prestige-color); }
         .shop-section {
-            margin-top: 25px; background: var(--card); border-radius: 20px; padding: 15px;
-            box-shadow: var(--inset-shadow);
+            margin-top:30px; background:var(--card-bg); backdrop-filter: blur(15px); border-radius:25px;
+            padding:20px; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15);
+            border:1px solid var(--glass-border);
         }
-        .shop-title { font-size: 1.3rem; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
-        .shop-items { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .shop-btn { flex: 1 1 140px; max-width: 200px; background: var(--prestige-bg); border-color: var(--prestige-color); }
+        .shop-title { font-size:1.4rem; font-weight:700; margin-bottom:15px; color:var(--accent); }
+        .shop-items { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
+        .shop-btn { flex:1 1 150px; max-width:200px; }
         .daily-bonus {
-            margin-top: 15px; background: #ffeaa7; border-radius: 20px; padding: 10px;
-            color: #582f0e; font-weight: bold;
+            margin-top:25px; background:rgba(255,215,0,0.12); backdrop-filter: blur(10px);
+            border-radius:25px; padding:15px; font-weight:700; border:1px solid rgba(255,215,0,0.3); color:#ffd700;
         }
         .daily-bonus button {
-            background: #fdcb6e; border: none; border-radius: 15px; padding: 8px 20px;
-            font-weight: bold; cursor: pointer;
+            background:#ffd700; border:none; border-radius:20px; padding:10px 25px; font-weight:800;
+            color:#0a0a1a; cursor:pointer; margin-left:10px; box-shadow:0 4px 15px rgba(255,215,0,0.5);
         }
+        .daily-bonus button:disabled { background:#555; color:#aaa; }
         .floating-score {
-            position: fixed; pointer-events: none; font-weight: 900; font-size: 2rem;
-            color: var(--accent); transform: translate(-50%, -50%);
-            animation: floatUp 0.8s ease-out forwards; z-index: 1000;
+            position:fixed; pointer-events:none; font-weight:900; font-size:2.8rem; color:var(--accent);
+            transform:translate(-50%,-50%); animation:floatUp 1s ease-out forwards; z-index:999;
+            text-shadow:0 0 25px var(--accent-glow);
         }
         @keyframes floatUp {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, calc(-50% - 80px)) scale(1.5); }
+            0%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+            100%{opacity:0;transform:translate(-50%,calc(-50% - 100px)) scale(1.8);}
         }
         .event-notification {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            padding: 15px 30px; border-radius: 30px; font-weight: bold;
-            font-size: 1.2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            z-index: 2000; animation: slideDown 0.5s ease-out; color: white;
+            position:fixed; top:30px; left:50%; transform:translateX(-50%); padding:15px 40px; border-radius:40px;
+            font-weight:800; font-size:1.3rem; box-shadow:0 10px 40px rgba(0,0,0,0.6); z-index:2000;
+            animation:slideDown 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); color:#fff; letter-spacing:1px;
         }
-        .event-notification.gold { background: #f1c40f; color: #333; }
-        .event-notification.storm { background: #3498db; }
-        .event-notification.bunt { background: #e67e22; }
-        .event-notification.rain { background: #ff9800; }
-        .event-timer {
-            background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 15px;
-            margin-top: 5px; display: inline-block;
-        }
-        @keyframes slideDown {
-            from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; }
-        }
+        .event-notification.gold { background:linear-gradient(135deg, #f1c40f, #f39c12); color:#1a1a2e; }
+        .event-notification.storm { background:linear-gradient(135deg, #3498db, #2980b9); }
+        .event-notification.bunt { background:linear-gradient(135deg, #e67e22, #d35400); }
+        .event-notification.rain { background:linear-gradient(135deg, #ff9800, #f57c00); }
+        @keyframes slideDown { from{top:-80px;opacity:0;} to{top:30px;opacity:1;} }
         .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 3000;
+            display:flex; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.8); backdrop-filter:blur(8px);
+            justify-content:center; align-items:center; z-index:3000;
+            opacity:0; transition: opacity 0.35s ease, visibility 0.35s ease;
         }
-        .modal.active { display: flex; }
+        .modal.active { visibility:visible; opacity:1; }
+        .modal.closing { opacity:0; }
         .modal-content {
-            background: var(--container-bg); padding: 30px; border-radius: 30px;
-            max-width: 600px; width: 90%; box-shadow: var(--shadow); text-align: left; color: var(--text);
+            background:var(--glass-bg); backdrop-filter:blur(30px); border:1px solid var(--glass-border);
+            border-radius:35px; padding:35px; max-width:650px; width:90%;
+            box-shadow:0 25px 60px rgba(0,0,0,0.7); text-align:left; color:var(--text);
+            animation:modalPop 0.4s ease;
         }
-        .modal-content h3 { margin-top: 0; color: var(--accent); }
+        @keyframes modalPop { from{transform:scale(0.9);opacity:0;} to{transform:scale(1);opacity:1;} }
+        .modal-content h3 { margin:0 0 20px; color:var(--accent); font-weight:800; font-size:1.6rem; }
         .modal-content input, .modal-content button {
-            margin: 8px 0; padding: 10px; border-radius: 10px;
-            border: 1px solid var(--btn-border); background: var(--btn-bg); color: var(--text); font-size: 1rem;
+            margin:8px 5px; padding:12px 20px; border-radius:15px; border:1px solid var(--btn-border);
+            background:var(--btn-bg); color:var(--text); font-size:1rem; font-weight:600;
         }
-        .modal-content button { cursor: pointer; font-weight: bold; }
+        .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
+        .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
         .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn {
-            background: var(--btn-bg); border: 2px solid var(--btn-border); color: var(--accent);
-            border-radius: 20px; padding: 8px 15px; cursor: pointer; font-weight: bold; margin: 5px;
+            background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
+            color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
+            margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
         }
-        .bottom-panel { margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 10px; border-bottom: 1px solid var(--btn-border); text-align: center; }
-        th { color: var(--accent); }
+        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover {
+            background:var(--accent); color:white; border-color:var(--accent);
+        }
+        .bottom-panel { margin-top:25px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+        table { width:100%; border-collapse:collapse; margin-top:20px; }
+        th, td { padding:14px; border-bottom:1px solid var(--glass-border); text-align:center; }
+        th { color:var(--accent); font-weight:800; }
         .chat-messages {
-            max-height: 300px; overflow-y: auto; margin: 15px 0; padding: 10px;
-            background: var(--card); border-radius: 15px; box-shadow: var(--inset-shadow);
+            max-height:350px; overflow-y:auto; margin:15px 0; padding:15px;
+            background:var(--card-bg); border-radius:20px; box-shadow:inset 0 2px 15px rgba(0,0,0,0.4);
         }
-        .chat-message { margin: 8px 0; word-break: break-word; }
-        .admin-tag { color: red; font-weight: bold; }
-        .friend-tag { color: red; font-weight: bold; }
+        .chat-message { margin:12px 0; word-break:break-word; animation:fadeIn 0.2s; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
+        .admin-tag { color:#ff4757; font-weight:800; }
+        .friend-tag { color:#ff4757; font-weight:800; }
         .gradient-nick {
-            background: linear-gradient(45deg, red, black, red); background-size: 200% 200%;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; animation: gradientShift 2s ease infinite; font-weight: bold;
+            background: linear-gradient(45deg, #ff4757, #ff6b81, #ff4757); background-size:200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: gradientShift 2s ease infinite; font-weight:800;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        @keyframes gradientShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+        .gradient-text {
+            background: linear-gradient(45deg, #a18cd1, #fbc2eb, #a18cd1); background-size:200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: gradientShift 3s ease infinite; font-weight:600;
         }
-        .rank-tag { color: #ff9800; font-weight: bold; }
-        .achievement-list { list-style: none; padding: 0; }
-        .achievement-list li { padding: 8px; margin: 5px 0; background: var(--card); border-radius: 10px; }
-        .hidden { display: none; }
+        .rank-tag { color:#ffa502; font-weight:700; }
+        .hidden { display:none !important; }
+        @media (max-width:600px) {
+            .game-container{padding:20px;}
+            .cookie-btn{font-size:110px;}
+            .score{font-size:2.8rem;}
+            .score-display { padding:25px 120px 25px 20px; }
+            .rank-badge {
+                font-size:0.7rem; padding:5px 10px;
+                max-width:90px;
+                white-space: normal;
+                text-align: center;
+            }
+            .upgrades{grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));}
+        }
     </style>
 </head>
 <body>
 <div class="game-container">
-    <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌓</button>
-    <h1>🍪 Печенько кликер v1.04.1</h1>
+    <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
+    <h1>🍪 Печенько кликер</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -221,11 +270,40 @@
 </div>
 
 <!-- Модальные окна -->
-<div class="modal" id="adminModal"><div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls"><button id="addCookiesBtn">+1000 печенек</button><button id="addManyCookiesBtn">+1 000 000 печенек</button><button id="addBillionCookiesBtn" class="hidden">+1 000 000 000 печенек</button><button id="adminStartEvent">Запустить Дождь из печенек (x2)</button><button id="adminSetClick2">Множитель клика = 2</button><button id="adminResetClick">Сбросить множитель</button><button id="adminGive10CR" class="hidden">Получить 10 CR</button><button id="adminFullReset">Полный сброс игры</button></div><button id="closeAdminModal" style="margin-top:15px;">Закрыть</button></div></div>
-<div class="modal" id="leaderboardModal"><div class="modal-content"><h3>🏆 Таблицы лидеров</h3><button id="showCookiesTop">Топ по печенькам</button><button id="showCRTop">Топ по CR</button><table id="leaderboardCookiesTable" class="leaderboard-table"><thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead><tbody></tbody></table><table id="leaderboardCRTable" class="leaderboard-table hidden"><thead><tr><th>#</th><th>Имя</th><th>CR (Перерождений)</th></tr></thead><tbody></tbody></table><button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button></div></div>
-<div class="modal" id="chatModal"><div class="modal-content"><h3>💬 Мировой чат</h3><div class="chat-messages" id="chatMessages"></div><input type="text" id="chatInput" placeholder="Введите сообщение..." style="width:70%;"><button id="sendChatBtn">Отправить</button><button id="closeChatModal" style="margin-top:15px;">Закрыть</button></div></div>
-<div class="modal" id="achievementsModal"><div class="modal-content"><h3>🎖️ Достижения</h3><ul class="achievement-list" id="achievementList"></ul><button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button></div></div>
-<div class="modal" id="clanModal"><div class="modal-content"><h3>👥 Кланы</h3><div id="myClanInfo" style="margin-bottom:15px;"></div><button id="createClanBtn">Создать клан</button><button id="joinClanBtn">Вступить в клан</button><div style="margin:10px 0;"><input type="text" id="clanNameInput" placeholder="Название клана"></div><h4>Топ кланов по CR</h4><table id="clanLeaderboardTable"><thead><tr><th>#</th><th>Клан</th><th>Общий CR</th></tr></thead><tbody></tbody></table><button id="closeClanModal" style="margin-top:15px;">Закрыть</button></div></div>
+<div class="modal" id="adminModal">
+    <div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls">
+        <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
+        <div style="margin-bottom:12px;"><label>Кастомный ник: <input type="text" id="customNickInput" placeholder="Никнейм" maxlength="16"></label></div>
+        <div style="margin-bottom:12px;"><label><input type="checkbox" id="gradientTextCheckbox"> Градиентный текст сообщений</label></div>
+        <button id="saveCustomBtn">Сохранить</button><hr style="margin:15px 0; border-color:var(--glass-border);">
+        <button id="addCookiesBtn">+1000 печенек</button><button id="addManyCookiesBtn">+1 000 000 печенек</button>
+        <button id="addBillionCookiesBtn" class="hidden">+1 000 000 000 печенек</button><button id="adminStartEvent">Дождь x2</button>
+        <button id="adminSetClick2">Клик x2</button><button id="adminResetClick">Сброс клика</button>
+        <button id="adminGive10CR" class="hidden">+10 CR</button><button id="adminFullReset">Полный сброс</button>
+    </div><button id="closeAdminModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="leaderboardModal">
+    <div class="modal-content"><h3>🏆 Таблицы лидеров</h3><button id="showCookiesTop">Топ по печенькам</button><button id="showCRTop">Топ по CR</button>
+        <table id="leaderboardCookiesTable"><thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead><tbody></tbody></table>
+        <table id="leaderboardCRTable" class="hidden"><thead><tr><th>#</th><th>Имя</th><th>CR</th></tr></thead><tbody></tbody></table>
+        <button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="chatModal">
+    <div class="modal-content"><h3>💬 Мировой чат</h3><div class="chat-messages" id="chatMessages"></div>
+        <input type="text" id="chatInput" placeholder="Введите сообщение..." style="width:70%;"><button id="sendChatBtn">Отправить</button>
+        <button id="closeChatModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="achievementsModal">
+    <div class="modal-content"><h3>🎖️ Достижения</h3><ul class="achievement-list" id="achievementList"></ul><button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="clanModal">
+    <div class="modal-content"><h3>👥 Кланы</h3><div id="myClanInfo"></div>
+        <button id="createClanBtn">Создать</button><button id="joinClanBtn">Вступить</button>
+        <input type="text" id="clanNameInput" placeholder="Название клана" style="width:100%; margin:10px 0;">
+        <h4>Топ кланов</h4>
+        <table id="clanLeaderboardTable"><thead><tr><th>#</th><th>Клан</th><th>Общий CR</th></tr></thead><tbody></tbody></table>
+        <button id="closeClanModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -255,6 +333,10 @@
     let eventActive = false, eventMultiplier = 1, eventTimerId = null;
     let productionMultiplier = 1, grandmaBoost = 1;
     let currentClan = localStorage.getItem('pechenkoClan') || null;
+    let customTag = localStorage.getItem('pechenkoCustomTag') || '';
+    let customNick = localStorage.getItem('pechenkoCustomNick') || '';
+    let gradientTextEnabled = localStorage.getItem('pechenkoGradientText') === 'true';
+    let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
 
     const DAILY_KEY = 'pechenkoDaily';
     let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
@@ -266,7 +348,10 @@
         { id: 'upgrade4', name: '🚀 Печеньколёт', baseCost: 3000, cps: 100, count: 0, costMult: 1.25 },
         { id: 'upgrade5', name: '🛸 НЛО-пекарня', baseCost: 15000, cps: 500, count: 0, costMult: 1.28 },
         { id: 'upgrade6', name: '🕰️ Временной пекарь', baseCost: 100000, cps: 2000, count: 0, costMult: 1.30 },
-        { id: 'upgrade7', name: '🌌 Квантовая печенька', baseCost: 500000, cps: 10000, count: 0, costMult: 1.33 }
+        { id: 'upgrade7', name: '🌌 Квантовая печенька', baseCost: 500000, cps: 10000, count: 0, costMult: 1.33 },
+        { id: 'upgrade8', name: '🌑 Тёмная материя', baseCost: 1500000, cps: 50000, count: 0, costMult: 1.35 },
+        { id: 'upgrade9', name: '⏳ Временной коллапс', baseCost: 5000000, cps: 250000, count: 0, costMult: 1.38 },
+        { id: 'upgrade10', name: '🍪 Вселенная печенья', baseCost: 20000000, cps: 1500000, count: 0, costMult: 1.40 }
     ];
     const ranks = [
         { threshold: 0, name: 'Новичок' }, { threshold: 1000, name: 'Пекарь' },
@@ -287,7 +372,6 @@
     let totalClicks = parseInt(localStorage.getItem('pechenkoTotalClicks') || '0');
     let totalEvents = parseInt(localStorage.getItem('pechenkoTotalEvents') || '0');
 
-    // Генерация кнопок улучшений
     const container = document.getElementById('upgradesContainer');
     upgrades.forEach((u, i) => {
         const btn = document.createElement('button');
@@ -297,7 +381,6 @@
         container.appendChild(btn);
     });
 
-    // Ежедневная награда
     function canClaimDaily() {
         const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
         if (now - last < oneDay) return false;
@@ -322,7 +405,6 @@
         span.textContent = dailyData.streak > 0 ? `Дней подряд: ${dailyData.streak}` : '';
     }
 
-    // Лидерборды
     function pushToLeaderboard(score) {
         const playerRef = ref(database, 'leaderboard/' + encodeURIComponent(playerName));
         get(playerRef).then(snap => {
@@ -363,7 +445,6 @@
         return idx !== -1 ? idx+1 : null;
     }
 
-    // Кланы
     function updateClanUI() {
         const infoDiv = document.getElementById('myClanInfo');
         if (currentClan) {
@@ -420,7 +501,6 @@
         await update(clanRef, { totalCR: (clan.totalCR || 0) + cr });
     }
 
-    // Ивенты
     function startEvent(type) {
         if (eventActive) { clearTimeout(eventTimerId); eventMultiplier = 1; productionMultiplier = 1; grandmaBoost = 1; removeEventNotification(); }
         eventActive = true;
@@ -495,9 +575,9 @@
             document.getElementById(u.id).disabled = cookies < cost;
         });
         const btn = document.getElementById('prestigeBtn');
-        const can = cookies >= 1_000_000;
+        const can = cookies >= prestigeCost;
         btn.disabled = !can;
-        btn.textContent = can ? '✨ Переродиться! (+1🌟)' : '✨ Переродиться (нужно 1 млн 🍪)';
+        btn.textContent = can ? `✨ Переродиться! (+1🌟)` : `✨ Переродиться (нужно ${prestigeCost.toLocaleString()} 🍪)`;
         document.getElementById('prestigeDisplay').textContent = `🌟 Очки престижа: ${prestigePoints}`;
         document.getElementById('shopSection').style.display = prestigePoints > 0 ? 'block' : 'none';
         document.getElementById('shopBuy1000').disabled = prestigePoints < 1;
@@ -524,7 +604,7 @@
         el.addEventListener('animationend', () => el.remove());
     }
     function performPrestige() {
-        if (cookies >= 1_000_000 && confirm('Переродиться?')) {
+        if (cookies >= prestigeCost && confirm('Переродиться? Все печеньки и улучшения обнулятся, но вы получите 1 очко престижа. Порог следующего перерождения вырастет.')) {
             pushToLeaderboard(cookies);
             cookies = 0; cookiesPerClick = 1;
             upgrades.forEach(u => u.count = 0);
@@ -532,6 +612,8 @@
             prestigePoints++;
             pushToLeaderboardCR();
             if (currentClan) addCRToClan(1);
+            prestigeCost = Math.floor(prestigeCost * 1.5);
+            localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
             updateUI();
             alert('Перерождение успешно!');
         }
@@ -540,8 +622,8 @@
         if (prestigePoints >= cost) { prestigePoints -= cost; cookies += amount; updateUI(); }
     }
     function toggleTheme() {
-        document.body.classList.toggle('dark');
-        localStorage.setItem('cookieClickerTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        document.body.classList.toggle('light');
+        localStorage.setItem('cookieClickerTheme', document.body.classList.contains('light') ? 'light' : 'dark');
     }
     function checkAchievements() {
         achievements.forEach(a => {
@@ -567,12 +649,17 @@
         const container = document.getElementById('chatMessages');
         const div = document.createElement('div');
         div.className = 'chat-message';
+        const displayTag = msg.customTag || (msg.isSpecialAdmin ? '[Фулл разраб]' : (msg.isFriendAdmin ? '[Друн]' : ''));
+        const displayName = msg.customNick || msg.name;
         let nameHtml = '';
-        if (msg.isSpecialAdmin) nameHtml = `<span class="admin-tag">[Фулл разраб]</span> <span class="gradient-nick">${escapeHtml(msg.name)}</span>`;
-        else if (msg.isFriendAdmin) nameHtml = `<span class="friend-tag">[Друн]</span> <span class="gradient-nick">${escapeHtml(msg.name)}</span>`;
-        else nameHtml = `<strong>${escapeHtml(msg.name)}</strong>`;
+        if (msg.isSpecialAdmin || msg.isFriendAdmin) {
+            nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
+        } else {
+            nameHtml = `<strong>${escapeHtml(displayName)}</strong>`;
+        }
         if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
-        div.innerHTML = `${nameHtml}: ${escapeHtml(msg.text)}`;
+        const textHtml = msg.gradientText ? `<span class="gradient-text">${escapeHtml(msg.text)}</span>` : escapeHtml(msg.text);
+        div.innerHTML = `${nameHtml}: ${textHtml}`;
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
     }
@@ -582,8 +669,15 @@
         const text = input.value.trim();
         if (!text) return;
         push(chatRef, {
-            name: playerName, text, isSpecialAdmin, isFriendAdmin,
-            rankPosition: getPlayerRankPosition(), timestamp: serverTimestamp()
+            name: customNick || playerName,
+            text: text,
+            isSpecialAdmin: isSpecialAdmin,
+            isFriendAdmin: isFriendAdmin,
+            rankPosition: getPlayerRankPosition(),
+            customTag: customTag,
+            customNick: customNick,
+            gradientText: gradientTextEnabled,
+            timestamp: serverTimestamp()
         });
         input.value = '';
     }
@@ -593,35 +687,22 @@
         document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
     }
 
-    function loadGame() {
-        const saved = localStorage.getItem('pechenkoClickerSave');
-        if (saved) {
-            const data = JSON.parse(saved);
-            cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1;
-            prestigePoints = data.prestigePoints || 0;
-            upgrades.forEach((u,i) => u.count = data.upgrades[i].count || 0);
-            updateCookiesPerSecond();
-        }
-        if (localStorage.getItem('cookieClickerTheme') === 'dark') document.body.classList.add('dark');
-        if (!playerName) {
-            playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним';
-            localStorage.setItem('pechenkoPlayerName', playerName);
-        }
-        if (isSpecialAdmin) playerName = 'tr3haszz';
-        if (isFriendAdmin) playerName = 't1nator';
-        updateAdminVisibility();
-        updateDailyUI();
-    }
-    function saveGame() {
-        localStorage.setItem('pechenkoClickerSave', JSON.stringify({
-            cookies, cookiesPerClick, prestigePoints,
-            upgrades: upgrades.map(u => ({ count: u.count }))
-        }));
-        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString());
-        localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
+    function closeModal(modal) {
+        modal.classList.add('closing');
+        modal.addEventListener('transitionend', function handler() {
+            modal.classList.remove('active', 'closing');
+            modal.removeEventListener('transitionend', handler);
+        }, { once: true });
+        setTimeout(() => {
+            if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing');
+        }, 350);
     }
 
-    // Обработчики событий
+    document.querySelectorAll('.modal').forEach(modal => {
+        const closeBtn = modal.querySelector('[id^="close"]');
+        if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
+    });
+
     document.getElementById('cookieBtn').addEventListener('click', (e) => {
         const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1);
         cookies += eff; totalClicks++;
@@ -641,8 +722,21 @@
         document.getElementById('adminModal').classList.add('active');
         document.getElementById('addBillionCookiesBtn').classList.toggle('hidden', !isSpecialAdmin);
         document.getElementById('adminGive10CR').classList.toggle('hidden', !isSpecialAdmin);
+        document.getElementById('customTagInput').value = customTag;
+        document.getElementById('customNickInput').value = customNick;
+        document.getElementById('gradientTextCheckbox').checked = gradientTextEnabled;
     });
-    document.getElementById('closeAdminModal').addEventListener('click', () => document.getElementById('adminModal').classList.remove('active'));
+
+    document.getElementById('saveCustomBtn').addEventListener('click', () => {
+        customTag = document.getElementById('customTagInput').value.trim();
+        customNick = document.getElementById('customNickInput').value.trim();
+        gradientTextEnabled = document.getElementById('gradientTextCheckbox').checked;
+        localStorage.setItem('pechenkoCustomTag', customTag);
+        localStorage.setItem('pechenkoCustomNick', customNick);
+        localStorage.setItem('pechenkoGradientText', gradientTextEnabled.toString());
+        alert('Сохранено!');
+    });
+
     document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; updateUI(); });
     document.getElementById('addManyCookiesBtn').addEventListener('click', () => { cookies += 1000000; updateUI(); });
     document.getElementById('addBillionCookiesBtn').addEventListener('click', () => { cookies += 1e9; updateUI(); });
@@ -657,7 +751,9 @@
         alert('+10 CR!');
     });
     document.getElementById('adminFullReset').addEventListener('click', () => {
-        if (confirm('Полный сброс всего?')) { localStorage.clear(); location.reload(); }
+        if (confirm('Полный сброс всего? Это удалит весь прогресс и админ-доступ.')) {
+            localStorage.clear(); location.reload();
+        }
     });
 
     document.getElementById('activateFriendBtn').addEventListener('click', () => {
@@ -675,7 +771,6 @@
         document.getElementById('leaderboardModal').classList.add('active');
         loadLeaderboard('cookies'); loadLeaderboard('cr');
     });
-    document.getElementById('closeLeaderboardModal').addEventListener('click', () => document.getElementById('leaderboardModal').classList.remove('active'));
     document.getElementById('showCookiesTop').addEventListener('click', () => {
         document.getElementById('leaderboardCookiesTable').classList.remove('hidden');
         document.getElementById('leaderboardCRTable').classList.add('hidden');
@@ -686,7 +781,6 @@
     });
 
     document.getElementById('openChatBtn').addEventListener('click', () => document.getElementById('chatModal').classList.add('active'));
-    document.getElementById('closeChatModal').addEventListener('click', () => document.getElementById('chatModal').classList.remove('active'));
     document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
     document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
 
@@ -694,13 +788,11 @@
         renderAchievements();
         document.getElementById('achievementsModal').classList.add('active');
     });
-    document.getElementById('closeAchievementsModal').addEventListener('click', () => document.getElementById('achievementsModal').classList.remove('active'));
 
     document.getElementById('openClanBtn').addEventListener('click', () => {
         updateClanUI();
         document.getElementById('clanModal').classList.add('active');
     });
-    document.getElementById('closeClanModal').addEventListener('click', () => document.getElementById('clanModal').classList.remove('active'));
     document.getElementById('createClanBtn').addEventListener('click', () => {
         const name = document.getElementById('clanNameInput').value.trim();
         if (name) createClan(name);
@@ -730,6 +822,36 @@
         updateAdminVisibility(); updateUI();
         alert('t1nator активирован как Друн!');
     };
+
+    function loadGame() {
+        const saved = localStorage.getItem('pechenkoClickerSave');
+        if (saved) {
+            const data = JSON.parse(saved);
+            cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1;
+            prestigePoints = data.prestigePoints || 0;
+            upgrades.forEach((u,i) => u.count = data.upgrades[i].count || 0);
+            updateCookiesPerSecond();
+        }
+        if (localStorage.getItem('cookieClickerTheme') === 'light') document.body.classList.add('light');
+        if (!playerName) {
+            playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним';
+            localStorage.setItem('pechenkoPlayerName', playerName);
+        }
+        if (isSpecialAdmin) playerName = 'tr3haszz';
+        if (isFriendAdmin) playerName = 't1nator';
+        prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
+        updateAdminVisibility();
+        updateDailyUI();
+    }
+    function saveGame() {
+        localStorage.setItem('pechenkoClickerSave', JSON.stringify({
+            cookies, cookiesPerClick, prestigePoints,
+            upgrades: upgrades.map(u => ({ count: u.count }))
+        }));
+        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString());
+        localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
+        localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
+    }
 
     setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; updateUI(); } }, 100);
     loadGame();
