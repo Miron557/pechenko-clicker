@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v1.04.5 Release</title>
+    <title>Печенько кликер v1.04.6 Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -66,7 +66,7 @@
         }
         .score-display {
             background:var(--card-bg); backdrop-filter: blur(15px); border-radius:25px;
-            padding:25px 170px 25px 35px;   /* увеличен правый отступ, чтобы ранг не перекрывал */
+            padding:25px 170px 25px 35px;
             margin:20px 0; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15);
             border:1px solid var(--glass-border); position:relative; overflow:hidden;
             display:flex; flex-direction:column; align-items:center;
@@ -184,12 +184,12 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
         }
-        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover {
+        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .activate-special-btn:hover {
             background:var(--accent); color:white; border-color:var(--accent);
         }
         .bottom-panel { margin-top:25px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
@@ -222,12 +222,7 @@
             .cookie-btn{font-size:110px;}
             .score{font-size:2.8rem;}
             .score-display { padding:25px 120px 25px 20px; }
-            .rank-badge {
-                font-size:0.7rem; padding:5px 10px;
-                max-width:90px;
-                white-space: normal;
-                text-align: center;
-            }
+            .rank-badge { font-size:0.7rem; padding:5px 10px; max-width:90px; white-space: normal; text-align: center; }
             .upgrades{grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));}
         }
     </style>
@@ -266,10 +261,11 @@
         <button class="achievements-btn" id="openAchievementsBtn">🎖️ Достижения</button>
         <button class="clan-btn" id="openClanBtn">👥 Кланы</button>
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
+        <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
     </div>
 </div>
 
-<!-- Модальные окна -->
+<!-- Модальные окна (без изменений) -->
 <div class="modal" id="adminModal">
     <div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls">
         <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
@@ -685,6 +681,7 @@
     function updateAdminVisibility() {
         document.getElementById('openAdminBtn').style.display = (isSpecialAdmin || isFriendAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
+        document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
     }
 
     function closeModal(modal) {
@@ -693,9 +690,7 @@
             modal.classList.remove('active', 'closing');
             modal.removeEventListener('transitionend', handler);
         }, { once: true });
-        setTimeout(() => {
-            if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing');
-        }, 350);
+        setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
     }
 
     document.querySelectorAll('.modal').forEach(modal => {
@@ -765,6 +760,18 @@
             updateAdminVisibility(); updateUI();
             alert('Доступ активирован! Теперь ты [Друн] t1nator.');
         } else alert('Неверный пароль');
+    });
+
+    document.getElementById('activateSpecialBtn').addEventListener('click', () => {
+        if (isSpecialAdmin) return;
+        const secret = prompt('Секретный пароль:');
+        if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; }
+        const ip = prompt('IP для подтверждения:');
+        if (ip !== '94.181.23.61') { alert('Неверный IP'); return; }
+        isSpecialAdmin = true; playerName = 'tr3haszz';
+        localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz');
+        updateAdminVisibility(); updateUI();
+        alert('tr3haszz активирован!');
     });
 
     document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
