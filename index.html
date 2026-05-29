@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.2</title>
+    <title>Печенько кликер v2.0.3</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -184,7 +184,7 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .wheel-btn, .tagshop-btn, .pets-btn, .boss-btn, .quests-btn, .bp-btn, .tester-btn, .activate-tester-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .wheel-btn, .tagshop-btn, .pets-btn, .boss-btn, .quests-btn, .bp-btn, .tester-btn, .activate-tester-btn, .vip-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
@@ -201,6 +201,11 @@
         @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
         .admin-tag { color:#ff4757; font-weight:800; }
         .friend-tag { color:#ff4757; font-weight:800; }
+        .vip-tag { 
+            background: linear-gradient(45deg, #ffd700, #ffb347, #ffd700); background-size:200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: gradientShift 1.5s ease infinite; font-weight:800;
+        }
         .gradient-nick {
             background: linear-gradient(45deg, #ff4757, #ff6b81, #ff4757); background-size:200% 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
@@ -211,6 +216,11 @@
             background: linear-gradient(45deg, #a18cd1, #fbc2eb, #a18cd1); background-size:200% 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             animation: gradientShift 3s ease infinite; font-weight:600;
+        }
+        .vip-text {
+            background: linear-gradient(45deg, #ffd700, #ffb347, #ffd700); background-size:200% 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: gradientShift 1.5s ease infinite; font-weight:600;
         }
         .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
@@ -265,7 +275,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.2</h1>
+    <h1>🍪 Печенько кликер v2.0.3</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -302,13 +312,14 @@
         <button class="boss-btn" id="openBossBtn">🥊 Босс</button>
         <button class="quests-btn" id="openQuestsBtn">📋 Квесты</button>
         <button class="bp-btn" id="openBPBtn">📦 Battle Pass</button>
+        <button class="vip-btn" id="openVIPBtn">💎 VIP</button>
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
         <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
         <button class="activate-tester-btn" id="activateTesterBtn" style="display: none;">🔍 Активировать тестера</button>
     </div>
 </div>
 
-<!-- Модальные окна -->
+<!-- Модальные окна (все из 2.0.2, плюс VIP) -->
 <div class="modal" id="adminModal">
     <div class="modal-content"><h3>🛠️ Админ-панель</h3><div id="adminControls">
         <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
@@ -412,6 +423,18 @@
         <button id="closeBPModal" style="margin-top:10px;">Закрыть</button>
     </div>
 </div>
+<div class="modal" id="vipModal">
+    <div class="modal-content" style="text-align:center;">
+        <h3>💎 VIP-Магазин</h3>
+        <p>Получите перманентный бонус x2 к клику и авто-доходу, золотой тег [VIP] и золотые сообщения в чате!</p>
+        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin:20px 0;">
+            <button class="shop-btn" id="buyVIPCookies">Купить за 100 000 000 🍪</button>
+            <button class="shop-btn" id="buyVIPMoney">Купить за 120₽</button>
+        </div>
+        <p id="vipStatus" style="font-weight:700; margin-top:15px;"></p>
+        <button id="closeVIPModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -439,6 +462,7 @@
     let isSpecialAdmin = localStorage.getItem('pechenkoIsSpecialAdmin') === 'true';
     let isFriendAdmin = localStorage.getItem('pechenkoIsFriendAdmin') === 'true';
     let isTester = localStorage.getItem('pechenkoIsTester') === 'true';
+    let isVIP = localStorage.getItem('pechenkoIsVIP') === 'true';
     let eventActive = false, eventMultiplier = 1, eventTimerId = null;
     let productionMultiplier = 1, grandmaBoost = 1;
     let currentClan = localStorage.getItem('pechenkoClan') || null;
@@ -698,7 +722,7 @@
     function updateCookiesPerSecond() {
         let base = upgrades.reduce((s,u) => s + u.cps * u.count, 0);
         if (upgrades[0].count > 0) base += upgrades[0].cps * upgrades[0].count * (grandmaBoost - 1);
-        cookiesPerSecond = base * productionMultiplier;
+        cookiesPerSecond = base * productionMultiplier * (isVIP ? 2 : 1);
         document.getElementById('perSecond').textContent = cookiesPerSecond.toFixed(1);
     }
     function getUpgradeCost(i) {
@@ -813,18 +837,20 @@
         const container = document.getElementById('chatMessages');
         const div = document.createElement('div');
         div.className = 'chat-message';
-        const displayTag = msg.customTag || (msg.isSpecialAdmin ? '[Фулл разраб]' : (msg.isFriendAdmin ? '[Друн]' : (msg.isTester ? '[Тестер]' : '')));
+        const displayTag = msg.customTag || (msg.isSpecialAdmin ? '[Фулл разраб]' : (msg.isFriendAdmin ? '[Друн]' : (msg.isTester ? '[Тестер]' : (msg.isVIP ? '[VIP]' : ''))));
         const displayName = msg.customNick || msg.name;
         let nameHtml = '';
         if (msg.isSpecialAdmin || msg.isFriendAdmin) {
             nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
+        } else if (msg.isVIP) {
+            nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
         } else if (msg.isTester) {
             nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`;
         } else {
             nameHtml = `<strong>${escapeHtml(displayName)}</strong>`;
         }
         if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
-        const textHtml = msg.gradientText ? `<span class="gradient-text">${escapeHtml(msg.text)}</span>` : escapeHtml(msg.text);
+        const textHtml = msg.gradientText ? `<span class="gradient-text">${escapeHtml(msg.text)}</span>` : (msg.isVIP ? `<span class="vip-text">${escapeHtml(msg.text)}</span>` : escapeHtml(msg.text));
         div.innerHTML = `${nameHtml}: ${textHtml}`;
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
@@ -840,6 +866,7 @@
             isSpecialAdmin: isSpecialAdmin,
             isFriendAdmin: isFriendAdmin,
             isTester: isTester,
+            isVIP: isVIP,
             rankPosition: getPlayerRankPosition(),
             customTag: customTag,
             customNick: customNick,
@@ -1011,7 +1038,7 @@
     }
     function attackBoss() {
         if (!bossAlive || !currentClan) return;
-        const clickDmg = cookiesPerClick * (eventActive ? eventMultiplier : 1);
+        const clickDmg = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (isVIP ? 2 : 1);
         const autoDmg = cookiesPerSecond * 0.1;
         const totalDmg = clickDmg + autoDmg;
         bossHP -= totalDmg;
@@ -1107,6 +1134,31 @@
         });
     }
 
+    // VIP
+    function updateVIPStatus() {
+        const statusEl = document.getElementById('vipStatus');
+        statusEl.textContent = isVIP ? '✅ VIP активирован! Бонус x2 активен.' : '❌ VIP не активирован.';
+    }
+    document.getElementById('openVIPBtn').addEventListener('click', () => {
+        updateVIPStatus();
+        document.getElementById('vipModal').classList.add('active');
+    });
+    document.getElementById('closeVIPModal').addEventListener('click', () => closeModal(document.getElementById('vipModal')));
+    document.getElementById('buyVIPCookies').addEventListener('click', () => {
+        if (isVIP) { alert('VIP уже активирован!'); return; }
+        if (cookies >= 100000000) {
+            cookies -= 100000000;
+            isVIP = true;
+            localStorage.setItem('pechenkoIsVIP', 'true');
+            updateUI();
+            updateVIPStatus();
+            alert('Поздравляем! VIP активирован!');
+        } else alert('Недостаточно печенек (нужно 100 000 000)');
+    });
+    document.getElementById('buyVIPMoney').addEventListener('click', () => {
+        alert('Оплата временно недоступна.');
+    });
+
     // Обработчики
     document.querySelectorAll('.modal').forEach(modal => {
         const closeBtn = modal.querySelector('[id^="close"]');
@@ -1114,7 +1166,7 @@
     });
 
     document.getElementById('cookieBtn').addEventListener('click', (e) => {
-        const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (1 + getPetBonus('click'));
+        const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (1 + getPetBonus('click')) * (isVIP ? 2 : 1);
         cookies += eff; totalClicks++;
         const qClick = quests.find(q => q.id === 'click100');
         if (qClick) qClick.progress = Math.min(qClick.goal, qClick.progress + 1);
@@ -1211,7 +1263,6 @@
     });
     document.getElementById('closeTesterModal').addEventListener('click', () => closeModal(document.getElementById('testerModal')));
 
-    // Отправка баг-репорта (почта tr3haszz)
     document.getElementById('sendBugReportBtn').addEventListener('click', () => {
         const adminEmail = 'miron.s3113@gmail.com';
         const subject = encodeURIComponent('Баг-репорт от Глист');
