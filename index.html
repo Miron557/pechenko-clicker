@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.2</title>
+    <title>Печенько кликер v2.0.9.4</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -184,7 +184,7 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .pets-btn, .boss-btn, .quests-btn, .bp-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px;
@@ -281,7 +281,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.2</h1>
+    <h1>🍪 Печенько кликер v2.0.9.4</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -313,10 +313,8 @@
         <button class="achievements-btn" id="openAchievementsBtn">🎖️ Достижения</button>
         <button class="clan-btn" id="openClanBtn">👥 Кланы</button>
         <button class="tagshop-btn" id="openTagShopBtn">🏷️ Теги</button>
-        <button class="pets-btn" id="openPetsBtn">🐾 Питомцы</button>
         <button class="boss-btn" id="openBossBtn">🥊 Босс</button>
         <button class="quests-btn" id="openQuestsBtn">📋 Квесты</button>
-        <button class="bp-btn" id="openBPBtn">📦 Battle Pass</button>
         <button class="vip-btn" id="openVIPBtn">💎 Магазин</button>
         <button class="activate-friend-btn" id="activateFriendBtn" style="display: none;">🔑 Активировать друга</button>
         <button class="activate-special-btn" id="activateSpecialBtn" style="display: none;">🔓 Активировать tr3haszz</button>
@@ -325,7 +323,7 @@
     </div>
 </div>
 
-<!-- Модальные окна (аналогично предыдущей версии, но добавлена кнопка "Выдать 100 млрд" в админ-панели) -->
+<!-- Модальные окна -->
 <div class="modal" id="adminModal">
     <div class="modal-content" style="max-width:700px;">
         <h3>🛠️ Админ-панель</h3>
@@ -356,8 +354,94 @@
         <button id="closeAdminModal" style="margin-top:15px;">Закрыть</button>
     </div>
 </div>
-<!-- Остальные модальные окна точно такие же, как в v2.0.9.1, для краткости опускаю, но они должны быть полностью скопированы -->
-<!-- ВАЖНО: Добавьте сюда модальные окна testerModal, leaderboardModal, chatModal, achievementsModal, clanModal, tagShopModal, petsModal, bossModal, questsModal, bpModal, vipModal из предыдущего полного кода -->
+<div class="modal" id="testerModal">
+    <div class="modal-content" style="text-align:center;">
+        <h3>🔧 Панель тестера</h3>
+        <p>Если нашли баг, отправьте репорт прямо tr3haszz!</p>
+        <button id="sendBugReportBtn">📧 Отправить баг-репорт</button>
+        <p style="margin-top:12px; font-size:0.9rem;">При нажатии откроется почтовый клиент. Опишите, что делали, что ожидали и что получили.</p>
+        <button id="closeTesterModal" style="margin-top:15px;">Закрыть</button>
+    </div>
+</div>
+<div class="modal" id="leaderboardModal">
+    <div class="modal-content"><h3>🏆 Таблицы лидеров</h3><button id="showCookiesTop">Топ по печенькам</button><button id="showCRTop">Топ по CR</button>
+        <table id="leaderboardCookiesTable"><thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead><tbody></tbody></table>
+        <table id="leaderboardCRTable" class="hidden"><thead><tr><th>#</th><th>Имя</th><th>CR</th></tr></thead><tbody></tbody></table>
+        <button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="chatModal">
+    <div class="modal-content">
+        <h3>💬 Мировой чат</h3>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <button id="emojiPickerBtn" style="font-size:1.4rem; background:transparent; border:none; cursor:pointer;">😀</button>
+            <div class="emoji-picker" id="emojiPicker"></div>
+            <input type="text" id="chatInput" placeholder="Введите сообщение..." style="flex:1;">
+            <button id="sendChatBtn">Отправить</button>
+        </div>
+        <button id="closeChatModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
+<div class="modal" id="achievementsModal">
+    <div class="modal-content"><h3>🎖️ Достижения</h3><ul class="achievement-list" id="achievementList"></ul><button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="clanModal">
+    <div class="modal-content"><h3>👥 Кланы</h3><div id="myClanInfo"></div>
+        <button id="createClanBtn">Создать</button><button id="joinClanBtn">Вступить</button>
+        <input type="text" id="clanNameInput" placeholder="Название клана" style="width:100%; margin:10px 0;">
+        <h4>Топ кланов</h4>
+        <table id="clanLeaderboardTable"><thead><tr><th>#</th><th>Клан</th><th>Общий CR</th></tr></thead><tbody></tbody></table>
+        <button id="closeClanModal" style="margin-top:15px;">Закрыть</button></div>
+</div>
+<div class="modal" id="tagShopModal">
+    <div class="modal-content">
+        <h3>🏷️ Магазин тегов</h3>
+        <p>Купите тег, который будет виден в чате всем!</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin:15px 0;">
+            <button class="shop-btn buyTagBtn" data-tag="[Новичок]" data-cost="1000">[Новичок] - 1 000 🍪</button>
+            <button class="shop-btn buyTagBtn" data-tag="[Пекарь]" data-cost="10000">[Пекарь] - 10 000 🍪</button>
+            <button class="shop-btn buyTagBtn" data-tag="[Магнат]" data-cost="100000">[Магнат] - 100 000 🍪</button>
+            <button class="shop-btn" id="buyCustomTagBtn">Свой тег - 1 000 000 🍪</button>
+        </div>
+        <button id="closeTagShopModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
+<div class="modal" id="bossModal">
+    <div class="modal-content" style="text-align:center;">
+        <h3>🥊 Клановый босс</h3>
+        <div id="bossInfo" style="margin:15px 0;"></div>
+        <div style="background:var(--card-bg); border-radius:20px; padding:15px; margin:15px 0;">
+            <p>Здоровье босса: <span id="bossHP">0</span></p>
+            <div style="background:#333; border-radius:10px; height:20px; margin:10px 0;">
+                <div id="bossHPBar" style="background:linear-gradient(90deg, #ff4757, #ff6b81); height:100%; border-radius:10px; width:100%;"></div>
+            </div>
+        </div>
+        <button id="attackBossBtn">Атаковать (клик)</button>
+        <button id="closeBossModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
+<div class="modal" id="questsModal">
+    <div class="modal-content">
+        <h3>📋 Ежедневные квесты</h3>
+        <div id="questsList" style="margin:15px 0;"></div>
+        <button id="closeQuestsModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
+<div class="modal" id="vipModal">
+    <div class="modal-content" style="text-align:center;">
+        <h3>💎 Магазин</h3>
+        <p>Здесь можно приобрести бонусы и статусы (оплата временно недоступна).</p>
+        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin:20px 0;">
+            <button class="shop-btn" id="buyVIPCookies">VIP x2 - 100 000 000 🍪</button>
+            <button class="shop-btn" id="buyVIPMoney">VIP x2 - 120₽</button>
+            <button class="shop-btn" id="buyX3Money">x3 навсегда - 50₽</button>
+            <button class="shop-btn" id="buyModerMoney">Модер (30д) - 100₽</button>
+            <button class="shop-btn" id="buyTempAdmin">Админ на 1 день - 1 000 000 000 000 🍪</button>
+        </div>
+        <p id="shopStatus" style="font-weight:700; margin-top:15px;"></p>
+        <button id="closeVIPModal" style="margin-top:10px;">Закрыть</button>
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -401,26 +485,15 @@
     let gradientColor = localStorage.getItem('pechenkoGradientColor') || '#ff4757, #ff6b81';
     let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
 
-    // Авто-VIP для админов
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
-        if (!isVIP) {
-            isVIP = true;
-            localStorage.setItem('pechenkoIsVIP', 'true');
-        }
+        if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); }
     }
     if (isTemporaryAdmin && Date.now() > tempAdminExpiry) {
-        isTemporaryAdmin = false;
-        localStorage.removeItem('pechenkoIsTemporaryAdmin');
-        localStorage.removeItem('pechenkoTempAdminExpiry');
-        if (!isSpecialAdmin && !isFriendAdmin) {
-            isVIP = false;
-            localStorage.removeItem('pechenkoIsVIP');
-        }
+        isTemporaryAdmin = false; localStorage.removeItem('pechenkoIsTemporaryAdmin'); localStorage.removeItem('pechenkoTempAdminExpiry');
+        if (!isSpecialAdmin && !isFriendAdmin) { isVIP = false; localStorage.removeItem('pechenkoIsVIP'); }
     }
     if (isModer && Date.now() > moderExpiry) {
-        isModer = false;
-        localStorage.removeItem('pechenkoIsModer');
-        localStorage.removeItem('pechenkoModerExpiry');
+        isModer = false; localStorage.removeItem('pechenkoIsModer'); localStorage.removeItem('pechenkoModerExpiry');
     }
 
     const DAILY_KEY = 'pechenkoDaily';
@@ -436,12 +509,7 @@
         { id: 'upgrade7', name: '🌌 Квантовая печенька', baseCost: 500000, cps: 10000, count: 0, costMult: 1.33 },
         { id: 'upgrade8', name: '🌑 Тёмная материя', baseCost: 1500000, cps: 50000, count: 0, costMult: 1.35 },
         { id: 'upgrade9', name: '⏳ Временной коллапс', baseCost: 5000000, cps: 250000, count: 0, costMult: 1.38 },
-        { id: 'upgrade10', name: '🍪 Вселенная печенья', baseCost: 20000000, cps: 1500000, count: 0, costMult: 1.40 },
-        { id: 'upgrade11', name: '✨ Божественный клик', baseCost: 100000000, cps: 5000000, count: 0, costMult: 1.42, requiresAll: true },
-        { id: 'upgrade12', name: '🔮 Печенье судьбы', baseCost: 500000000, cps: 20000000, count: 0, costMult: 1.44, requiresAll: true },
-        { id: 'upgrade13', name: '🌠 Звёздная пыль', baseCost: 2000000000, cps: 80000000, count: 0, costMult: 1.46, requiresAll: true },
-        { id: 'upgrade14', name: '🌀 Хроно-печенье', baseCost: 10000000000, cps: 300000000, count: 0, costMult: 1.48, requiresAll: true },
-        { id: 'upgrade15', name: '💥 Большой взрыв', baseCost: 50000000000, cps: 1000000000, count: 0, costMult: 1.50, requiresAll: true }
+        { id: 'upgrade10', name: '🍪 Вселенная печенья', baseCost: 20000000, cps: 1500000, count: 0, costMult: 1.40 }
     ];
     const ranks = [
         { threshold: 0, name: 'Новичок' }, { threshold: 1000, name: 'Пекарь' },
@@ -456,8 +524,7 @@
         { id: 'prestige_1', name: 'Первое перерождение', desc: 'Выполнить перерождение', check: () => prestigePoints >= 1 },
         { id: 'buy_10_grandmas', name: 'Бабушкоман', desc: 'Купить 10 бабушек', check: () => upgrades[0].count >= 10 },
         { id: 'daily_3', name: 'Постоянство', desc: 'Забрать ежедневную награду 3 дня подряд', check: () => dailyData.streak >= 3 },
-        { id: 'event_master', name: 'Мастер ивентов', desc: 'Пережить 5 ивентов', check: () => totalEvents >= 5 },
-        { id: 'pet_lover', name: 'Друг питомцев', desc: 'Купить любого питомца', check: () => Object.values(petLevels).some(l => l > 0) }
+        { id: 'event_master', name: 'Мастер ивентов', desc: 'Пережить 5 ивентов', check: () => totalEvents >= 5 }
     ];
     let unlockedAchievements = JSON.parse(localStorage.getItem('pechenkoAchievements') || '[]');
     let totalClicks = parseInt(localStorage.getItem('pechenkoTotalClicks') || '0');
@@ -465,24 +532,12 @@
 
     const container = document.getElementById('upgradesContainer');
     upgrades.forEach((u, i) => {
-        if (u.requiresAll) {
-            const allBought = upgrades.slice(0, 10).every(upg => upg.count > 0);
-            if (!allBought) return;
-        }
         const btn = document.createElement('button');
         btn.className = 'upgrade-btn';
         btn.id = u.id;
         btn.innerHTML = `<span class="upgrade-name">${u.name}</span><span class="upgrade-cost">Цена: <span id="cost${i+1}">${u.baseCost}</span> 🍪</span><span class="upgrade-count">Куплено: <span id="count${i+1}">0</span></span>`;
         container.appendChild(btn);
     });
-
-    const pets = [
-        { id: 'cat', name: '🐱 Котопеченька', cost: 10000, bonusType: 'click', bonusPerLevel: 0.5, level: 0, maxLevel: 20 },
-        { id: 'dragon', name: '🐉 Драко-печенька', cost: 50000, bonusType: 'cps', bonusPerLevel: 0.02, level: 0, maxLevel: 20 },
-        { id: 'unicorn', name: '🦄 Единорог-печенька', cost: 200000, bonusType: 'all', bonusPerLevel: 0.01, level: 0, maxLevel: 20 }
-    ];
-    let petLevels = JSON.parse(localStorage.getItem('pechenkoPetLevels') || '{"cat":0,"dragon":0,"unicorn":0}');
-    let activePet = localStorage.getItem('pechenkoActivePet') || null;
 
     let bossHP = 0, bossMaxHP = 1000000, bossAlive = false;
     const BOSS_COOLDOWN = 24 * 60 * 60 * 1000;
@@ -493,18 +548,6 @@
         { id: 'buy5', desc: 'Купить 5 улучшений', goal: 5, progress: 0, reward: 1000 },
         { id: 'prestige1', desc: 'Переродиться 1 раз', goal: 1, progress: 0, reward: 5 }
     ];
-    let bpXP = parseInt(localStorage.getItem('pechenkoBPXP') || '0');
-    let bpLevel = parseInt(localStorage.getItem('pechenkoBPLevel') || '1');
-    const bpMaxLevel = 20;
-    const xpPerLevel = 500;
-    let bpRewards = [
-        { level: 1, free: '500 🍪', premium: '1000 🍪 + Тег [Сезон 1]' },
-        { level: 5, free: '1 CR', premium: '5 CR' },
-        { level: 10, free: 'Питомец: Котопеченька (ур.5)', premium: 'Котопеченька ур.10' },
-        { level: 15, free: '10 000 🍪', premium: '100 000 🍪' },
-        { level: 20, free: 'Градиентный ник (30д)', premium: 'Градиентный ник навсегда' }
-    ];
-    let bpPremium = localStorage.getItem('pechenkoBPPremium') === 'true';
 
     function canClaimDaily() {
         const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
@@ -669,10 +712,7 @@
         if (notif) { clearInterval(parseInt(notif.dataset.intervalId)); notif.remove(); }
     }
     function scheduleRandomEvent() {
-        if (eventsFrozen) {
-            setTimeout(scheduleRandomEvent, 60000);
-            return;
-        }
+        if (eventsFrozen) { setTimeout(scheduleRandomEvent, 60000); return; }
         const types = ['rain','gold','storm','bunt'];
         const weights = [40,15,25,20];
         let r = Math.random() * weights.reduce((a,b)=>a+b), type = 'rain';
@@ -689,27 +729,10 @@
         cookiesPerSecond = base * productionMultiplier * mult;
         document.getElementById('perSecond').textContent = cookiesPerSecond.toFixed(1);
     }
-    function getUpgradeCost(i) {
-        const u = upgrades[i];
-        return Math.floor(u.baseCost * Math.pow(u.costMult, u.count));
-    }
-    function getCurrentRank() {
-        let rank = ranks[0];
-        for (let r of ranks) if (cookies >= r.threshold) rank = r; else break;
-        return rank.name;
-    }
-    function getPetBonus(type) {
-        let bonus = 0;
-        for (const pet of pets) {
-            const lvl = petLevels[pet.id] || 0;
-            if (lvl > 0) {
-                if (pet.bonusType === type || pet.bonusType === 'all') {
-                    bonus += pet.bonusPerLevel * lvl;
-                }
-            }
-        }
-        return bonus;
-    }
+    function getUpgradeCost(i) { const u = upgrades[i]; return Math.floor(u.baseCost * Math.pow(u.costMult, u.count)); }
+    function getCurrentRank() { let rank = ranks[0]; for (let r of ranks) if (cookies >= r.threshold) rank = r; else break; return rank.name; }
+    function getPetBonus(type) { return 0; } // заглушка, чтобы не ломать вызовы
+
     function updateUI() {
         document.getElementById('score').textContent = Math.floor(cookies);
         document.getElementById('rankDisplay').textContent = getCurrentRank();
@@ -766,17 +789,11 @@
             const qPrestige = quests.find(q => q.id === 'prestige1');
             if (qPrestige) qPrestige.progress = 1;
             updateQuests();
-            addBPXP(100);
             alert('Перерождение успешно!');
         }
     }
-    function buyShopItem(amount, cost) {
-        if (prestigePoints >= cost) { prestigePoints -= cost; cookies += amount; updateUI(); }
-    }
-    function toggleTheme() {
-        document.body.classList.toggle('light');
-        localStorage.setItem('cookieClickerTheme', document.body.classList.contains('light') ? 'light' : 'dark');
-    }
+    function buyShopItem(amount, cost) { if (prestigePoints >= cost) { prestigePoints -= cost; cookies += amount; updateUI(); } }
+    function toggleTheme() { document.body.classList.toggle('light'); localStorage.setItem('cookieClickerTheme', document.body.classList.contains('light') ? 'light' : 'dark'); }
     function checkAchievements() {
         achievements.forEach(a => {
             if (!unlockedAchievements.includes(a.id) && a.check()) {
@@ -798,146 +815,73 @@
     }
     function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-    // Чат (полностью рабочий)
+    // Чат
     const emojiList = ['😀','😂','😍','🥺','😎','🤔','😴','😡','👍','👎','🎉','🍪','💎','🌟','💬','❤️','🔥','⭐','🎁','📧','💡','⌛','🚀','🍕','🎂','☕','🌈','🎵','🎮','⚽','📱','💻','🖥️','📷','🔑','💰','🛒','🎡','🏆','🐱','🐶','🦊','🐼','🐨','🐸','🦄','🐙','🍎','🍊','🍋','🍉','🍇','🍓','🍒','🥝','🍔','🌮','🍩','🍿','🥤','🍹','🍾','🎄','🎃','🎈','🎊','🎀','🎁','🏅','🥇','🥈','🥉','💍','🕶️','👑','💣','🧨','🎯','🔮','📌','✂️','🖊️','📅'];
     const emojiPicker = document.getElementById('emojiPicker');
     emojiList.forEach(emoji => {
         const btn = document.createElement('button');
         btn.className = 'emoji-btn';
         btn.textContent = emoji;
-        btn.addEventListener('click', () => {
-            const input = document.getElementById('chatInput');
-            input.value += emoji;
-            input.focus();
-            emojiPicker.style.display = 'none';
-        });
+        btn.addEventListener('click', () => { const input = document.getElementById('chatInput'); input.value += emoji; input.focus(); emojiPicker.style.display = 'none'; });
         emojiPicker.appendChild(btn);
     });
-    document.getElementById('emojiPickerBtn').addEventListener('click', () => {
-        emojiPicker.style.display = emojiPicker.style.display === 'grid' ? 'none' : 'grid';
-    });
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.chat-input-area')) {
-            emojiPicker.style.display = 'none';
-        }
-    });
+    document.getElementById('emojiPickerBtn').addEventListener('click', () => { emojiPicker.style.display = emojiPicker.style.display === 'grid' ? 'none' : 'grid'; });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.chat-input-area')) { emojiPicker.style.display = 'none'; } });
 
     let audioCtx = null;
     function playNotificationSound() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const now = audioCtx.currentTime;
-        const osc1 = audioCtx.createOscillator();
-        const gain1 = audioCtx.createGain();
-        osc1.connect(gain1);
-        gain1.connect(audioCtx.destination);
-        osc1.frequency.value = 880;
-        osc1.type = 'sine';
-        gain1.gain.setValueAtTime(0.3, now);
-        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        osc1.start(now);
-        osc1.stop(now + 0.08);
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.frequency.value = 1100;
-        osc2.type = 'sine';
-        gain2.gain.setValueAtTime(0.3, now + 0.08);
-        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
-        osc2.start(now + 0.08);
-        osc2.stop(now + 0.16);
+        const osc1 = audioCtx.createOscillator(); const gain1 = audioCtx.createGain();
+        osc1.connect(gain1); gain1.connect(audioCtx.destination);
+        osc1.frequency.value = 880; osc1.type = 'sine';
+        gain1.gain.setValueAtTime(0.3, now); gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc1.start(now); osc1.stop(now + 0.08);
+        const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain();
+        osc2.connect(gain2); gain2.connect(audioCtx.destination);
+        osc2.frequency.value = 1100; osc2.type = 'sine';
+        gain2.gain.setValueAtTime(0.3, now + 0.08); gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+        osc2.start(now + 0.08); osc2.stop(now + 0.16);
     }
 
-    let unreadCount = 0;
-    let chatModalActive = false;
+    let unreadCount = 0, chatModalActive = false;
     const chatBtn = document.getElementById('openChatBtn');
     const badge = document.createElement('span');
-    badge.className = 'unread-badge hidden';
-    badge.textContent = '0';
-    chatBtn.style.position = 'relative';
-    chatBtn.appendChild(badge);
+    badge.className = 'unread-badge hidden'; badge.textContent = '0';
+    chatBtn.style.position = 'relative'; chatBtn.appendChild(badge);
 
-    function updateBadge() {
-        if (unreadCount > 0) {
-            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-            badge.classList.remove('hidden');
-        } else {
-            badge.classList.add('hidden');
-        }
-    }
+    function updateBadge() { if (unreadCount > 0) { badge.textContent = unreadCount > 99 ? '99+' : unreadCount; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
 
     function renderChatMessage(msg) {
         const container = document.getElementById('chatMessages');
-        const div = document.createElement('div');
-        div.className = 'chat-message';
+        const div = document.createElement('div'); div.className = 'chat-message';
         let displayTag = msg.customTag || '';
         if (!displayTag) {
-            if (msg.isSpecialAdmin) displayTag = '[Фулл разраб]';
-            else if (msg.isFriendAdmin) displayTag = '[Друн]';
-            else if (msg.isTester) displayTag = '[Тестер]';
-            else if (msg.isModer) displayTag = '[Модер]';
-            else if (msg.isVIP) displayTag = '[VIP]';
+            if (msg.isSpecialAdmin) displayTag = '[Фулл разраб]'; else if (msg.isFriendAdmin) displayTag = '[Друн]';
+            else if (msg.isTester) displayTag = '[Тестер]'; else if (msg.isModer) displayTag = '[Модер]'; else if (msg.isVIP) displayTag = '[VIP]';
         }
         const displayName = msg.customNick || msg.name;
         let nameHtml = '';
-        if (msg.isSpecialAdmin || msg.isFriendAdmin) {
-            nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isModer) {
-            nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isVIP) {
-            nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isTester) {
-            nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`;
-        } else {
-            nameHtml = `<strong>${escapeHtml(displayName)}</strong>`;
-        }
+        if (msg.isSpecialAdmin || msg.isFriendAdmin) { nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
+        else if (msg.isModer) { nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
+        else if (msg.isVIP) { nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
+        else if (msg.isTester) { nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`; }
+        else { nameHtml = `<strong>${escapeHtml(displayName)}</strong>`; }
         if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
         let textHtml = msg.gradientText ? `<span class="gradient-text" style="background: linear-gradient(45deg, ${gradientColor}); background-size:200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 3s ease infinite; font-weight:600;">${escapeHtml(msg.text)}</span>` : escapeHtml(msg.text);
         if (!msg.gradientText && msg.isVIP) textHtml = `<span class="vip-text">${escapeHtml(msg.text)}</span>`;
         if (!msg.gradientText && msg.isModer) textHtml = `<span class="moder-text">${escapeHtml(msg.text)}</span>`;
         div.innerHTML = `${nameHtml}: ${textHtml} <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
+        container.appendChild(div); container.scrollTop = container.scrollHeight;
     }
 
-    onChildAdded(chatRef, snap => {
-        const m = snap.val();
-        if (m) {
-            renderChatMessage(m);
-            if (!chatModalActive) {
-                unreadCount++;
-                updateBadge();
-                playNotificationSound();
-            }
-        }
-    });
+    onChildAdded(chatRef, snap => { const m = snap.val(); if (m) { renderChatMessage(m); if (!chatModalActive) { unreadCount++; updateBadge(); playNotificationSound(); } } });
 
     function sendChatMessage() {
-        const input = document.getElementById('chatInput');
-        let text = input.value.trim();
-        if (!text) return;
-        if (text.startsWith('/me ')) {
-            text = text.replace('/me ', '');
-            text = `* ${customNick || playerName} ${text}`;
-        } else if (text === '/cookie') {
-            text = '🍪 Печенька!';
-        } else if (text === '/dance') {
-            text = '🕺💃🕺💃';
-        }
-        push(chatRef, {
-            name: customNick || playerName,
-            text: text,
-            isSpecialAdmin: isSpecialAdmin,
-            isFriendAdmin: isFriendAdmin,
-            isTester: isTester,
-            isVIP: isVIP,
-            isModer: isModer,
-            rankPosition: getPlayerRankPosition(),
-            customTag: customTag,
-            customNick: customNick,
-            gradientText: gradientTextEnabled,
-            timestamp: serverTimestamp()
-        });
+        const input = document.getElementById('chatInput'); let text = input.value.trim(); if (!text) return;
+        if (text.startsWith('/me ')) { text = text.replace('/me ', ''); text = `* ${customNick || playerName} ${text}`; }
+        else if (text === '/cookie') { text = '🍪 Печенька!'; } else if (text === '/dance') { text = '🕺💃🕺💃'; }
+        push(chatRef, { name: customNick || playerName, text: text, isSpecialAdmin: isSpecialAdmin, isFriendAdmin: isFriendAdmin, isTester: isTester, isVIP: isVIP, isModer: isModer, rankPosition: getPlayerRankPosition(), customTag: customTag, customNick: customNick, gradientText: gradientTextEnabled, timestamp: serverTimestamp() });
         input.value = '';
     }
 
@@ -951,69 +895,15 @@
 
     function closeModal(modal) {
         modal.classList.add('closing');
-        modal.addEventListener('transitionend', function handler() {
-            modal.classList.remove('active', 'closing');
-            modal.removeEventListener('transitionend', handler);
-        }, { once: true });
+        modal.addEventListener('transitionend', function handler() { modal.classList.remove('active', 'closing'); modal.removeEventListener('transitionend', handler); }, { once: true });
         setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
-    }
-
-    function renderPets() {
-        const list = document.getElementById('petList');
-        list.innerHTML = '';
-        pets.forEach(pet => {
-            const lvl = petLevels[pet.id] || 0;
-            const cost = Math.floor(pet.cost * Math.pow(1.5, lvl));
-            const div = document.createElement('div');
-            div.style.cssText = 'background:var(--card-bg); padding:15px; border-radius:20px; text-align:center; flex:1 1 200px;';
-            div.innerHTML = `
-                <h4>${pet.name}</h4>
-                <p>Уровень: ${lvl}/${pet.maxLevel}</p>
-                <p>Бонус: ${pet.bonusType === 'click' ? 'Клик' : pet.bonusType === 'cps' ? 'Авто-доход' : 'Всё'} +${(pet.bonusPerLevel * lvl * 100).toFixed(1)}%</p>
-                <button class="shop-btn upgradePetBtn" data-pet="${pet.id}" ${lvl >= pet.maxLevel ? 'disabled' : ''}>Улучшить (${cost.toLocaleString()} 🍪)</button>
-                <button class="shop-btn selectPetBtn" data-pet="${pet.id}" ${activePet === pet.id ? 'disabled' : ''}>${activePet === pet.id ? 'Выбран' : 'Выбрать'}</button>
-            `;
-            list.appendChild(div);
-        });
-        document.querySelectorAll('.upgradePetBtn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const petId = btn.dataset.pet;
-                const pet = pets.find(p => p.id === petId);
-                const lvl = petLevels[petId] || 0;
-                const cost = Math.floor(pet.cost * Math.pow(1.5, lvl));
-                if (cookies >= cost && lvl < pet.maxLevel) {
-                    cookies -= cost;
-                    petLevels[petId] = lvl + 1;
-                    localStorage.setItem('pechenkoPetLevels', JSON.stringify(petLevels));
-                    updateUI();
-                    renderPets();
-                } else {
-                    alert('Недостаточно печенек или максимальный уровень!');
-                }
-            });
-        });
-        document.querySelectorAll('.selectPetBtn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                activePet = btn.dataset.pet;
-                localStorage.setItem('pechenkoActivePet', activePet);
-                renderPets();
-            });
-        });
     }
 
     function updateBossUI() {
         const infoDiv = document.getElementById('bossInfo');
-        if (!currentClan) {
-            infoDiv.innerHTML = 'Вы не в клане! Вступите, чтобы сражаться с боссом.';
-            document.getElementById('attackBossBtn').disabled = true;
-            return;
-        }
+        if (!currentClan) { infoDiv.innerHTML = 'Вы не в клане! Вступите, чтобы сражаться с боссом.'; document.getElementById('attackBossBtn').disabled = true; return; }
         const now = Date.now();
-        const canSpawn = now - lastBossKill >= BOSS_COOLDOWN;
-        if (!bossAlive && canSpawn) {
-            bossAlive = true;
-            bossHP = bossMaxHP;
-        }
+        if (!bossAlive && (now - lastBossKill >= BOSS_COOLDOWN)) { bossAlive = true; bossHP = bossMaxHP; }
         if (bossAlive) {
             infoDiv.innerHTML = `<p>Клановый босс: 🍪 Гигантское Печенье</p><p>Награда: +5 CR всем участникам</p>`;
             document.getElementById('bossHP').textContent = Math.floor(bossHP).toLocaleString();
@@ -1021,196 +911,73 @@
             document.getElementById('attackBossBtn').disabled = false;
         } else {
             const remaining = BOSS_COOLDOWN - (now - lastBossKill);
-            const h = Math.floor(remaining / 3600000);
-            const m = Math.floor((remaining % 3600000) / 60000);
+            const h = Math.floor(remaining / 3600000), m = Math.floor((remaining % 3600000) / 60000);
             infoDiv.innerHTML = `Босс побеждён! Следующий через ${h}ч ${m}м`;
             document.getElementById('attackBossBtn').disabled = true;
         }
     }
     function attackBoss() {
         if (!bossAlive || !currentClan) return;
-        let clickMult = 1;
-        if (isVIP) clickMult *= 2;
-        if (isX3) clickMult *= 3;
+        let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
         const clickDmg = cookiesPerClick * (eventActive ? eventMultiplier : 1) * clickMult;
         const autoDmg = cookiesPerSecond * 0.1;
-        const totalDmg = clickDmg + autoDmg;
-        bossHP -= totalDmg;
+        bossHP -= clickDmg + autoDmg;
         if (bossHP <= 0) {
-            bossAlive = false;
-            lastBossKill = Date.now();
-            localStorage.setItem('lastBossKill', lastBossKill);
-            prestigePoints += 5;
-            pushToLeaderboardCR();
-            addCRToClan(5);
+            bossAlive = false; lastBossKill = Date.now(); localStorage.setItem('lastBossKill', lastBossKill);
+            prestigePoints += 5; pushToLeaderboardCR(); addCRToClan(5);
             alert('Босс побеждён! Вы получили +5 CR!');
         }
-        updateBossUI();
-        updateUI();
+        updateBossUI(); updateUI();
     }
 
     function updateQuests() {
-        const qList = document.getElementById('questsList');
-        qList.innerHTML = '';
+        const qList = document.getElementById('questsList'); qList.innerHTML = '';
         quests.forEach((q, idx) => {
-            const div = document.createElement('div');
-            div.style.margin = '10px 0';
+            const div = document.createElement('div'); div.style.margin = '10px 0';
             const complete = q.progress >= q.goal;
             div.innerHTML = `${q.desc} (${Math.min(q.progress, q.goal)}/${q.goal}) ${complete ? '✅' : ''} <button class="shop-btn claimQuestBtn" data-idx="${idx}" ${!complete ? 'disabled' : ''}>Забрать</button>`;
             qList.appendChild(div);
         });
         document.querySelectorAll('.claimQuestBtn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const idx = parseInt(btn.dataset.idx);
-                const q = quests[idx];
+                const idx = parseInt(btn.dataset.idx); const q = quests[idx];
                 if (q.progress >= q.goal) {
                     q.progress = 0;
-                    if (q.reward <= 5 && q.id !== 'prestige1') {
-                        prestigePoints += q.reward;
-                        pushToLeaderboardCR();
-                        if (currentClan) addCRToClan(q.reward);
-                    } else {
-                        cookies += q.reward;
-                    }
-                    addBPXP(50);
-                    updateUI();
-                    updateQuests();
-                    alert('Квест выполнен!');
+                    if (q.reward <= 5 && q.id !== 'prestige1') { prestigePoints += q.reward; pushToLeaderboardCR(); if (currentClan) addCRToClan(q.reward); }
+                    else { cookies += q.reward; }
+                    updateUI(); updateQuests(); alert('Квест выполнен!');
                 }
             });
         });
     }
-    function addBPXP(amount) {
-        bpXP += amount;
-        while (bpXP >= xpPerLevel && bpLevel < bpMaxLevel) {
-            bpXP -= xpPerLevel;
-            bpLevel++;
-            const reward = bpRewards.find(r => r.level === bpLevel);
-            if (reward) {
-                const rewardText = bpPremium ? reward.premium : reward.free;
-                if (rewardText.includes('CR')) {
-                    const cr = parseInt(rewardText) || 1;
-                    prestigePoints += cr;
-                    pushToLeaderboardCR();
-                    if (currentClan) addCRToClan(cr);
-                } else if (rewardText.includes('🍪')) {
-                    const cookiesAmount = parseInt(rewardText.replace(/[^0-9]/g, '')) || 1000;
-                    cookies += cookiesAmount;
-                }
-                alert(`🎁 Новый уровень Battle Pass! Награда: ${rewardText}`);
-            }
-        }
-        localStorage.setItem('pechenkoBPXP', bpXP);
-        localStorage.setItem('pechenkoBPLevel', bpLevel);
-    }
-    function updateBPUI() {
-        const bpDiv = document.getElementById('bpInfo');
-        const currentXP = bpXP;
-        const currentLevel = bpLevel;
-        bpDiv.innerHTML = `
-            <p>Уровень: ${currentLevel}/${bpMaxLevel}</p>
-            <p>Опыт: ${currentXP}/${xpPerLevel}</p>
-            <div style="background:#333; border-radius:10px; height:20px; margin:10px 0;">
-                <div style="background:linear-gradient(90deg, #bb86fc, #6200ea); width:${(currentXP/xpPerLevel*100)}%; height:100%; border-radius:10px;"></div>
-            </div>
-            <button class="shop-btn" id="buyPremiumBP" ${bpPremium ? 'disabled' : ''}>Купить Premium (100 CR)</button>
-        `;
-        document.getElementById('buyPremiumBP')?.addEventListener('click', () => {
-            if (prestigePoints >= 100) {
-                prestigePoints -= 100;
-                bpPremium = true;
-                localStorage.setItem('pechenkoBPPremium', 'true');
-                updateUI();
-                updateBPUI();
-                alert('Premium Battle Pass активирован!');
-            } else alert('Недостаточно CR');
-        });
-    }
 
     function updateShopStatus() {
-        const statusEl = document.getElementById('shopStatus');
-        let status = '';
+        const statusEl = document.getElementById('shopStatus'); let status = '';
         if (isVIP) status += '✅ VIP активен (x2). ';
         if (isX3) status += '✅ x3 активен (постоянный). ';
-        if (isModer) {
-            const remaining = Math.max(0, Math.floor((moderExpiry - Date.now()) / 86400000));
-            status += `✅ Модер активен (осталось ${remaining} дн.). `;
-        }
-        if (isTemporaryAdmin && Date.now() < tempAdminExpiry) {
-            const remaining = Math.max(0, Math.floor((tempAdminExpiry - Date.now()) / 3600000));
-            status += `✅ Временная админка (осталось ${remaining} ч.). `;
-        }
+        if (isModer) { const remaining = Math.max(0, Math.floor((moderExpiry - Date.now()) / 86400000)); status += `✅ Модер активен (осталось ${remaining} дн.). `; }
+        if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { const remaining = Math.max(0, Math.floor((tempAdminExpiry - Date.now()) / 3600000)); status += `✅ Временная админка (осталось ${remaining} ч.). `; }
         if (!status) status = 'Нет активных покупок.';
         statusEl.textContent = status;
     }
 
-    document.getElementById('openVIPBtn').addEventListener('click', () => {
-        updateShopStatus();
-        document.getElementById('vipModal').classList.add('active');
-    });
+    document.getElementById('openVIPBtn').addEventListener('click', () => { updateShopStatus(); document.getElementById('vipModal').classList.add('active'); });
     document.getElementById('closeVIPModal').addEventListener('click', () => closeModal(document.getElementById('vipModal')));
 
-    document.getElementById('buyVIPCookies').addEventListener('click', () => {
-        if (isVIP) { alert('VIP уже активирован!'); return; }
-        if (cookies >= 100000000) {
-            cookies -= 100000000;
-            isVIP = true;
-            localStorage.setItem('pechenkoIsVIP', 'true');
-            updateUI();
-            updateShopStatus();
-            alert('Поздравляем! VIP активирован!');
-        } else alert('Недостаточно печенек (нужно 100 000 000)');
-    });
-
+    document.getElementById('buyVIPCookies').addEventListener('click', () => { if (isVIP) { alert('VIP уже активирован!'); return; } if (cookies >= 100000000) { cookies -= 100000000; isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); updateUI(); updateShopStatus(); alert('Поздравляем! VIP активирован!'); } else alert('Недостаточно печенек (нужно 100 000 000)'); });
     document.getElementById('buyVIPMoney').addEventListener('click', () => alert('Оплата временно недоступна.'));
-    document.getElementById('buyX3Money').addEventListener('click', () => {
-        if (isX3) { alert('x3 уже активирован!'); return; }
-        alert('Оплата временно недоступна.');
-    });
-    document.getElementById('buyModerMoney').addEventListener('click', () => {
-        if (isModer) { alert('Модер уже активирован!'); return; }
-        alert('Оплата временно недоступна.');
-    });
+    document.getElementById('buyX3Money').addEventListener('click', () => { if (isX3) { alert('x3 уже активирован!'); return; } alert('Оплата временно недоступна.'); });
+    document.getElementById('buyModerMoney').addEventListener('click', () => { if (isModer) { alert('Модер уже активирован!'); return; } alert('Оплата временно недоступна.'); });
+    document.getElementById('buyTempAdmin').addEventListener('click', () => { if (isSpecialAdmin || isFriendAdmin) { alert('У вас уже постоянная админка!'); return; } if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { alert('Временная админка уже активна!'); return; } if (cookies >= 1e12) { cookies -= 1e12; isTemporaryAdmin = true; tempAdminExpiry = Date.now() + 86400000; localStorage.setItem('pechenkoIsTemporaryAdmin', 'true'); localStorage.setItem('pechenkoTempAdminExpiry', tempAdminExpiry.toString()); if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); } updateUI(); updateAdminVisibility(); updateShopStatus(); alert('Временная админка активирована на 24 часа!'); } else { alert('Недостаточно печенек (нужно 1 000 000 000 000)'); } });
 
-    document.getElementById('buyTempAdmin').addEventListener('click', () => {
-        if (isSpecialAdmin || isFriendAdmin) { alert('У вас уже постоянная админка!'); return; }
-        if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { alert('Временная админка уже активна!'); return; }
-        if (cookies >= 1e12) {
-            cookies -= 1e12;
-            isTemporaryAdmin = true;
-            tempAdminExpiry = Date.now() + 86400000;
-            localStorage.setItem('pechenkoIsTemporaryAdmin', 'true');
-            localStorage.setItem('pechenkoTempAdminExpiry', tempAdminExpiry.toString());
-            if (!isVIP) {
-                isVIP = true;
-                localStorage.setItem('pechenkoIsVIP', 'true');
-            }
-            updateUI();
-            updateAdminVisibility();
-            updateShopStatus();
-            alert('Временная админка активирована на 24 часа!');
-        } else {
-            alert('Недостаточно печенек (нужно 1 000 000 000 000)');
-        }
-    });
+    document.querySelectorAll('.modal').forEach(modal => { const closeBtn = modal.querySelector('[id^="close"]'); if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal)); });
 
-    document.querySelectorAll('.modal').forEach(modal => {
-        const closeBtn = modal.querySelector('[id^="close"]');
-        if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal));
-    });
-
-    // Клик – мгновенный, без задержки
     document.getElementById('cookieBtn').addEventListener('click', (e) => {
-        let clickMult = 1;
-        if (isVIP) clickMult *= 2;
-        if (isX3) clickMult *= 3;
+        let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
         const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (1 + getPetBonus('click')) * clickMult;
         cookies += eff; totalClicks++;
-        const qClick = quests.find(q => q.id === 'click100');
-        if (qClick) qClick.progress = Math.min(qClick.goal, qClick.progress + 1);
-        updateUI();
-        showFloatingScore(e.clientX, e.clientY, eff);
-        addBPXP(1);
+        const qClick = quests.find(q => q.id === 'click100'); if (qClick) qClick.progress = Math.min(qClick.goal, qClick.progress + 1);
+        updateUI(); showFloatingScore(e.clientX, e.clientY, eff);
     });
     upgrades.forEach((u,i) => document.getElementById(u.id).addEventListener('click', () => buyUpgrade(i)));
     document.getElementById('prestigeBtn').addEventListener('click', performPrestige);
@@ -1223,21 +990,15 @@
     document.getElementById('openAdminBtn').addEventListener('click', () => {
         if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
         document.getElementById('adminModal').classList.add('active');
-        document.getElementById('customTagInput').value = customTag;
-        document.getElementById('customNickInput').value = customNick;
-        document.getElementById('gradientTextCheckbox').checked = gradientTextEnabled;
-        document.getElementById('gradientColorInput').value = gradientColor;
+        document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick;
+        document.getElementById('gradientTextCheckbox').checked = gradientTextEnabled; document.getElementById('gradientColorInput').value = gradientColor;
     });
 
     document.getElementById('saveCustomBtn').addEventListener('click', () => {
-        customTag = document.getElementById('customTagInput').value.trim();
-        customNick = document.getElementById('customNickInput').value.trim();
-        gradientTextEnabled = document.getElementById('gradientTextCheckbox').checked;
-        gradientColor = document.getElementById('gradientColorInput').value.trim();
-        localStorage.setItem('pechenkoCustomTag', customTag);
-        localStorage.setItem('pechenkoCustomNick', customNick);
-        localStorage.setItem('pechenkoGradientText', gradientTextEnabled.toString());
-        localStorage.setItem('pechenkoGradientColor', gradientColor);
+        customTag = document.getElementById('customTagInput').value.trim(); customNick = document.getElementById('customNickInput').value.trim();
+        gradientTextEnabled = document.getElementById('gradientTextCheckbox').checked; gradientColor = document.getElementById('gradientColorInput').value.trim();
+        localStorage.setItem('pechenkoCustomTag', customTag); localStorage.setItem('pechenkoCustomNick', customNick);
+        localStorage.setItem('pechenkoGradientText', gradientTextEnabled.toString()); localStorage.setItem('pechenkoGradientColor', gradientColor);
         alert('Сохранено!');
     });
 
@@ -1249,222 +1010,68 @@
     document.getElementById('adminStartEvent').addEventListener('click', () => startEvent('rain'));
     document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; updateUI(); });
     document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; updateUI(); });
-    document.getElementById('adminGive10CR').addEventListener('click', () => {
-        prestigePoints += 10;
-        pushToLeaderboardCR();
-        if (currentClan) addCRToClan(10);
-        updateUI();
-        alert('+10 CR!');
-    });
+    document.getElementById('adminGive10CR').addEventListener('click', () => { prestigePoints += 10; pushToLeaderboardCR(); if (currentClan) addCRToClan(10); updateUI(); alert('+10 CR!'); });
     document.getElementById('adminFreezeEvents').addEventListener('click', () => { eventsFrozen = true; alert('Ивенты заморожены.'); });
     document.getElementById('adminUnfreezeEvents').addEventListener('click', () => { eventsFrozen = false; alert('Ивенты разморожены.'); });
-    document.getElementById('adminClearChat').addEventListener('click', () => {
-        document.getElementById('chatMessages').innerHTML = '';
-        alert('Чат очищен (локально).');
-    });
-    document.getElementById('adminSimulateOffline').addEventListener('click', () => {
-        if (cookiesPerSecond > 0) {
-            cookies += cookiesPerSecond * 3600;
-            updateUI();
-            alert('Симулирован 1 час оффлайн-прогресса.');
-        }
-    });
-    document.getElementById('adminFullReset').addEventListener('click', () => {
-        if (confirm('Полный сброс всего? Это удалит весь прогресс и админ-доступ.')) {
-            localStorage.clear(); location.reload();
-        }
-    });
+    document.getElementById('adminClearChat').addEventListener('click', () => { document.getElementById('chatMessages').innerHTML = ''; alert('Чат очищен (локально).'); });
+    document.getElementById('adminSimulateOffline').addEventListener('click', () => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond * 3600; updateUI(); alert('Симулирован 1 час оффлайн-прогресса.'); } });
+    document.getElementById('adminFullReset').addEventListener('click', () => { if (confirm('Полный сброс всего? Это удалит весь прогресс и админ-доступ.')) { localStorage.clear(); location.reload(); } });
 
-    document.getElementById('activateFriendBtn').addEventListener('click', () => {
-        if (isFriendAdmin) return;
-        const secret = prompt('Пароль для друга:');
-        if (secret === 'friend') {
-            isFriendAdmin = true; playerName = 't1nator';
-            localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator');
-            updateAdminVisibility(); updateUI();
-            alert('Доступ активирован! Теперь ты [Друн] t1nator.');
-        } else alert('Неверный пароль');
-    });
+    document.getElementById('activateFriendBtn').addEventListener('click', () => { if (isFriendAdmin) return; const secret = prompt('Пароль для друга:'); if (secret === 'friend') { isFriendAdmin = true; playerName = 't1nator'; localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator'); updateAdminVisibility(); updateUI(); alert('Доступ активирован! Теперь ты [Друн] t1nator.'); } else alert('Неверный пароль'); });
+    document.getElementById('activateSpecialBtn').addEventListener('click', () => { if (isSpecialAdmin) return; const secret = prompt('Секретный пароль:'); if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; } const ip = prompt('IP для подтверждения:'); if (ip !== '94.181.23.61') { alert('Неверный IP'); return; } isSpecialAdmin = true; playerName = 'tr3haszz'; localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz'); updateAdminVisibility(); updateUI(); alert('tr3haszz активирован!'); });
+    document.getElementById('activateTesterBtn').addEventListener('click', () => { if (isTester) return; const secret = prompt('Пароль тестера:'); if (secret === 'tester') { isTester = true; playerName = 'Глист'; localStorage.setItem('pechenkoIsTester', 'true'); localStorage.setItem('pechenkoPlayerName', 'Глист'); updateAdminVisibility(); updateUI(); alert('Доступ тестера активирован!'); } else alert('Неверный пароль'); });
 
-    document.getElementById('activateSpecialBtn').addEventListener('click', () => {
-        if (isSpecialAdmin) return;
-        const secret = prompt('Секретный пароль:');
-        if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; }
-        const ip = prompt('IP для подтверждения:');
-        if (ip !== '94.181.23.61') { alert('Неверный IP'); return; }
-        isSpecialAdmin = true; playerName = 'tr3haszz';
-        localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz');
-        updateAdminVisibility(); updateUI();
-        alert('tr3haszz активирован!');
-    });
-
-    document.getElementById('activateTesterBtn').addEventListener('click', () => {
-        if (isTester) return;
-        const secret = prompt('Пароль тестера:');
-        if (secret === 'tester') {
-            isTester = true;
-            playerName = 'Глист';
-            localStorage.setItem('pechenkoIsTester', 'true');
-            localStorage.setItem('pechenkoPlayerName', 'Глист');
-            updateAdminVisibility();
-            updateUI();
-            alert('Доступ тестера активирован!');
-        } else alert('Неверный пароль');
-    });
-
-    document.getElementById('openTesterBtn').addEventListener('click', () => {
-        document.getElementById('testerModal').classList.add('active');
-    });
+    document.getElementById('openTesterBtn').addEventListener('click', () => { document.getElementById('testerModal').classList.add('active'); });
     document.getElementById('closeTesterModal').addEventListener('click', () => closeModal(document.getElementById('testerModal')));
+    document.getElementById('sendBugReportBtn').addEventListener('click', () => { const adminEmail = 'miron.s3113@gmail.com'; const subject = encodeURIComponent('Баг-репорт от Глист'); const body = encodeURIComponent('Опишите найденный баг:\n\n1. Что делали?\n2. Что ожидали?\n3. Что получили?\n\nСпасибо!'); window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`; });
 
-    document.getElementById('sendBugReportBtn').addEventListener('click', () => {
-        const adminEmail = 'miron.s3113@gmail.com';
-        const subject = encodeURIComponent('Баг-репорт от Глист');
-        const body = encodeURIComponent('Опишите найденный баг:\n\n1. Что делали?\n2. Что ожидали?\n3. Что получили?\n\nСпасибо!');
-        window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
-    });
+    document.getElementById('openLeaderboardBtn').addEventListener('click', () => { document.getElementById('leaderboardModal').classList.add('active'); loadLeaderboard('cookies'); loadLeaderboard('cr'); });
+    document.getElementById('showCookiesTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.remove('hidden'); document.getElementById('leaderboardCRTable').classList.add('hidden'); });
+    document.getElementById('showCRTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.add('hidden'); document.getElementById('leaderboardCRTable').classList.remove('hidden'); });
 
-    document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
-        document.getElementById('leaderboardModal').classList.add('active');
-        loadLeaderboard('cookies'); loadLeaderboard('cr');
-    });
-    document.getElementById('showCookiesTop').addEventListener('click', () => {
-        document.getElementById('leaderboardCookiesTable').classList.remove('hidden');
-        document.getElementById('leaderboardCRTable').classList.add('hidden');
-    });
-    document.getElementById('showCRTop').addEventListener('click', () => {
-        document.getElementById('leaderboardCookiesTable').classList.add('hidden');
-        document.getElementById('leaderboardCRTable').classList.remove('hidden');
-    });
-
-    document.getElementById('openChatBtn').addEventListener('click', () => {
-        document.getElementById('chatModal').classList.add('active');
-        chatModalActive = true;
-        unreadCount = 0;
-        updateBadge();
-    });
-    document.getElementById('closeChatModal').addEventListener('click', () => {
-        chatModalActive = false;
-    });
+    document.getElementById('openChatBtn').addEventListener('click', () => { document.getElementById('chatModal').classList.add('active'); chatModalActive = true; unreadCount = 0; updateBadge(); });
+    document.getElementById('closeChatModal').addEventListener('click', () => { chatModalActive = false; });
     document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
     document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
-    document.getElementById('chatInput').addEventListener('keydown', e => {
-        if (e.ctrlKey && e.key === 'Enter') sendChatMessage();
-    });
+    document.getElementById('chatInput').addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') sendChatMessage(); });
 
-    document.getElementById('openAchievementsBtn').addEventListener('click', () => {
-        renderAchievements();
-        document.getElementById('achievementsModal').classList.add('active');
-    });
+    document.getElementById('openAchievementsBtn').addEventListener('click', () => { renderAchievements(); document.getElementById('achievementsModal').classList.add('active'); });
 
-    document.getElementById('openClanBtn').addEventListener('click', () => {
-        updateClanUI();
-        document.getElementById('clanModal').classList.add('active');
-    });
-    document.getElementById('createClanBtn').addEventListener('click', () => {
-        const name = document.getElementById('clanNameInput').value.trim();
-        if (name) createClan(name);
-    });
-    document.getElementById('joinClanBtn').addEventListener('click', () => {
-        const name = document.getElementById('clanNameInput').value.trim();
-        if (name) joinClan(name);
-    });
+    document.getElementById('openClanBtn').addEventListener('click', () => { updateClanUI(); document.getElementById('clanModal').classList.add('active'); });
+    document.getElementById('createClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) createClan(name); });
+    document.getElementById('joinClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) joinClan(name); });
 
     document.getElementById('openTagShopBtn').addEventListener('click', () => document.getElementById('tagShopModal').classList.add('active'));
     document.getElementById('closeTagShopModal').addEventListener('click', () => closeModal(document.getElementById('tagShopModal')));
-    document.querySelectorAll('.buyTagBtn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tag = btn.dataset.tag;
-            const cost = parseInt(btn.dataset.cost);
-            if (cookies < cost) { alert('Недостаточно печенек!'); return; }
-            cookies -= cost;
-            customTag = tag;
-            localStorage.setItem('pechenkoCustomTag', customTag);
-            updateUI();
-            alert(`Тег "${tag}" куплен!`);
-        });
-    });
-    document.getElementById('buyCustomTagBtn').addEventListener('click', () => {
-        const newTag = prompt('Введите свой тег (до 12 символов):');
-        if (!newTag) return;
-        const formatted = newTag.startsWith('[') ? newTag : `[${newTag}]`;
-        if (formatted.length > 14) { alert('Слишком длинный!'); return; }
-        if (cookies < 1000000) { alert('Недостаточно печенек!'); return; }
-        cookies -= 1000000;
-        customTag = formatted;
-        localStorage.setItem('pechenkoCustomTag', customTag);
-        updateUI();
-        alert(`Тег "${formatted}" куплен!`);
-    });
+    document.querySelectorAll('.buyTagBtn').forEach(btn => { btn.addEventListener('click', () => { const tag = btn.dataset.tag; const cost = parseInt(btn.dataset.cost); if (cookies < cost) { alert('Недостаточно печенек!'); return; } cookies -= cost; customTag = tag; localStorage.setItem('pechenkoCustomTag', customTag); updateUI(); alert(`Тег "${tag}" куплен!`); }); });
+    document.getElementById('buyCustomTagBtn').addEventListener('click', () => { const newTag = prompt('Введите свой тег (до 12 символов):'); if (!newTag) return; const formatted = newTag.startsWith('[') ? newTag : `[${newTag}]`; if (formatted.length > 14) { alert('Слишком длинный!'); return; } if (cookies < 1000000) { alert('Недостаточно печенек!'); return; } cookies -= 1000000; customTag = formatted; localStorage.setItem('pechenkoCustomTag', customTag); updateUI(); alert(`Тег "${formatted}" куплен!`); });
 
-    document.getElementById('openPetsBtn').addEventListener('click', () => {
-        renderPets();
-        document.getElementById('petsModal').classList.add('active');
-    });
-    document.getElementById('closePetsModal').addEventListener('click', () => closeModal(document.getElementById('petsModal')));
-
-    document.getElementById('openBossBtn').addEventListener('click', () => {
-        updateBossUI();
-        document.getElementById('bossModal').classList.add('active');
-    });
+    document.getElementById('openBossBtn').addEventListener('click', () => { updateBossUI(); document.getElementById('bossModal').classList.add('active'); });
     document.getElementById('attackBossBtn').addEventListener('click', attackBoss);
     document.getElementById('closeBossModal').addEventListener('click', () => closeModal(document.getElementById('bossModal')));
 
-    document.getElementById('openQuestsBtn').addEventListener('click', () => {
-        updateQuests();
-        document.getElementById('questsModal').classList.add('active');
-    });
+    document.getElementById('openQuestsBtn').addEventListener('click', () => { updateQuests(); document.getElementById('questsModal').classList.add('active'); });
     document.getElementById('closeQuestsModal').addEventListener('click', () => closeModal(document.getElementById('questsModal')));
 
-    document.getElementById('openBPBtn').addEventListener('click', () => {
-        updateBPUI();
-        document.getElementById('bpModal').classList.add('active');
-    });
-    document.getElementById('closeBPModal').addEventListener('click', () => closeModal(document.getElementById('bpModal')));
-
-    // Discord кнопка
-    document.getElementById('openDiscordBtn').addEventListener('click', () => {
-        window.open('https://discord.gg/ВАШ_СЕРВЕР', '_blank');
-    });
+    document.getElementById('openDiscordBtn').addEventListener('click', () => { window.open('https://discord.gg/ВАШ_СЕРВЕР', '_blank'); });
 
     function loadGame() {
         const saved = localStorage.getItem('pechenkoClickerSave');
-        if (saved) {
-            const data = JSON.parse(saved);
-            cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1;
-            prestigePoints = data.prestigePoints || 0;
-            upgrades.forEach((u,i) => u.count = data.upgrades[i].count || 0);
-            updateCookiesPerSecond();
-        }
+        if (saved) { const data = JSON.parse(saved); cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1; prestigePoints = data.prestigePoints || 0; upgrades.forEach((u,i) => u.count = data.upgrades[i].count || 0); updateCookiesPerSecond(); }
         if (localStorage.getItem('cookieClickerTheme') === 'light') document.body.classList.add('light');
-        if (!playerName) {
-            playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним';
-            localStorage.setItem('pechenkoPlayerName', playerName);
-        }
-        if (isSpecialAdmin) playerName = 'tr3haszz';
-        if (isFriendAdmin) playerName = 't1nator';
-        if (isTester) playerName = 'Глист';
+        if (!playerName) { playerName = prompt('Введите ваше имя:', 'Игрок') || 'Аноним'; localStorage.setItem('pechenkoPlayerName', playerName); }
+        if (isSpecialAdmin) playerName = 'tr3haszz'; if (isFriendAdmin) playerName = 't1nator'; if (isTester) playerName = 'Глист';
         prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
-        updateAdminVisibility();
-        updateDailyUI();
-        updateQuests();
-        updateBossUI();
+        updateAdminVisibility(); updateDailyUI(); updateQuests(); updateBossUI();
     }
     function saveGame() {
-        localStorage.setItem('pechenkoClickerSave', JSON.stringify({
-            cookies, cookiesPerClick, prestigePoints,
-            upgrades: upgrades.map(u => ({ count: u.count }))
-        }));
-        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString());
-        localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
+        localStorage.setItem('pechenkoClickerSave', JSON.stringify({ cookies, cookiesPerClick, prestigePoints, upgrades: upgrades.map(u => ({ count: u.count })) }));
+        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString()); localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
         localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
     }
 
     setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond * (1 + getPetBonus('cps')) / 10; updateUI(); } }, 100);
-    loadGame();
-    updateCookiesPerSecond();
-    updateUI();
-    scheduleRandomEvent();
+    loadGame(); updateCookiesPerSecond(); updateUI(); scheduleRandomEvent();
 </script>
 </body>
 </html>
