@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.0.9.12</title>
+    <title>Печенько кликер v2.0.9.13</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* Весь CSS из v2.0.9.10 + новые стили чата */
         :root {
             --bg-gradient: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0d0d2b 100%);
             --glass-bg: rgba(255, 248, 240, 0.06);
@@ -313,7 +312,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.0.9.12</h1>
+    <h1>🍪 Печенько кликер v2.0.9.13</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -412,9 +411,6 @@
         </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div id="replyPreview" style="display:none;" class="reply-preview"></div>
-        <div style="display:flex; gap:5px; margin:5px 0;">
-            <input type="text" id="imageUrlInput" placeholder="🔗 URL картинки (необязательно)" style="flex:1;">
-        </div>
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Введите сообщение..." style="flex:1;">
             <button id="sendChatBtn">Отправить</button>
@@ -553,15 +549,6 @@
     let activeRoleTag = localStorage.getItem('pechenkoActiveRoleTag') || '';
     let activeRoleNick = localStorage.getItem('pechenkoActiveRoleNick') || '';
 
-    // Чат-переменные
-    let allMessages = [];
-    let replyTo = null;
-    let privateChatUser = null;
-    let invisibleMode = false;
-    const mutedPlayers = JSON.parse(localStorage.getItem('pechenkoMutedPlayers') || '[]');
-    const favorites = JSON.parse(localStorage.getItem('pechenkoFavorites') || '[]');
-    const chatTheme = localStorage.getItem('pechenkoChatTheme') || 'dark';
-
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); }
     }
@@ -624,7 +611,15 @@
         { id: 'prestige1', desc: 'Переродиться 1 раз', goal: 1, progress: 0, reward: 5 }
     ];
 
-    // Функции игры
+    // Чат-переменные
+    let allMessages = [];
+    let replyTo = null;
+    let privateChatUser = null;
+    let invisibleMode = false;
+    const mutedPlayers = JSON.parse(localStorage.getItem('pechenkoMutedPlayers') || '[]');
+    const favorites = JSON.parse(localStorage.getItem('pechenkoFavorites') || '[]');
+    const chatTheme = localStorage.getItem('pechenkoChatTheme') || 'dark';
+
     function canClaimDaily() {
         const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
         if (now - last < oneDay) return false;
@@ -995,11 +990,6 @@
             }
         }
 
-        let imageHtml = '';
-        if (msg.imageUrl) {
-            imageHtml = `<img src="${escapeHtml(msg.imageUrl)}" class="chat-image" onerror="this.style.display='none'"/>`;
-        }
-
         let pollHtml = '';
         if (msg.poll) {
             const poll = msg.poll;
@@ -1028,7 +1018,6 @@
             ${replyHtml}
             ${nameHtml}: ${textHtml}
             ${videoHtml}
-            ${imageHtml}
             ${pollHtml}
             <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
             <span class="msg-actions-btn" title="Действия">⋯</span>
@@ -1095,12 +1084,11 @@
         allMessages.forEach(msg => renderChatMessage(msg));
     }
 
-    // Отправка
+    // Отправка сообщения (без картинок)
     function sendChatMessage() {
         const input = document.getElementById('chatInput');
-        const imageUrl = document.getElementById('imageUrlInput').value.trim();
         let text = input.value.trim();
-        if (!text && !imageUrl) return;
+        if (!text) return;
 
         let privateTo = privateChatUser || null;
         if (text.startsWith('/w ')) {
@@ -1148,13 +1136,11 @@
             isSpecialAdmin, isFriendAdmin, isTester, isVIP, isModer,
             rankPosition: getPlayerRankPosition(),
             customTag, customNick,
-            imageUrl: imageUrl || null,
             replyTo: replyTo ? { id: replyTo.id, name: replyTo.name, text: replyTo.text } : null,
             privateTo: privateTo,
             timestamp: serverTimestamp()
         });
         input.value = '';
-        document.getElementById('imageUrlInput').value = '';
         replyTo = null;
         document.getElementById('replyPreview').style.display = 'none';
         setMyPresence(false);
