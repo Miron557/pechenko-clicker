@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.2.0</title>
+    <title>Печенько кликер v2.3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -39,331 +39,109 @@
             --prestige-bg: #f3e5f5;
         }
         * { margin:0; padding:0; box-sizing:border-box; transition: background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s; }
-        body {
-            font-family: var(--font); background: var(--bg-gradient); min-height:100vh;
-            display:flex; justify-content:center; align-items:center; user-select:none; color:var(--text);
-            padding:20px; overflow-x:hidden; position: relative;
-            animation: bgPulse 8s ease-in-out infinite alternate;
-        }
+        body { font-family: var(--font); background: var(--bg-gradient); min-height:100vh; display:flex; justify-content:center; align-items:center; user-select:none; color:var(--text); padding:20px; overflow-x:hidden; position: relative; animation: bgPulse 8s ease-in-out infinite alternate; }
         @keyframes bgPulse { 0%{background-size:100% 100%;} 100%{background-size:120% 120%;} }
-        .game-container {
-            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border:1px solid var(--glass-border); border-radius:40px; padding:30px; box-shadow:var(--glass-shadow), 0 0 50px rgba(0,0,0,0.4);
-            text-align:center; max-width:900px; width:100%; position:relative; z-index:1;
-            animation: fadeInUp 0.8s ease-out;
-        }
+        .game-container { background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border:1px solid var(--glass-border); border-radius:40px; padding:25px; box-shadow:var(--glass-shadow), 0 0 50px rgba(0,0,0,0.4); text-align:center; max-width:950px; width:100%; position:relative; z-index:1; animation: fadeInUp 0.8s ease-out; }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
-        .theme-toggle {
-            position:absolute; top:20px; right:20px; background:var(--btn-bg); border:1px solid var(--btn-border);
-            color:var(--accent); border-radius:50%; width:45px; height:45px; font-size:1.5rem; cursor:pointer;
-            display:flex; align-items:center; justify-content:center; box-shadow:var(--crisp-shadow); z-index:2;
-            backdrop-filter: blur(10px);
-        }
-        h1 {
-            font-weight:900; font-size:3rem; margin:0 0 25px;
-            background: linear-gradient(135deg, var(--accent), #ffb347);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            text-shadow: var(--accent-glow); letter-spacing:2px;
-        }
-        .score-display {
-            background:var(--card-bg); backdrop-filter: blur(20px); border-radius:25px;
-            padding:25px 170px 25px 35px;
-            margin:20px 0; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15);
-            border:1px solid var(--glass-border); position:relative; overflow:hidden;
-            display:flex; flex-direction:column; align-items:center;
-        }
-        .rank-badge {
-            position:absolute; top:18px; right:20px; background: linear-gradient(135deg, var(--accent), #ff8c42);
-            color:white; padding:8px 18px; border-radius:30px; font-weight:700; font-size:0.9rem;
-            box-shadow:0 4px 15px rgba(0,0,0,0.3); letter-spacing:1px;
-            max-width: 140px; white-space: normal; text-align: center;
-        }
-        .score-label {
-            font-size:1rem; text-transform:uppercase; letter-spacing:4px; color:var(--accent);
-            font-weight:600; margin-bottom:5px;
-        }
-        .score {
-            font-size:4.5rem; font-weight:900; color:var(--text); line-height:1.1;
-            text-shadow:0 2px 15px rgba(0,0,0,0.5); margin-bottom:5px;
-        }
-        .per-second { font-size:1rem; opacity:0.8; }
-        .cookie-btn {
-            background:none; border:none; cursor:pointer; font-size:170px; transition: transform 0.05s ease;
-            filter: drop-shadow(0 0 40px rgba(240, 184, 122, 0.9)); outline:none; padding:15px;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-12px);} }
+        .theme-toggle { position:absolute; top:20px; right:20px; background:var(--btn-bg); border:1px solid var(--btn-border); color:var(--accent); border-radius:50%; width:45px; height:45px; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:var(--crisp-shadow); z-index:2; backdrop-filter: blur(10px); }
+        h1 { font-weight:900; font-size:2.8rem; margin:0 0 20px; background: linear-gradient(135deg, var(--accent), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: var(--accent-glow); letter-spacing:2px; }
+        .score-display { background:var(--card-bg); backdrop-filter: blur(20px); border-radius:25px; padding:20px 120px 20px 30px; margin:15px 0; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15); border:1px solid var(--glass-border); position:relative; display:flex; flex-direction:column; align-items:center; }
+        .rank-badge { position:absolute; top:18px; right:20px; background: linear-gradient(135deg, var(--accent), #ff8c42); color:white; padding:6px 15px; border-radius:30px; font-weight:700; font-size:0.8rem; box-shadow:0 4px 15px rgba(0,0,0,0.3); letter-spacing:1px; }
+        .score-label { font-size:0.9rem; text-transform:uppercase; letter-spacing:3px; color:var(--accent); font-weight:600; margin-bottom:5px; }
+        .score { font-size:4rem; font-weight:900; color:var(--text); line-height:1.1; text-shadow:0 2px 15px rgba(0,0,0,0.5); margin-bottom:5px; }
+        .per-second { font-size:0.9rem; opacity:0.8; }
+        .cookie-btn { background:none; border:none; cursor:pointer; font-size:150px; transition: transform 0.05s ease; filter: drop-shadow(0 0 40px rgba(240, 184, 122, 0.9)); outline:none; padding:10px; animation: float 3s ease-in-out infinite; }
         .cookie-btn:active { transform:scale(0.85); filter: drop-shadow(0 0 60px rgba(240, 184, 122, 1)); }
         .cookie-btn:hover { transform:scale(1.1); filter: drop-shadow(0 0 70px rgba(240, 184, 122, 1)); }
-        .upgrades { display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap:15px; margin-top:30px; }
-        .upgrade-btn, .shop-btn {
-            background:var(--btn-bg); backdrop-filter: blur(10px); border:1px solid var(--btn-border);
-            border-radius:20px; padding:18px 12px; cursor:pointer; font-weight:700; color:var(--text);
-            box-shadow:var(--crisp-shadow); font-size:0.9rem; letter-spacing:0.5px;
-            position:relative; overflow:hidden;
-        }
-        .upgrade-btn::before, .shop-btn::before {
-            content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: left 0.5s;
-        }
+        @keyframes float { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-10px);} }
+        .upgrades { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:10px; margin-top:20px; }
+        .upgrade-btn, .shop-btn { background:var(--btn-bg); backdrop-filter: blur(10px); border:1px solid var(--btn-border); border-radius:20px; padding:15px 10px; cursor:pointer; font-weight:700; color:var(--text); box-shadow:var(--crisp-shadow); font-size:0.85rem; letter-spacing:0.5px; position:relative; overflow:hidden; }
+        .upgrade-btn::before, .shop-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transition: left 0.5s; }
         .upgrade-btn:hover::before, .shop-btn:hover::before { left:100%; }
-        .upgrade-btn:hover:not(:disabled), .shop-btn:hover:not(:disabled) {
-            background:var(--btn-hover-bg); border-color:var(--accent); transform:translateY(-4px);
-            box-shadow:0 15px 30px rgba(0,0,0,0.5);
-        }
+        .upgrade-btn:hover:not(:disabled), .shop-btn:hover:not(:disabled) { background:var(--btn-hover-bg); border-color:var(--accent); transform:translateY(-3px); box-shadow:0 10px 25px rgba(0,0,0,0.5); }
         .upgrade-btn:disabled, .shop-btn:disabled { opacity:0.4; filter:grayscale(50%); cursor:not-allowed; }
-        .upgrade-name, .shop-name { display:block; font-size:1.2rem; margin-bottom:5px; }
-        .upgrade-cost, .shop-cost { display:block; font-size:0.85rem; color:var(--accent); }
-        .upgrade-count, .shop-count {
-            background:rgba(0,0,0,0.4); color:white; border-radius:15px; padding:4px 12px;
-            font-size:0.8rem; display:inline-block; margin-top:5px;
-        }
-        .prestige-btn {
-            margin-top:25px; background:var(--prestige-bg); border:2px solid var(--prestige-color);
-            color:var(--prestige-color); padding:15px 35px; border-radius:35px; cursor:pointer;
-            font-weight:800; font-size:1.2rem; letter-spacing:1px; box-shadow:0 4px 20px rgba(187,134,252,0.4);
-        }
+        .upgrade-name, .shop-name { display:block; font-size:1.1rem; margin-bottom:5px; }
+        .upgrade-cost, .shop-cost { display:block; font-size:0.8rem; color:var(--accent); }
+        .upgrade-count, .shop-count { background:rgba(0,0,0,0.4); color:white; border-radius:15px; padding:4px 10px; font-size:0.75rem; display:inline-block; margin-top:5px; }
+        .prestige-btn { margin-top:20px; background:var(--prestige-bg); border:2px solid var(--prestige-color); color:var(--prestige-color); padding:12px 30px; border-radius:35px; cursor:pointer; font-weight:800; font-size:1.1rem; letter-spacing:1px; box-shadow:0 4px 20px rgba(187,134,252,0.4); }
         .prestige-btn:hover:not(:disabled) { background:var(--prestige-color); color:white; box-shadow:0 8px 30px rgba(187,134,252,0.7); }
         .prestige-btn:disabled { opacity:0.3; }
-        .prestige-display { margin-top:12px; font-weight:700; color:var(--prestige-color); }
-        .shop-section {
-            margin-top:30px; background:var(--card-bg); backdrop-filter: blur(15px); border-radius:25px;
-            padding:20px; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15);
-            border:1px solid var(--glass-border);
-        }
-        .shop-title { font-size:1.4rem; font-weight:700; margin-bottom:15px; color:var(--accent); }
-        .shop-items { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
-        .shop-btn { flex: 1 1 150px; max-width:200px; }
-        .daily-bonus {
-            margin-top:25px; background:rgba(255,215,0,0.12); backdrop-filter: blur(10px);
-            border-radius:25px; padding:15px; font-weight:700; border:1px solid rgba(255,215,0,0.3); color:#ffd700;
-        }
-        .daily-bonus button {
-            background:#ffd700; border:none; border-radius:20px; padding:10px 25px; font-weight:800;
-            color:#0a0a1a; cursor:pointer; margin-left:10px; box-shadow:0 4px 15px rgba(255,215,0,0.5);
-        }
+        .prestige-display { margin-top:10px; font-weight:700; color:var(--prestige-color); }
+        .shop-section { margin-top:20px; background:var(--card-bg); backdrop-filter: blur(15px); border-radius:25px; padding:15px; box-shadow:var(--crisp-shadow), inset 0 1px 1px rgba(255,255,255,0.15); border:1px solid var(--glass-border); }
+        .shop-title { font-size:1.3rem; font-weight:700; margin-bottom:10px; color:var(--accent); }
+        .shop-items { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+        .daily-bonus { margin-top:20px; background:rgba(255,215,0,0.12); backdrop-filter: blur(10px); border-radius:25px; padding:12px; font-weight:700; border:1px solid rgba(255,215,0,0.3); color:#ffd700; }
+        .daily-bonus button { background:#ffd700; border:none; border-radius:20px; padding:8px 20px; font-weight:800; color:#0a0a1a; cursor:pointer; margin-left:10px; }
         .daily-bonus button:disabled { background:#555; color:#aaa; }
-        .floating-score {
-            position:fixed; pointer-events:none; font-weight:900; font-size:2.8rem; color:var(--accent);
-            transform:translate(-50%,-50%); animation:floatUp 1s ease-out forwards; z-index:999;
-            text-shadow:0 0 25px var(--accent-glow);
-        }
-        @keyframes floatUp {
-            0%{opacity:1;transform:translate(-50%,-50%) scale(1);}
-            100%{opacity:0;transform:translate(-50%,calc(-50% - 100px)) scale(1.8);}
-        }
-        .event-notification {
-            position:fixed; top:30px; left:50%; transform:translateX(-50%); padding:15px 40px; border-radius:40px;
-            font-weight:800; font-size:1.3rem; box-shadow:0 10px 40px rgba(0,0,0,0.6); z-index:2000;
-            animation:slideDown 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); color:#fff; letter-spacing:1px;
-        }
+        .floating-score { position:fixed; pointer-events:none; font-weight:900; font-size:2.5rem; color:var(--accent); transform:translate(-50%,-50%); animation:floatUp 1s ease-out forwards; z-index:999; text-shadow:0 0 25px var(--accent-glow); }
+        @keyframes floatUp { 0%{opacity:1;transform:translate(-50%,-50%) scale(1);} 100%{opacity:0;transform:translate(-50%,calc(-50% - 80px)) scale(1.6);} }
+        .event-notification { position:fixed; top:30px; left:50%; transform:translateX(-50%); padding:12px 35px; border-radius:40px; font-weight:800; font-size:1.2rem; box-shadow:0 10px 40px rgba(0,0,0,0.6); z-index:2000; animation:slideDown 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); color:#fff; letter-spacing:1px; }
         .event-notification.gold { background:linear-gradient(135deg, #f1c40f, #f39c12); color:#1a1a2e; }
         .event-notification.storm { background:linear-gradient(135deg, #3498db, #2980b9); }
         .event-notification.bunt { background:linear-gradient(135deg, #e67e22, #d35400); }
         .event-notification.rain { background:linear-gradient(135deg, #ff9800, #f57c00); }
         @keyframes slideDown { from{top:-80px;opacity:0;} to{top:30px;opacity:1;} }
-        .modal {
-            display:flex; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.8); backdrop-filter:blur(8px);
-            justify-content:center; align-items:center; z-index:3000;
-            opacity:0; transition: opacity 0.35s ease, visibility 0.35s ease;
-        }
+        .modal { display:flex; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); justify-content:center; align-items:center; z-index:3000; opacity:0; transition: opacity 0.35s ease, visibility 0.35s ease; }
         .modal.active { visibility:visible; opacity:1; }
         .modal.closing { opacity:0; }
-        .modal-content {
-            background:var(--glass-bg); backdrop-filter:blur(30px); border:1px solid var(--glass-border);
-            border-radius:35px; padding:35px; max-width:650px; width:90%; max-height:80vh; overflow-y:auto;
-            box-shadow:0 25px 60px rgba(0,0,0,0.7); text-align:left; color:var(--text);
-            animation:modalPop 0.4s ease;
-        }
+        .modal-content { background:var(--glass-bg); backdrop-filter:blur(30px); border:1px solid var(--glass-border); border-radius:35px; padding:30px; max-width:650px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 25px 60px rgba(0,0,0,0.7); text-align:left; color:var(--text); animation:modalPop 0.4s ease; }
         @keyframes modalPop { from{transform:scale(0.9);opacity:0;} to{transform:scale(1);opacity:1;} }
-        .modal-content h3 { margin:0 0 20px; color:var(--accent); font-weight:800; font-size:1.6rem; }
-        .modal-content input, .modal-content button {
-            margin:8px 5px; padding:12px 20px; border-radius:15px; border:1px solid var(--btn-border);
-            background:var(--btn-bg); color:var(--text); font-size:1rem; font-weight:600;
-        }
+        .modal-content h3 { margin:0 0 20px; color:var(--accent); font-weight:800; font-size:1.5rem; }
+        .modal-content input, .modal-content button { margin:8px 5px; padding:10px 18px; border-radius:15px; border:1px solid var(--btn-border); background:var(--btn-bg); color:var(--text); font-size:0.9rem; font-weight:600; }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .clan-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn, .market-btn, .stats-btn, .skins-btn, .skills-btn {
-            background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
-            color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
-            margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px; transition: all 0.2s ease;
-        }
-        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .tagshop-btn:hover, .boss-btn:hover, .quests-btn:hover, .tester-btn:hover, .vip-btn:hover, .discord-btn:hover, .market-btn:hover, .stats-btn:hover, .skins-btn:hover, .skills-btn:hover {
-            transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-        }
-        .bottom-panel { margin-top:25px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
-        table { width:100%; border-collapse:collapse; margin-top:20px; }
-        th, td { padding:14px; border-bottom:1px solid var(--glass-border); text-align:center; }
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .clan-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn, .market-btn, .stats-btn, .skins-btn, .minigame-btn, .cards-btn, .pets-btn, .tree-btn, .friends-btn, .bank-btn, .lootbox-btn { background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border); color:var(--accent); border-radius:30px; padding:10px 20px; cursor:pointer; font-weight:700; margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px; transition: all 0.2s ease; }
+        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .tagshop-btn:hover, .boss-btn:hover, .quests-btn:hover, .tester-btn:hover, .vip-btn:hover, .discord-btn:hover, .market-btn:hover, .stats-btn:hover, .skins-btn:hover, .minigame-btn:hover, .cards-btn:hover, .pets-btn:hover, .tree-btn:hover, .friends-btn:hover, .bank-btn:hover, .lootbox-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+        .bottom-panel { margin-top:20px; display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
+        .mini-leaderboard { margin:15px 0; display:flex; justify-content:center; gap:20px; }
+        .mini-lb-entry { background:var(--card-bg); border-radius:15px; padding:8px 15px; font-size:0.9rem; }
+        .golden-cookie { position:fixed; z-index:2500; font-size:50px; cursor:pointer; animation: goldenFade 10s forwards; }
+        @keyframes goldenFade { 0%{opacity:1;} 100%{opacity:0; top:10%;} }
+        table { width:100%; border-collapse:collapse; margin-top:15px; }
+        th, td { padding:12px; border-bottom:1px solid var(--glass-border); text-align:center; }
         th { color:var(--accent); font-weight:800; }
-        .chat-messages {
-            max-height:350px; overflow-y:auto; margin:15px 0; padding:15px;
-            background:var(--card-bg); border-radius:20px; box-shadow:inset 0 2px 15px rgba(0,0,0,0.4);
-        }
-        .chat-message { margin:12px 0; word-break:break-word; animation:fadeIn 0.2s; position:relative; }
+        .chat-messages { max-height:300px; overflow-y:auto; margin:10px 0; padding:10px; background:var(--card-bg); border-radius:20px; box-shadow:inset 0 2px 15px rgba(0,0,0,0.4); }
+        .chat-message { margin:10px 0; word-break:break-word; animation:fadeIn 0.2s; position:relative; }
         @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
-        .admin-tag { color:#ff4757; font-weight:800; }
-        .friend-tag { color:#ff4757; font-weight:800; }
-        .vip-tag {
-            background: linear-gradient(90deg, #ff0000, #000000, #ff0000);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: vipShine 3s linear infinite;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
+        .admin-tag { color:#ff4757; font-weight:800; } .friend-tag { color:#ff4757; font-weight:800; }
+        .vip-tag { background: linear-gradient(90deg, #ff0000, #000000, #ff0000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: vipShine 3s linear infinite; font-weight: 900; letter-spacing: 1px; }
         @keyframes vipShine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-        .moder-tag {
-            background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: vipShine 1.5s linear infinite;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-        .gradient-nick {
-            background: linear-gradient(45deg, #ff4757, #ff6b81, #ff4757); background-size:200% 200%;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: gradientShift 2s ease infinite; font-weight:800;
-        }
+        .moder-tag { background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: vipShine 1.5s linear infinite; font-weight: 900; letter-spacing: 1px; }
+        .gradient-nick { background: linear-gradient(45deg, #ff4757, #ff6b81, #ff4757); background-size:200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 2s ease infinite; font-weight:800; }
         @keyframes gradientShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
-        .vip-text {
-            background: linear-gradient(90deg, #ff0000, #000000, #ff0000);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: vipShine 3s linear infinite;
-            font-weight: 900;
-            font-size: 1.05em;
-        }
-        .moder-text {
-            background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff); background-size: 200% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: vipShine 1.5s linear infinite; font-weight: 600;
-        }
-        .bold-text { font-weight: 900; }
-        .rank-tag { color:#ffa502; font-weight:700; }
+        .vip-text { background: linear-gradient(90deg, #ff0000, #000000, #ff0000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: vipShine 3s linear infinite; font-weight: 900; font-size: 1.05em; }
+        .moder-text { background: linear-gradient(90deg, #00bfff, #1e90ff, #00bfff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: vipShine 1.5s linear infinite; font-weight: 600; }
+        .bold-text { font-weight: 900; } .rank-tag { color:#ffa502; font-weight:700; }
         .hidden { display:none !important; }
         .chat-input-area { position: relative; display: flex; align-items: center; gap: 5px; }
-        .unread-badge {
-            position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; border-radius: 50%;
-            width: 20px; height: 20px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center;
-            font-weight: 700;
-        }
+        .unread-badge { position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 700; }
         .chat-btn { position: relative; }
         .msg-time { font-size:0.7rem; color:gray; margin-left:8px; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        @media (max-width:600px) {
-            .game-container{padding:20px;}
-            .cookie-btn{font-size:110px;}
-            .score{font-size:2.8rem;}
-            .score-display { padding:25px 120px 25px 20px; }
-            .rank-badge { font-size:0.7rem; padding:5px 10px; max-width:90px; white-space: normal; text-align: center; }
-            .upgrades{grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));}
-        }
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
-        .role-switcher { display: flex; gap: 5px; margin: 10px 0; flex-wrap: wrap; }
-        .msg-actions-btn {
-            cursor: pointer; font-size: 1.2rem; opacity: 0.6; margin-left: 6px; transition: opacity 0.2s;
-        }
-        .msg-actions-btn:hover { opacity: 1; }
-        .msg-menu {
-            display: none; position: absolute; right: 20px; background: var(--card-bg);
-            backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px;
-            padding: 6px 0; z-index: 10; min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        }
-        .msg-menu.active { display: block; animation: fadeIn 0.2s; }
-        .msg-menu button {
-            display: block; width: 100%; background: transparent; border: none; color: var(--text);
-            padding: 8px 16px; text-align: left; cursor: pointer; font-size: 0.9rem;
-        }
-        .msg-menu button:hover { background: var(--btn-hover-bg); }
-        .mention-suggestions {
-            position: absolute; bottom: 50px; left: 10px; background: var(--card-bg);
-            border: 1px solid var(--glass-border); border-radius: 12px; max-height: 120px;
-            overflow-y: auto; z-index: 20; width: 200px;
-        }
-        .mention-suggestions div { padding: 6px 12px; cursor: pointer; }
-        .mention-suggestions div:hover { background: var(--btn-hover-bg); }
-        .chat-light { --text: #582f0e; --card-bg: rgba(254,250,224,0.8); --glass-bg: rgba(255,248,240,0.8); }
-        .typing-indicator { font-size: 0.8rem; opacity: 0.7; padding: 4px 8px; }
-        .youtube-preview { margin-top: 6px; border-radius: 8px; overflow: hidden; }
-        .youtube-preview iframe { width: 100%; max-width: 300px; height: 169px; border: none; }
-        .poll-options { margin-top: 6px; }
-        .poll-options button {
-            margin: 3px 5px 3px 0; padding: 4px 12px; border-radius: 12px;
-            border: 1px solid var(--accent); background: transparent; color: var(--text); cursor: pointer;
-        }
-        .poll-options button:hover { background: var(--accent); color: white; }
-        .poll-results { font-size: 0.8rem; margin-top: 4px; }
-        .favorite-star { cursor: pointer; }
-        .favorites-list { margin: 10px 0; }
-        .quote-btn {
-            position: absolute; background: var(--accent); color: white; border: none;
-            border-radius: 8px; padding: 4px 12px; cursor: pointer; z-index: 100; display: none;
-        }
-        .skin-selector {
-            display: flex; gap: 10px; justify-content: center; margin: 15px 0;
-        }
-        .skin-option {
-            font-size: 3rem; cursor: pointer; border: 3px solid transparent; border-radius: 15px; padding: 5px;
-            transition: 0.2s;
-        }
-        .skin-option.active { border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
-        .skin-option:hover { transform: scale(1.15); }
-        .skills-panel {
-            display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap;
-        }
-        .skill-btn {
-            background: var(--btn-bg); border: 2px solid var(--accent); border-radius: 50%;
-            width: 70px; height: 70px; font-size: 1.8rem; cursor: pointer; position: relative;
-            box-shadow: var(--crisp-shadow); transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column;
-        }
-        .skill-btn:hover:not(:disabled) { background: var(--btn-hover-bg); transform: scale(1.1); }
+        @media (max-width:600px) { .game-container{padding:15px;} .cookie-btn{font-size:110px;} .score{font-size:2.8rem;} .score-display { padding:20px 100px 20px 20px; } .upgrades{grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));} }
+        .skills-panel { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
+        .skill-btn { background: var(--btn-bg); border: 2px solid var(--accent); border-radius: 50%; width: 60px; height: 60px; font-size: 1.5rem; cursor: pointer; position: relative; box-shadow: var(--crisp-shadow); display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .skill-btn:disabled { opacity: 0.5; filter: grayscale(50%); cursor: not-allowed; }
-        .skill-cooldown {
-            position: absolute; bottom: 5px; font-size: 0.7rem; color: var(--accent); font-weight: 700;
-        }
-        .seasonal-badge {
-            position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #f1c40f, #f39c12);
-            color: white; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); letter-spacing: 1px; z-index: 2;
-        }
+        .skill-cooldown { position: absolute; bottom: 3px; font-size: 0.6rem; color: var(--accent); font-weight: 700; }
+        .seasonal-badge { position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #f1c40f, #f39c12); color: white; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3); letter-spacing: 1px; z-index: 2; }
     </style>
 </head>
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
     <span class="seasonal-badge" id="seasonalBadge" style="display:none;">🌞 Летний марафон!</span>
-    <h1>🍪 Печенько кликер v2.2.0</h1>
+    <h1>🍪 Печенько кликер v2.3.0</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
         <div class="per-second">в секунду: <span id="perSecond">0</span></div>
         <span class="rank-badge" id="rankDisplay">Новичок</span>
     </div>
+    <div class="mini-leaderboard" id="miniLeaderboard"></div>
     <button class="cookie-btn" id="cookieBtn">🍪</button>
     <div class="skills-panel" id="skillsPanel">
-        <button class="skill-btn" id="skillGoldRain" title="Золотой дождь (x2 клики, 10с)" style="display:none;">
-            🌧️<span class="skill-cooldown" id="cdGoldRain"></span>
-            <span class="skill-count" id="cntGoldRain"></span>
-        </button>
-        <button class="skill-btn" id="skillGrandmaRage" title="Бабушкин гнев (бабушки x3, 15с)" style="display:none;">
-            👵<span class="skill-cooldown" id="cdGrandmaRage"></span>
-            <span class="skill-count" id="cntGrandmaRage"></span>
-        </button>
-        <button class="skill-btn" id="skillQuantumLeap" title="Квантовый скачок (+10% печенек)" style="display:none;">
-            ⚛️<span class="skill-cooldown" id="cdQuantumLeap"></span>
-            <span class="skill-count" id="cntQuantumLeap"></span>
-        </button>
+        <button class="skill-btn" id="skillGoldRain" title="Золотой дождь (x2 клики, 10с)" style="display:none;">🌧️<span class="skill-cooldown" id="cdGoldRain"></span><span class="skill-count" id="cntGoldRain"></span></button>
+        <button class="skill-btn" id="skillGrandmaRage" title="Бабушкин гнев (бабушки x3, 15с)" style="display:none;">👵<span class="skill-cooldown" id="cdGrandmaRage"></span><span class="skill-count" id="cntGrandmaRage"></span></button>
+        <button class="skill-btn" id="skillQuantumLeap" title="Квантовый скачок (+10% печенек)" style="display:none;">⚛️<span class="skill-cooldown" id="cdQuantumLeap"></span><span class="skill-count" id="cntQuantumLeap"></span></button>
     </div>
     <div class="upgrades" id="upgradesContainer"></div>
     <button class="prestige-btn" id="prestigeBtn" disabled>✨ Переродиться (нужно 1 млн 🍪)</button>
@@ -378,1183 +156,532 @@
         </div>
     </div>
     <div class="daily-bonus" id="dailyBonusSection">
-        <span>🎁 Ежедневная награда: </span>
-        <button id="claimDailyBtn">Забрать</button>
-        <span id="dailyStreak" style="margin-left:10px;"></span>
+        <span>🎁 Ежедневная награда: </span><button id="claimDailyBtn">Забрать</button><span id="dailyStreak" style="margin-left:10px;"></span>
     </div>
     <div class="bottom-panel">
-        <button class="admin-btn" id="openAdminBtn" style="display: none;">⚙️ Админ</button>
-        <button class="tester-btn" id="openTesterBtn" style="display: none;">🔧 Тестер</button>
-        <button class="leaderboard-btn" id="openLeaderboardBtn">🏆 Лидеры</button>
+        <button class="admin-btn" id="openAdminBtn" style="display:none;">⚙️ Админ</button>
+        <button class="leaderboard-btn" id="openLeaderboardBtn">🏆 Топ</button>
         <button class="chat-btn" id="openChatBtn">💬 Чат</button>
-        <button class="achievements-btn" id="openAchievementsBtn">🎖️ Достижения</button>
+        <button class="achievements-btn" id="openAchievementsBtn">🎖️ Ачивки</button>
         <button class="clan-btn" id="openClanBtn">👥 Кланы</button>
-        <button class="tagshop-btn" id="openTagShopBtn">🏷️ Теги</button>
         <button class="boss-btn" id="openBossBtn">🥊 Босс</button>
         <button class="quests-btn" id="openQuestsBtn">📋 Квесты</button>
-        <button class="vip-btn" id="openVIPBtn">💎 Магазин</button>
         <button class="market-btn" id="openMarketBtn">🏪 Рынок</button>
-        <button class="stats-btn" id="openStatsBtn">📊 Статистика</button>
         <button class="skins-btn" id="openSkinsBtn">🎨 Скины</button>
+        <button class="minigame-btn" id="openMinigameBtn">🎰 Рулетка</button>
+        <button class="cards-btn" id="openCardsBtn">🃏 Карты</button>
+        <button class="pets-btn" id="openPetsBtn">🐾 Питомцы</button>
+        <button class="tree-btn" id="openTreeBtn">🌳 Древо</button>
+        <button class="friends-btn" id="openFriendsBtn">👫 Друзья</button>
+        <button class="bank-btn" id="openBankBtn">🏦 Банк</button>
+        <button class="lootbox-btn" id="openLootboxBtn">🎁 Лутбокс</button>
         <button class="discord-btn" id="openDiscordBtn">🛠️ Дискорд</button>
-        <button id="googleSignInBtn" style="display:none;">🔐 Войти через Google</button>
+        <button id="googleSignInBtn" style="display:none;">🔐 Google вход</button>
     </div>
 </div>
 
 <!-- Модальные окна -->
 <div class="modal" id="adminModal">
-    <div class="modal-content" style="max-width:700px;">
-        <h3>🛠️ Админ-панель</h3>
-        <div id="adminControls">
-            <div style="margin-bottom:12px;"><label>Кастомный тег: <input type="text" id="customTagInput" placeholder="[Твой тег]" maxlength="12"></label></div>
-            <div style="margin-bottom:12px;"><label>Кастомный ник: <input type="text" id="customNickInput" placeholder="Никнейм" maxlength="16"></label></div>
-            <button id="saveCustomBtn">Сохранить настройки</button>
-            <hr style="margin:15px 0; border-color:var(--glass-border);">
-            <div class="admin-grid">
-                <button id="addCookiesBtn">+1 000 печенек</button>
-                <button id="addTrillionCookiesBtn">+1 000 000 000 000 печенек</button>
-                <button id="adminSetClick2">Клик x2</button>
-                <button id="adminResetClick">Сброс клика</button>
-                <button id="adminGiftT1nator">🎁 Подарок для t1nator (+1 трлн)</button>
-                <button id="adminFreezeEvents">Заморозить ивенты</button>
-                <button id="adminUnfreezeEvents">Разморозить ивенты</button>
-                <button id="adminRestoreProgress" style="display:none;">🔙 Восстановить 2T и +4 клик (tr3haszz)</button>
-                <button id="adminRestoreT1nator" style="display:none;">🔙 Восстановить 1T и x3 клик (t1nator)</button>
-            </div>
-            <div class="role-switcher">
-                <button id="switchToModer">👑 Модер</button>
-                <button id="switchToTester">🔧 Тестер</button>
-                <button id="switchToAdmin">⚙️ Админ (себя)</button>
-                <button id="hideAdminBtn">🙈 Скрыть админку</button>
-            </div>
+    <div class="modal-content"><h3>🛠️ Админ-панель</h3>
+        <input id="customTagInput" placeholder="Тег"><input id="customNickInput" placeholder="Ник">
+        <button id="saveCustomBtn">Сохранить</button>
+        <hr>
+        <button id="addCookiesBtn">+1 000 печенек</button>
+        <button id="addTrillionCookiesBtn">+1 трлн</button>
+        <button id="adminSetClick2">Клик x2</button>
+        <button id="adminResetClick">Сброс клика</button>
+        <button id="adminGiftT1nator">🎁 t1nator +1 трлн</button>
+        <button id="adminFreezeEvents">Заморозить ивенты</button>
+        <button id="adminUnfreezeEvents">Разморозить</button>
+        <button id="adminRestoreProgress" style="display:none;">Восстановить 2T (tr3haszz)</button>
+        <button id="adminRestoreT1nator" style="display:none;">Восстановить 3T (t1nator)</button>
+        <div>
+            <button id="switchToModer">Модер</button>
+            <button id="switchToTester">Тестер</button>
+            <button id="switchToAdmin">Сброс</button>
+            <button id="hideAdminBtn">Скрыть</button>
         </div>
-        <button id="closeAdminModal" style="margin-top:15px;">Закрыть</button>
+        <button id="closeAdminModal">Закрыть</button>
     </div>
 </div>
-<div class="modal" id="testerModal">
-    <div class="modal-content" style="text-align:center;">
-        <h3>🔧 Панель тестера</h3>
-        <p>Если нашли баг, отправьте репорт прямо tr3haszz!</p>
-        <button id="sendBugReportBtn">📧 Отправить баг-репорт</button>
-        <button id="closeTesterModal" style="margin-top:15px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="leaderboardModal">
-    <div class="modal-content"><h3>🏆 Таблицы лидеров</h3><button id="showCookiesTop">Топ по печенькам</button><button id="showCRTop">Топ по CR</button>
-        <table id="leaderboardCookiesTable"><thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead><tbody></tbody></table>
-        <table id="leaderboardCRTable" class="hidden"><thead><tr><th>#</th><th>Имя</th><th>CR</th></tr></thead><tbody></tbody></table>
-        <button id="closeLeaderboardModal" style="margin-top:15px;">Закрыть</button></div>
-</div>
-<div class="modal" id="chatModal">
-    <div class="modal-content" style="max-width:700px;">
-        <h3>💬 Мировой чат</h3>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span>Тема чата: <button id="chatThemeToggle">🌗</button></span>
-            <button id="invisibleToggle">👻 Невидимка</button>
-        </div>
-        <div id="typingIndicator" class="typing-indicator" style="display:none;"></div>
-        <div class="search-bar">
-            <input type="text" id="chatSearch" placeholder="🔍 Поиск...">
-        </div>
-        <div class="chat-messages" id="chatMessages"></div>
-        <div id="replyPreview" style="display:none;" class="reply-preview"></div>
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Введите сообщение..." style="flex:1;">
-            <button id="sendChatBtn">Отправить</button>
-        </div>
-        <div style="display:flex; gap:5px; margin-top:8px;">
-            <button id="privateChatBtn">✉️ ЛС</button>
-            <button id="closePrivateChatBtn" style="display:none;">🔓 Закрыть ЛС</button>
-            <button id="showFavoritesBtn">⭐ Избранное</button>
-        </div>
-        <div id="privateUsersList" class="private-chat-users" style="display:none;"></div>
-        <button id="closeChatModal" style="margin-top:10px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="achievementsModal">
-    <div class="modal-content"><h3>🎖️ Достижения</h3><ul class="achievement-list" id="achievementList"></ul><button id="closeAchievementsModal" style="margin-top:15px;">Закрыть</button></div>
-</div>
-<div class="modal" id="clanModal">
-    <div class="modal-content"><h3>👥 Кланы</h3><div id="myClanInfo"></div>
-        <button id="createClanBtn">Создать</button><button id="joinClanBtn">Вступить</button>
-        <input type="text" id="clanNameInput" placeholder="Название клана" style="width:100%; margin:10px 0;">
-        <h4>Топ кланов</h4>
-        <table id="clanLeaderboardTable"><thead><tr><th>#</th><th>Клан</th><th>Общий CR</th></tr></thead><tbody></tbody></table>
-        <button id="closeClanModal" style="margin-top:15px;">Закрыть</button></div>
-</div>
-<div class="modal" id="tagShopModal">
-    <div class="modal-content">
-        <h3>🏷️ Магазин тегов</h3>
-        <p>Купите тег, который будет виден в чате всем!</p>
-        <div style="display:flex; flex-wrap:wrap; gap:10px; margin:15px 0;">
-            <button class="shop-btn buyTagBtn" data-tag="[Новичок]" data-cost="1000">[Новичок] - 1 000 🍪</button>
-            <button class="shop-btn buyTagBtn" data-tag="[Пекарь]" data-cost="10000">[Пекарь] - 10 000 🍪</button>
-            <button class="shop-btn buyTagBtn" data-tag="[Магнат]" data-cost="100000">[Магнат] - 100 000 🍪</button>
-            <button class="shop-btn" id="buyCustomTagBtn">Свой тег - 1 000 000 🍪</button>
-        </div>
-        <button id="closeTagShopModal" style="margin-top:10px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="bossModal">
-    <div class="modal-content" style="text-align:center;">
-        <h3>🥊 Клановый босс</h3>
-        <div id="bossInfo" style="margin:15px 0;"></div>
-        <div style="background:var(--card-bg); border-radius:20px; padding:15px; margin:15px 0;">
-            <p>Здоровье босса: <span id="bossHP">0</span></p>
-            <div style="background:#333; border-radius:10px; height:20px; margin:10px 0;">
-                <div id="bossHPBar" style="background:linear-gradient(90deg, #ff4757, #ff6b81); height:100%; border-radius:10px; width:100%;"></div>
-            </div>
-        </div>
-        <button id="attackBossBtn">Атаковать (клик)</button>
-        <button id="closeBossModal" style="margin-top:10px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="questsModal">
-    <div class="modal-content">
-        <h3>📋 Ежедневные квесты</h3>
-        <div id="questsList" style="margin:15px 0;"></div>
-        <button id="closeQuestsModal" style="margin-top:10px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="vipModal">
-    <div class="modal-content" style="text-align:center;">
-        <h3>💎 Магазин</h3>
-        <p>Здесь можно приобрести бонусы и статусы (оплата временно недоступна).</p>
-        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin:20px 0;">
-            <button class="shop-btn" id="buyVIPCookies">VIP x2 - 100 000 000 🍪</button>
-            <button class="shop-btn" id="buyVIPMoney">VIP x2 - 120₽</button>
-            <button class="shop-btn" id="buyX3Money">x3 навсегда - 50₽</button>
-            <button class="shop-btn" id="buyModerMoney">Модер (30д) - 100₽</button>
-            <button class="shop-btn" id="buyModerCookies">Модер (30д) - 100 000 000 🍪</button>
-            <button class="shop-btn" id="buyTempAdmin">Админ на 1 день - 1 000 000 000 000 🍪</button>
-        </div>
-        <p id="shopStatus" style="font-weight:700; margin-top:15px;"></p>
-        <button id="closeVIPModal" style="margin-top:10px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="marketModal">
-    <div class="modal-content">
-        <h3>🏪 Рынок</h3>
-        <p>Обменяйте CR на печеньки или наоборот.</p>
-        <button id="exchangeCRtoCookies">1 CR → 1 000 000 🍪</button>
-        <button id="exchangeCookiestoCR">10 000 000 🍪 → 1 CR</button>
-        <button id="closeMarketModal" style="margin-top:10px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="statsModal">
-    <div class="modal-content">
-        <h3>📊 Статистика</h3>
-        <p>Всего кликов: <span id="statClicks">0</span></p>
-        <p>Перерождений: <span id="statPrestiges">0</span></p>
-        <p>Куплено улучшений: <span id="statUpgrades">0</span></p>
-        <button id="closeStatsModal" style="margin-top:10px;">Закрыть</button>
-    </div>
-</div>
-<div class="modal" id="skinsModal">
-    <div class="modal-content" style="text-align:center;">
-        <h3>🎨 Скины печеньки</h3>
-        <div class="skin-selector" id="skinSelector">
-            <span class="skin-option" data-skin="🍪">🍪</span>
-            <span class="skin-option" data-skin="🍫">🍫</span>
-            <span class="skin-option" data-skin="🌟">🌟</span>
-            <span class="skin-option" data-skin="🌌">🌌</span>
-        </div>
-        <button id="closeSkinsModal" style="margin-top:15px;">Закрыть</button>
-    </div>
-</div>
+<div class="modal" id="leaderboardModal"><div class="modal-content"><h3>🏆 Таблицы лидеров</h3><button id="showCookiesTop">Печеньки</button><button id="showCRTop">CR</button><table id="leaderboardCookiesTable"><thead><tr><th>#</th><th>Имя</th><th>Печенек</th></tr></thead><tbody></tbody></table><table id="leaderboardCRTable" class="hidden"><thead><tr><th>#</th><th>Имя</th><th>CR</th></tr></thead><tbody></tbody></table><button id="closeLeaderboardModal">Закрыть</button></div></div>
+<div class="modal" id="chatModal"><div class="modal-content"><h3>💬 Чат</h3><button id="chatThemeToggle">🌗</button><button id="invisibleToggle">👻</button><div id="typingIndicator" class="typing-indicator" style="display:none;"></div><input type="text" id="chatSearch" placeholder="Поиск..."><div class="chat-messages" id="chatMessages"></div><div id="replyPreview" style="display:none;"></div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="Сообщение..."><button id="sendChatBtn">Отправить</button></div><button id="privateChatBtn">ЛС</button><button id="closePrivateChatBtn" style="display:none;">Закрыть ЛС</button><button id="showFavoritesBtn">⭐</button><div id="privateUsersList" class="private-chat-users" style="display:none;"></div><button id="closeChatModal">Закрыть</button></div></div>
+<div class="modal" id="achievementsModal"><div class="modal-content"><h3>🎖️ Достижения</h3><ul id="achievementList"></ul><button id="closeAchievementsModal">Закрыть</button></div></div>
+<div class="modal" id="clanModal"><div class="modal-content"><h3>👥 Кланы</h3><div id="myClanInfo"></div><input id="clanNameInput" placeholder="Название"><button id="createClanBtn">Создать</button><button id="joinClanBtn">Вступить</button><table id="clanLeaderboardTable"><thead><tr><th>#</th><th>Клан</th><th>CR</th></tr></thead><tbody></tbody></table><button id="closeClanModal">Закрыть</button></div></div>
+<div class="modal" id="bossModal"><div class="modal-content"><h3>🥊 Босс</h3><div id="bossInfo"></div><p>HP: <span id="bossHP"></span></p><div style="background:#333; height:20px;"><div id="bossHPBar" style="background:#ff4757; height:100%; width:100%;"></div></div><button id="attackBossBtn">Атаковать</button><button id="closeBossModal">Закрыть</button></div></div>
+<div class="modal" id="questsModal"><div class="modal-content"><h3>📋 Квесты</h3><div id="questsList"></div><button id="closeQuestsModal">Закрыть</button></div></div>
+<div class="modal" id="marketModal"><div class="modal-content"><h3>🏪 Рынок</h3><button id="exchangeCRtoCookies">1 CR → 1M 🍪</button><button id="exchangeCookiestoCR">10M 🍪 → 1 CR</button><button id="closeMarketModal">Закрыть</button></div></div>
+<div class="modal" id="skinsModal"><div class="modal-content"><h3>🎨 Скины</h3><div class="skin-selector" id="skinSelector"><span class="skin-option" data-skin="🍪">🍪</span><span class="skin-option" data-skin="🍫">🍫</span><span class="skin-option" data-skin="🌟">🌟</span><span class="skin-option" data-skin="🌌">🌌</span></div><button id="closeSkinsModal">Закрыть</button></div></div>
+<div class="modal" id="minigameModal"><div class="modal-content"><h3>🎰 Рулетка</h3><p>Испытайте удачу! Ставка: 10 000 🍪</p><button id="spinRouletteBtn">Крутить</button><p id="rouletteResult"></p><button id="closeMinigameModal">Закрыть</button></div></div>
+<div class="modal" id="cardsModal"><div class="modal-content"><h3>🃏 Карты</h3><p>Соберите коллекцию!</p><div id="cardCollectionDiv"></div><button id="closeCardsModal">Закрыть</button></div></div>
+<div class="modal" id="petsModal"><div class="modal-content"><h3>🐾 Питомцы</h3><p>Купите питомца:</p><button id="buyCatBtn">🐱 Кот (10 000 🍪)</button><button id="buyDogBtn">🐶 Собака (50 000 🍪)</button><button id="buyDragonBtn">🐉 Дракон (500 000 🍪)</button><p id="petStatus"></p><button id="closePetsModal">Закрыть</button></div></div>
+<div class="modal" id="treeModal"><div class="modal-content"><h3>🌳 Древо престижа</h3>
+    <button id="buyOfflineTime">Оффлайн-время (10🌟)</button>
+    <button id="buyCpsMult">CPS множитель (20🌟)</button>
+    <button id="buyClickBase">Базовый клик (15🌟)</button>
+    <button id="buyGoldenChance">Шанс золотой печеньки (25🌟)</button>
+    <p id="treeStatus"></p><button id="closeTreeModal">Закрыть</button></div></div>
+<div class="modal" id="friendsModal"><div class="modal-content"><h3>👫 Друзья</h3><input id="friendNameInput" placeholder="Имя друга"><button id="addFriendBtn">Добавить</button><div id="friendsListContainer"></div><button id="closeFriendsModal">Закрыть</button></div></div>
+<div class="modal" id="bankModal"><div class="modal-content"><h3>🏦 Банк</h3><p>Вклад: <span id="bankDepositDisplay">0</span> 🍪</p><button id="depositBtn">Положить 10 000</button><button id="withdrawBtn">Снять всё</button><button id="closeBankModal">Закрыть</button></div></div>
+<div class="modal" id="lootboxModal"><div class="modal-content"><h3>🎁 Лутбокс</h3><p>Цена: 50 000 🍪</p><button id="openLootboxBtnModal">Открыть</button><p id="lootboxResult"></p><button id="closeLootboxModal">Закрыть</button></div></div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, serverTimestamp, set, get, query, orderByChild, limitToLast, onValue, update, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded, serverTimestamp, set, get, query, orderByChild, limitToLast, onValue, update, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCKsCycC_nlvlvXonjZdBpViyIVE6yNHpM",
-        authDomain: "chat-2f0e3.firebaseapp.com",
-        databaseURL: "https://chat-2f0e3-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "chat-2f0e3",
-        storageBucket: "chat-2f0e3.firebasestorage.app",
-        messagingSenderId: "1074494149039",
-        appId: "1:1074494149039:web:31a72ccc5ad8414dccdf5a",
-        measurementId: "G-J6C5F9Y2K6"
-    };
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const auth = getAuth(app);
-    const chatRef = ref(database, 'messages');
-    const presenceRef = ref(database, 'presence');
-    const leaderboardRef = ref(database, 'leaderboard');
-    const leaderboardCRRef = ref(database, 'leaderboardCR');
-    const clansRef = ref(database, 'clans');
+const firebaseConfig = {
+    apiKey: "AIzaSyCKsCycC_nlvlvXonjZdBpViyIVE6yNHpM",
+    authDomain: "chat-2f0e3.firebaseapp.com",
+    databaseURL: "https://chat-2f0e3-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "chat-2f0e3",
+    storageBucket: "chat-2f0e3.firebasestorage.app",
+    messagingSenderId: "1074494149039",
+    appId: "1:1074494149039:web:31a72ccc5ad8414dccdf5a",
+    measurementId: "G-J6C5F9Y2K6"
+};
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const auth = getAuth(app);
+const chatRef = ref(database, 'messages');
+const presenceRef = ref(database, 'presence');
+const leaderboardRef = ref(database, 'leaderboard');
+const leaderboardCRRef = ref(database, 'leaderboardCR');
+const clansRef = ref(database, 'clans');
 
-    // ====== ИГРОВЫЕ ПЕРЕМЕННЫЕ ======
-    let cookies = 0, cookiesPerClick = 1, cookiesPerSecond = 0, prestigePoints = 0;
-    let playerName = localStorage.getItem('pechenkoPlayerName') || '';
-    let isSpecialAdmin = localStorage.getItem('pechenkoIsSpecialAdmin') === 'true';
-    let isFriendAdmin = localStorage.getItem('pechenkoIsFriendAdmin') === 'true';
-    let isTester = localStorage.getItem('pechenkoIsTester') === 'true';
-    let isVIP = localStorage.getItem('pechenkoIsVIP') === 'true';
-    let isX3 = localStorage.getItem('pechenkoIsX3') === 'true';
-    let isModer = localStorage.getItem('pechenkoIsModer') === 'true';
-    let isTemporaryAdmin = localStorage.getItem('pechenkoIsTemporaryAdmin') === 'true';
-    let tempAdminExpiry = parseInt(localStorage.getItem('pechenkoTempAdminExpiry') || '0');
-    let moderExpiry = parseInt(localStorage.getItem('pechenkoModerExpiry') || '0');
-    let eventActive = false, eventMultiplier = 1, eventTimerId = null;
-    let productionMultiplier = 1, grandmaBoost = 1;
-    let eventsFrozen = false;
-    let currentClan = localStorage.getItem('pechenkoClan') || null;
-    let customTag = localStorage.getItem('pechenkoCustomTag') || '';
-    let customNick = localStorage.getItem('pechenkoCustomNick') || '';
-    let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
-    let adminHidden = localStorage.getItem('pechenkoAdminHidden') === 'true';
-    let activeRoleTag = localStorage.getItem('pechenkoActiveRoleTag') || '';
-    let activeRoleNick = localStorage.getItem('pechenkoActiveRoleNick') || '';
-    let clickPowerLevel = parseInt(localStorage.getItem('pechenkoClickPowerLevel') || '0');
-    let selectedSkin = localStorage.getItem('pechenkoSelectedSkin') || '🍪';
+// ====== ИГРОВЫЕ ПЕРЕМЕННЫЕ ======
+let cookies = 0, cookiesPerClick = 1, cookiesPerSecond = 0, prestigePoints = 0;
+let playerName = localStorage.getItem('pechenkoPlayerName') || '';
+let isSpecialAdmin = localStorage.getItem('pechenkoIsSpecialAdmin') === 'true';
+let isFriendAdmin = localStorage.getItem('pechenkoIsFriendAdmin') === 'true';
+let isTester = localStorage.getItem('pechenkoIsTester') === 'true';
+let isVIP = localStorage.getItem('pechenkoIsVIP') === 'true';
+let isX3 = localStorage.getItem('pechenkoIsX3') === 'true';
+let isModer = localStorage.getItem('pechenkoIsModer') === 'true';
+let isTemporaryAdmin = localStorage.getItem('pechenkoIsTemporaryAdmin') === 'true';
+let tempAdminExpiry = parseInt(localStorage.getItem('pechenkoTempAdminExpiry') || '0');
+let moderExpiry = parseInt(localStorage.getItem('pechenkoModerExpiry') || '0');
+let eventActive = false, eventMultiplier = 1, eventTimerId = null;
+let productionMultiplier = 1, grandmaBoost = 1;
+let eventsFrozen = false;
+let currentClan = localStorage.getItem('pechenkoClan') || null;
+let customTag = localStorage.getItem('pechenkoCustomTag') || '';
+let customNick = localStorage.getItem('pechenkoCustomNick') || '';
+let prestigeCost = parseInt(localStorage.getItem('pechenkoPrestigeCost') || '1000000');
+let adminHidden = localStorage.getItem('pechenkoAdminHidden') === 'true';
+let activeRoleTag = localStorage.getItem('pechenkoActiveRoleTag') || '';
+let activeRoleNick = localStorage.getItem('pechenkoActiveRoleNick') || '';
+let clickPowerLevel = parseInt(localStorage.getItem('pechenkoClickPowerLevel') || '0');
+let selectedSkin = localStorage.getItem('pechenkoSelectedSkin') || '🍪';
+let goldenCookieActive = false, goldenCookieTimer = null;
+let goldenCookieMultiplier = 1;
 
-    // Сезонный ивент
-    const SEASON_START = new Date('2026-06-01').getTime();
-    const SEASON_END = new Date('2026-08-31').getTime();
-    let seasonalTokens = parseInt(localStorage.getItem('pechenkoSeasonalTokens') || '0');
-    let seasonalQuestDone = localStorage.getItem('pechenkoSeasonalQuestDone') === 'true';
+if ((playerName === 'tr3haszz' && isSpecialAdmin) || (playerName === 't1nator' && isFriendAdmin)) { adminHidden = false; localStorage.removeItem('pechenkoAdminHidden'); }
 
-    // Навыки-трофеи
-    let skillCounts = {
-        goldRain: parseInt(localStorage.getItem('skillCountGoldRain') || '0'),
-        grandmaRage: parseInt(localStorage.getItem('skillCountGrandmaRage') || '0'),
-        quantumLeap: parseInt(localStorage.getItem('skillCountQuantumLeap') || '0')
-    };
-    let skillCooldowns = { goldRain: 0, grandmaRage: 0, quantumLeap: 0 };
-    let skillTimers = {};
+const SEASON_START = new Date('2026-06-01').getTime();
+const SEASON_END = new Date('2026-08-31').getTime();
+let seasonalTokens = parseInt(localStorage.getItem('pechenkoSeasonalTokens') || '0');
+let seasonalQuestDone = localStorage.getItem('pechenkoSeasonalQuestDone') === 'true';
 
-    const DAILY_KEY = 'pechenkoDaily';
-    let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
-    const upgrades = [
-        { id: 'upgrade1', name: '👆 Бабушка', baseCost: 15, cps: 0.5, count: 0, costMult: 1.15 },
-        { id: 'upgrade2', name: '🏭 Фабрика', baseCost: 100, cps: 4, count: 0, costMult: 1.18 },
-        { id: 'upgrade3', name: '🧙‍♂️ Волшебник', baseCost: 500, cps: 20, count: 0, costMult: 1.20 },
-        { id: 'upgrade4', name: '🚀 Печеньколёт', baseCost: 3000, cps: 100, count: 0, costMult: 1.25 },
-        { id: 'upgrade5', name: '🛸 НЛО-пекарня', baseCost: 15000, cps: 500, count: 0, costMult: 1.28 },
-        { id: 'upgrade6', name: '🕰️ Временной пекарь', baseCost: 100000, cps: 2000, count: 0, costMult: 1.30 },
-        { id: 'upgrade7', name: '🌌 Квантовая печенька', baseCost: 500000, cps: 10000, count: 0, costMult: 1.33 },
-        { id: 'upgrade8', name: '🌑 Тёмная материя', baseCost: 1500000, cps: 50000, count: 0, costMult: 1.35 },
-        { id: 'upgrade9', name: '⏳ Временной коллапс', baseCost: 5000000, cps: 250000, count: 0, costMult: 1.38 },
-        { id: 'upgrade10', name: '🍪 Вселенная печенья', baseCost: 20000000, cps: 1500000, count: 0, costMult: 1.40 }
-    ];
-    const ranks = [
-        { threshold: 0, name: 'Новичок' }, { threshold: 1000, name: 'Пекарь' },
-        { threshold: 10000, name: 'Кондитер' }, { threshold: 100000, name: 'Мастер печенья' },
-        { threshold: 1000000, name: 'Печеньковый магнат' }, { threshold: 10000000, name: 'Король печенек' },
-        { threshold: 100000000, name: 'Бог печенек' }
-    ];
-    const achievements = [
-        { id: 'first_cookie', name: 'Первая печенька', desc: 'Кликнуть 1 раз', check: () => totalClicks >= 1 },
-        { id: 'click_100', name: 'Сотня кликов', desc: 'Совершить 100 кликов', check: () => totalClicks >= 100 },
-        { id: 'cookies_1000', name: 'Тысяча печенек', desc: 'Накопить 1000 печенек', check: () => cookies >= 1000 },
-        { id: 'prestige_1', name: 'Первое перерождение', desc: 'Выполнить перерождение', check: () => prestigePoints >= 1 },
-        { id: 'buy_10_grandmas', name: 'Бабушкоман', desc: 'Купить 10 бабушек', check: () => upgrades[0].count >= 10 },
-        { id: 'daily_3', name: 'Постоянство', desc: 'Забрать ежедневную награду 3 дня подряд', check: () => dailyData.streak >= 3 },
-        { id: 'event_master', name: 'Мастер ивентов', desc: 'Пережить 5 ивентов', check: () => totalEvents >= 5 },
-        { id: 'seasonal_summer', name: 'Летний пекарь', desc: 'Выполнить летний квест', check: () => seasonalQuestDone }
-    ];
-    let unlockedAchievements = JSON.parse(localStorage.getItem('pechenkoAchievements') || '[]');
-    let totalClicks = parseInt(localStorage.getItem('pechenkoTotalClicks') || '0');
-    let totalEvents = parseInt(localStorage.getItem('pechenkoTotalEvents') || '0');
+let skillCounts = {
+    goldRain: parseInt(localStorage.getItem('skillCountGoldRain') || '0'),
+    grandmaRage: parseInt(localStorage.getItem('skillCountGrandmaRage') || '0'),
+    quantumLeap: parseInt(localStorage.getItem('skillCountQuantumLeap') || '0')
+};
+let skillCooldowns = { goldRain: 0, grandmaRage: 0, quantumLeap: 0 };
+let skillTimers = {};
 
-    // Throttle & Debounce
-    let lastUIUpdate = 0;
-    const UI_THROTTLE = 100;
-    let saveTimeout = null;
-    const SAVE_DELAY = 5000;
-    let uid = null;
-    let lastSaveTime = parseInt(localStorage.getItem('pechenkoLastSaveTime') || Date.now().toString());
+let bankDeposit = parseFloat(localStorage.getItem('bankDeposit') || '0');
+let bankTimestamp = parseInt(localStorage.getItem('bankTimestamp') || '0');
+const BANK_INTEREST_RATE = 0.0001;
 
-    let audioCtx = null;
-    function playClickSound() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, now);
-        osc.frequency.exponentialRampToValueAtTime(200, now + 0.06);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-        osc.start(now); osc.stop(now + 0.06);
+let friendsList = JSON.parse(localStorage.getItem('friendsList') || '[]');
+
+let petLevels = {
+    cat: parseInt(localStorage.getItem('pet_cat') || '0'),
+    dog: parseInt(localStorage.getItem('pet_dog') || '0'),
+    dragon: parseInt(localStorage.getItem('pet_dragon') || '0')
+};
+
+let treeUpgrades = {
+    offlineTime: parseInt(localStorage.getItem('tree_offline') || '0'),
+    cpsMult: parseInt(localStorage.getItem('tree_cpsMult') || '0'),
+    clickBase: parseInt(localStorage.getItem('tree_clickBase') || '0'),
+    goldenChance: parseInt(localStorage.getItem('tree_goldenChance') || '0')
+};
+
+let cardCollection = JSON.parse(localStorage.getItem('cardCollection') || '{}');
+let cardBonuses = { cps: 0, click: 0, goldenChance: 0 };
+updateCardBonuses();
+
+let lootboxCooldown = parseInt(localStorage.getItem('lootboxCooldown') || '0');
+
+const DAILY_KEY = 'pechenkoDaily';
+let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
+const upgrades = [
+    { id: 'upgrade1', name: '👆 Бабушка', baseCost: 15, cps: 0.5, count: 0, costMult: 1.15 },
+    { id: 'upgrade2', name: '🏭 Фабрика', baseCost: 100, cps: 4, count: 0, costMult: 1.18 },
+    { id: 'upgrade3', name: '🧙‍♂️ Волшебник', baseCost: 500, cps: 20, count: 0, costMult: 1.20 },
+    { id: 'upgrade4', name: '🚀 Печеньколёт', baseCost: 3000, cps: 100, count: 0, costMult: 1.25 },
+    { id: 'upgrade5', name: '🛸 НЛО-пекарня', baseCost: 15000, cps: 500, count: 0, costMult: 1.28 },
+    { id: 'upgrade6', name: '🕰️ Временной пекарь', baseCost: 100000, cps: 2000, count: 0, costMult: 1.30 },
+    { id: 'upgrade7', name: '🌌 Квантовая печенька', baseCost: 500000, cps: 10000, count: 0, costMult: 1.33 },
+    { id: 'upgrade8', name: '🌑 Тёмная материя', baseCost: 1500000, cps: 50000, count: 0, costMult: 1.35 },
+    { id: 'upgrade9', name: '⏳ Временной коллапс', baseCost: 5000000, cps: 250000, count: 0, costMult: 1.38 },
+    { id: 'upgrade10', name: '🍪 Вселенная печенья', baseCost: 20000000, cps: 1500000, count: 0, costMult: 1.40 }
+];
+const ranks = [
+    { threshold: 0, name: 'Новичок' }, { threshold: 1000, name: 'Пекарь' },
+    { threshold: 10000, name: 'Кондитер' }, { threshold: 100000, name: 'Мастер печенья' },
+    { threshold: 1000000, name: 'Печеньковый магнат' }, { threshold: 10000000, name: 'Король печенек' },
+    { threshold: 100000000, name: 'Бог печенек' }
+];
+const achievements = [
+    { id: 'first_cookie', name: 'Первая печенька', desc: 'Кликнуть 1 раз', check: () => totalClicks >= 1 },
+    { id: 'click_100', name: 'Сотня кликов', desc: 'Совершить 100 кликов', check: () => totalClicks >= 100 },
+    { id: 'cookies_1000', name: 'Тысяча печенек', desc: 'Накопить 1000 печенек', check: () => cookies >= 1000 },
+    { id: 'prestige_1', name: 'Первое перерождение', desc: 'Выполнить перерождение', check: () => prestigePoints >= 1 },
+    { id: 'buy_10_grandmas', name: 'Бабушкоман', desc: 'Купить 10 бабушек', check: () => upgrades[0].count >= 10 },
+    { id: 'daily_3', name: 'Постоянство', desc: 'Забрать ежедневную награду 3 дня подряд', check: () => dailyData.streak >= 3 },
+    { id: 'event_master', name: 'Мастер ивентов', desc: 'Пережить 5 ивентов', check: () => totalEvents >= 5 },
+    { id: 'seasonal_summer', name: 'Летний пекарь', desc: 'Выполнить летний квест', check: () => seasonalQuestDone }
+];
+let unlockedAchievements = JSON.parse(localStorage.getItem('pechenkoAchievements') || '[]');
+let totalClicks = parseInt(localStorage.getItem('pechenkoTotalClicks') || '0');
+let totalEvents = parseInt(localStorage.getItem('pechenkoTotalEvents') || '0');
+
+let lastUIUpdate = 0; const UI_THROTTLE = 100;
+let saveTimeout = null; const SAVE_DELAY = 5000;
+let uid = null; let lastSaveTime = parseInt(localStorage.getItem('pechenkoLastSaveTime') || Date.now().toString());
+
+let audioCtx = null;
+function playClickSound() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(200, now + 0.06); gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06); osc.start(now); osc.stop(now + 0.06); }
+
+const container = document.getElementById('upgradesContainer');
+upgrades.forEach((u, i) => { const btn = document.createElement('button'); btn.className = 'upgrade-btn'; btn.id = u.id; btn.innerHTML = `<span class="upgrade-name">${u.name}</span><span class="upgrade-cost">Цена: <span id="cost${i+1}">${u.baseCost}</span> 🍪</span><span class="upgrade-count">Куплено: <span id="count${i+1}">0</span></span>`; container.appendChild(btn); });
+
+let bossHP = 0, bossMaxHP = 1000000, bossAlive = false; const BOSS_COOLDOWN = 24*60*60*1000; let lastBossKill = parseInt(localStorage.getItem('lastBossKill')||'0');
+let quests = [ { id:'click100', desc:'Кликнуть 100 раз', goal:100, progress:0, reward:500 }, { id:'buy5', desc:'Купить 5 улучшений', goal:5, progress:0, reward:1000 }, { id:'prestige1', desc:'Переродиться 1 раз', goal:1, progress:0, reward:5 } ];
+
+let allMessages = []; let replyTo = null; let privateChatUser = null; let invisibleMode = false;
+const mutedPlayers = JSON.parse(localStorage.getItem('pechenkoMutedPlayers')||'[]');
+const favorites = JSON.parse(localStorage.getItem('pechenkoFavorites')||'[]');
+const chatTheme = localStorage.getItem('pechenkoChatTheme')||'dark';
+
+function canClaimDaily() { const now=Date.now(),last=dailyData.lastClaim||0,oneDay=86400000; if(now-last<oneDay)return false; if(now-last>2*oneDay)dailyData.streak=0; return true; }
+function claimDaily() { if(!canClaimDaily())return; dailyData.streak=Math.min(dailyData.streak+1,7); const rewards=[0,50,100,250,500,1000,2500,5000]; cookies+=rewards[dailyData.streak]||1000; dailyData.lastClaim=Date.now(); localStorage.setItem(DAILY_KEY,JSON.stringify(dailyData)); updateDailyUI(); scheduleUIUpdate(); alert(`🎁 Вы получили ${rewards[dailyData.streak]} печенек! День ${dailyData.streak}`); }
+function updateDailyUI() { const btn=document.getElementById('claimDailyBtn'),span=document.getElementById('dailyStreak'); const can=canClaimDaily(); btn.disabled=!can; btn.textContent=can?'Забрать':'Уже собрано'; span.textContent=dailyData.streak>0?`Дней подряд: ${dailyData.streak}`:''; }
+
+function pushToLeaderboard(score) { const playerRef=ref(database,'leaderboard/'+encodeURIComponent(playerName)); get(playerRef).then(snap=>{ const old=snap.val(); if(!old||score>old.score)set(playerRef,{name:playerName,score:Math.floor(score),timestamp:serverTimestamp()}); }); }
+function pushToLeaderboardCR() { const playerRef=ref(database,'leaderboardCR/'+encodeURIComponent(playerName)); get(playerRef).then(snap=>{ const old=snap.val(); if(!old||prestigePoints>old.score)set(playerRef,{name:playerName,score:prestigePoints,timestamp:serverTimestamp()}); }); }
+function loadLeaderboard(type='cookies') { const refPath=type==='cookies'?leaderboardRef:leaderboardCRRef; const tableId=type==='cookies'?'leaderboardCookiesTable':'leaderboardCRTable'; onValue(query(refPath,orderByChild('score'),limitToLast(10)),snapshot=>{ const entries=[]; snapshot.forEach(child=>entries.push(child.val())); entries.sort((a,b)=>b.score-a.score); const top10=entries.slice(0,10); const tbody=document.querySelector(`#${tableId} tbody`); tbody.innerHTML=''; top10.forEach((e,i)=>{ const row=tbody.insertRow(); row.insertCell().textContent=i+1; row.insertCell().textContent=e.name; row.insertCell().textContent=e.score.toLocaleString(); }); if(type==='cookies'){ localStorage.setItem('pechenkoLeaderboard',JSON.stringify(top10)); updateMiniLeaderboard(top10); } }); }
+loadLeaderboard('cookies'); loadLeaderboard('cr');
+function updateMiniLeaderboard(top) { const container=document.getElementById('miniLeaderboard'); if(!top||top.length===0) return; const html=top.slice(0,3).map((e,i)=>`<div class="mini-lb-entry">#${i+1} ${e.name}: ${e.score.toLocaleString()}</div>`).join(''); container.innerHTML=html; }
+function getPlayerRankPosition() { const lb=JSON.parse(localStorage.getItem('pechenkoLeaderboard')||'[]'); const idx=lb.findIndex(e=>e.name===playerName); return idx!==-1?idx+1:null; }
+
+function updateBank() { if(bankDeposit>0&&bankTimestamp){ const now=Date.now(); const seconds=(now-bankTimestamp)/1000; const interest=bankDeposit*BANK_INTEREST_RATE*seconds; bankDeposit+=interest; bankTimestamp=now; localStorage.setItem('bankDeposit',bankDeposit.toString()); localStorage.setItem('bankTimestamp',bankTimestamp.toString()); } }
+
+function spawnGoldenCookie() { if(goldenCookieActive||Math.random()>0.01+cardBonuses.goldenChance*0.005+getTreeGoldenChance()*0.002)return; goldenCookieActive=true; const gc=document.createElement('div'); gc.className='golden-cookie'; gc.textContent='🍪✨'; gc.style.top=Math.random()*50+20+'%'; gc.style.left=Math.random()*80+10+'%'; gc.addEventListener('click',()=>{ const reward=cookies*0.1+1000; cookies+=reward; alert(`Золотая печенька! +${Math.floor(reward).toLocaleString()} 🍪`); gc.remove(); goldenCookieActive=false; }); document.body.appendChild(gc); goldenCookieTimer=setTimeout(()=>{ gc.remove(); goldenCookieActive=false; },10000); }
+
+function dropCard() { const cards=['🂡','🂱','🃁','🃑']; const card=cards[Math.floor(Math.random()*cards.length)]; const count=cardCollection[card]||0; cardCollection[card]=count+1; localStorage.setItem('cardCollection',JSON.stringify(cardCollection)); updateCardBonuses(); alert(`🃏 Вы нашли карту ${card}!`); }
+function updateCardBonuses() { cardBonuses.cps=Object.values(cardCollection).reduce((s,c)=>s+c,0)*0.01; cardBonuses.click=Object.values(cardCollection).reduce((s,c)=>s+c,0)*0.005; cardBonuses.goldenChance=Object.keys(cardCollection).length*0.01; }
+
+function addFriend(name) { if(!name||friendsList.includes(name)) return; friendsList.push(name); localStorage.setItem('friendsList',JSON.stringify(friendsList)); updateFriendsUI(); }
+function removeFriend(name) { friendsList=friendsList.filter(f=>f!==name); localStorage.setItem('friendsList',JSON.stringify(friendsList)); updateFriendsUI(); }
+function updateFriendsUI() { const list=document.getElementById('friendsListContainer'); if(!list) return; list.innerHTML=''; friendsList.forEach(f=>{ const div=document.createElement('div'); div.innerHTML=`${f} <button class="remove-friend" data-name="${f}">❌</button>`; list.appendChild(div); }); document.querySelectorAll('.remove-friend').forEach(b=>b.addEventListener('click',(e)=>removeFriend(e.target.dataset.name))); }
+
+function buyPet(type,cost) { if(cookies<cost) return alert('Недостаточно печенек'); cookies-=cost; petLevels[type]=(petLevels[type]||0)+1; localStorage.setItem('pet_'+type,petLevels[type].toString()); scheduleUIUpdate(); }
+function getPetBonusCps() { let bonus=0; if(petLevels.cat>0) bonus+=petLevels.cat*0.2; if(petLevels.dog>0) bonus+=petLevels.dog*0.3; if(petLevels.dragon>0) bonus+=petLevels.dragon*1; return bonus; }
+function getPetBonusClick() { return (petLevels.cat+petLevels.dog+petLevels.dragon)*0.1; }
+
+function buyTreeUpgrade(key,cost) { if(prestigePoints<cost) return; prestigePoints-=cost; treeUpgrades[key]=(treeUpgrades[key]||0)+1; localStorage.setItem('tree_'+key,treeUpgrades[key].toString()); scheduleUIUpdate(); }
+function getTreeBonusOfflineHours() { return treeUpgrades.offlineTime*4; }
+function getTreeBonusCpsMult() { return 1+treeUpgrades.cpsMult*0.1; }
+function getTreeBonusClick() { return treeUpgrades.clickBase*0.5; }
+function getTreeGoldenChance() { return treeUpgrades.goldenChance*0.01; }
+
+function openLootbox() { if(Date.now()<lootboxCooldown) return alert('Подождите 10 минут'); const cost=50000; if(cookies<cost) return alert('Недостаточно печенек'); cookies-=cost; const r=Math.random(); if(r<0.4){ cookies+=100000; alert('Вы выиграли 100000 🍪'); } else if(r<0.7){ prestigePoints+=1; alert('+1 CR'); } else if(r<0.9){ skillCounts.goldRain++; alert('Трофей: Золотой дождь'); } else{ cookies+=500000; alert('Джекпот! 500000 🍪'); } lootboxCooldown=Date.now()+600000; localStorage.setItem('lootboxCooldown',lootboxCooldown.toString()); scheduleUIUpdate(); }
+
+function updateCookiesPerSecond() {
+    let base = upgrades.reduce((s,u) => s + u.cps * u.count, 0);
+    if (upgrades[0].count > 0) base += upgrades[0].cps * upgrades[0].count * (grandmaBoost - 1);
+    let mult = 1; if (isVIP) mult *= 2; if (isX3) mult *= 3;
+    cookiesPerSecond = (base + getPetBonusCps() + cardBonuses.cps) * productionMultiplier * mult * getTreeBonusCpsMult();
+    document.getElementById('perSecond').textContent = cookiesPerSecond.toFixed(1);
+}
+function getUpgradeCost(i) { const u = upgrades[i]; return Math.floor(u.baseCost * Math.pow(u.costMult, u.count)); }
+function getCurrentRank() { let rank = ranks[0]; for (let r of ranks) if (cookies >= r.threshold) rank = r; else break; return rank.name; }
+function getPetBonus(type) { return type==='click'?getPetBonusClick()+cardBonuses.click+getTreeBonusClick():0; }
+
+function scheduleUIUpdate() { const now = Date.now(); if (now - lastUIUpdate >= UI_THROTTLE) { lastUIUpdate = now; updateUI(); } else { if (!window._uiUpdateScheduled) { window._uiUpdateScheduled = true; setTimeout(() => { lastUIUpdate = Date.now(); updateUI(); window._uiUpdateScheduled = false; }, UI_THROTTLE - (now - lastUIUpdate)); } } }
+function updateUI() {
+    document.getElementById('score').textContent = Math.floor(cookies);
+    document.getElementById('rankDisplay').textContent = getCurrentRank();
+    upgrades.forEach((u,i) => { const cost = getUpgradeCost(i); document.getElementById(`cost${i+1}`).textContent = cost.toLocaleString(); document.getElementById(`count${i+1}`).textContent = u.count; document.getElementById(u.id).disabled = cookies < cost; });
+    const btn = document.getElementById('prestigeBtn'); const can = cookies >= prestigeCost; btn.disabled = !can;
+    btn.textContent = can ? `✨ Переродиться! (+1🌟)` : `✨ Переродиться (нужно ${prestigeCost.toLocaleString()} 🍪)`;
+    document.getElementById('prestigeDisplay').textContent = `🌟 Очки престижа: ${prestigePoints}`;
+    document.getElementById('shopSection').style.display = prestigePoints > 0 ? 'block' : 'none';
+    document.getElementById('shopBuy1000').disabled = prestigePoints < 1;
+    document.getElementById('shopBuy10000').disabled = prestigePoints < 2;
+    document.getElementById('shopBuy1M').disabled = prestigePoints < 5;
+    const clickPowerBtn = document.getElementById('shopBuyClickPower');
+    const clickPowerCostSpan = document.getElementById('clickPowerCost');
+    const nextCost = 10 + clickPowerLevel * 5;
+    clickPowerCostSpan.textContent = `Цена: ${nextCost} 🌟`;
+    clickPowerBtn.disabled = prestigePoints < nextCost;
+    document.getElementById('seasonalBadge').style.display = (Date.now() >= SEASON_START && Date.now() <= SEASON_END) ? 'inline-block' : 'none';
+    updateSkillButtons();
+    document.getElementById('bankDepositDisplay').textContent = Math.floor(bankDeposit).toLocaleString();
+    document.getElementById('petStatus').textContent = `Кот: ${petLevels.cat} Собака: ${petLevels.dog} Дракон: ${petLevels.dragon}`;
+    document.getElementById('treeStatus').textContent = `Оффлайн: ${getTreeBonusOfflineHours()}ч CPS: x${getTreeBonusCpsMult().toFixed(1)} Клик: +${getTreeBonusClick().toFixed(1)}`;
+    if (playerName === 'tr3haszz' && isSpecialAdmin) { document.getElementById('adminRestoreProgress').style.display = 'inline-block'; }
+    else if (playerName === 't1nator' && isFriendAdmin) { document.getElementById('adminRestoreT1nator').style.display = 'inline-block'; }
+    checkAchievements(); debouncedSave();
+}
+function updateSkillButtons() {
+    document.getElementById('skillGoldRain').style.display = skillCounts.goldRain > 0 ? 'inline-flex' : 'none';
+    document.getElementById('skillGrandmaRage').style.display = skillCounts.grandmaRage > 0 ? 'inline-flex' : 'none';
+    document.getElementById('skillQuantumLeap').style.display = skillCounts.quantumLeap > 0 ? 'inline-flex' : 'none';
+    document.getElementById('cntGoldRain').textContent = skillCounts.goldRain;
+    document.getElementById('cntGrandmaRage').textContent = skillCounts.grandmaRage;
+    document.getElementById('cntQuantumLeap').textContent = skillCounts.quantumLeap;
+}
+function activateSkill(skillName) {
+    if (skillCooldowns[skillName] > 0 || skillCounts[skillName] <= 0) return;
+    skillCounts[skillName]--;
+    localStorage.setItem('skillCount' + skillName.charAt(0).toUpperCase() + skillName.slice(1), skillCounts[skillName].toString());
+    switch(skillName) {
+        case 'goldRain': eventMultiplier = 2; skillCooldowns.goldRain = 60; alert('Золотой дождь!'); setTimeout(() => { if (!eventActive) eventMultiplier = 1; }, 10000); break;
+        case 'grandmaRage': grandmaBoost = 3; skillCooldowns.grandmaRage = 90; alert('Бабушкин гнев!'); setTimeout(() => { grandmaBoost = 1; updateCookiesPerSecond(); }, 15000); break;
+        case 'quantumLeap': const gain = Math.floor(cookies * 0.1); cookies += gain; skillCooldowns.quantumLeap = 120; alert(`+${gain.toLocaleString()}`); scheduleUIUpdate(); break;
     }
-
-    // ====== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ======
-    function canClaimDaily() {
-        const now = Date.now(), last = dailyData.lastClaim || 0, oneDay = 86400000;
-        if (now - last < oneDay) return false;
-        if (now - last > 2 * oneDay) dailyData.streak = 0;
-        return true;
-    }
-    function claimDaily() {
-        if (!canClaimDaily()) return;
-        dailyData.streak = Math.min(dailyData.streak + 1, 7);
-        const rewards = [0, 50, 100, 250, 500, 1000, 2500, 5000];
-        cookies += rewards[dailyData.streak] || 1000;
-        dailyData.lastClaim = Date.now();
-        localStorage.setItem(DAILY_KEY, JSON.stringify(dailyData));
-        updateDailyUI(); scheduleUIUpdate();
-        alert(`🎁 Вы получили ${rewards[dailyData.streak]} печенек! День ${dailyData.streak}`);
-    }
-    function updateDailyUI() {
-        const btn = document.getElementById('claimDailyBtn'), span = document.getElementById('dailyStreak');
-        const can = canClaimDaily();
-        btn.disabled = !can;
-        btn.textContent = can ? 'Забрать' : 'Уже собрано';
-        span.textContent = dailyData.streak > 0 ? `Дней подряд: ${dailyData.streak}` : '';
-    }
-
-    function pushToLeaderboard(score) {
-        const playerRef = ref(database, 'leaderboard/' + encodeURIComponent(playerName));
-        get(playerRef).then(snap => {
-            const old = snap.val();
-            if (!old || score > old.score) set(playerRef, { name: playerName, score: Math.floor(score), timestamp: serverTimestamp() });
-        });
-    }
-    function pushToLeaderboardCR() {
-        const playerRef = ref(database, 'leaderboardCR/' + encodeURIComponent(playerName));
-        get(playerRef).then(snap => {
-            const old = snap.val();
-            if (!old || prestigePoints > old.score) set(playerRef, { name: playerName, score: prestigePoints, timestamp: serverTimestamp() });
-        });
-    }
-    function loadLeaderboard(type = 'cookies') {
-        const refPath = type === 'cookies' ? leaderboardRef : leaderboardCRRef;
-        const tableId = type === 'cookies' ? 'leaderboardCookiesTable' : 'leaderboardCRTable';
-        onValue(query(refPath, orderByChild('score'), limitToLast(10)), snapshot => {
-            const entries = [];
-            snapshot.forEach(child => entries.push(child.val()));
-            entries.sort((a,b) => b.score - a.score);
-            const top10 = entries.slice(0,10);
-            const tbody = document.querySelector(`#${tableId} tbody`);
-            tbody.innerHTML = '';
-            top10.forEach((e,i) => {
-                const row = tbody.insertRow();
-                row.insertCell().textContent = i+1;
-                row.insertCell().textContent = e.name;
-                row.insertCell().textContent = e.score.toLocaleString();
-            });
-            if (type === 'cookies') localStorage.setItem('pechenkoLeaderboard', JSON.stringify(top10));
-        });
-    }
-    loadLeaderboard('cookies'); loadLeaderboard('cr');
-    function getPlayerRankPosition() {
-        const lb = JSON.parse(localStorage.getItem('pechenkoLeaderboard') || '[]');
-        const idx = lb.findIndex(e => e.name === playerName);
-        return idx !== -1 ? idx+1 : null;
-    }
-
-    function updateClanUI() {
-        const infoDiv = document.getElementById('myClanInfo');
-        if (currentClan) {
-            get(ref(database, 'clans/' + currentClan)).then(snap => {
-                const clan = snap.val();
-                if (clan) infoDiv.innerHTML = `Ваш клан: <strong>${currentClan}</strong> | Участников: ${Object.keys(clan.members).length} | CR клана: ${clan.totalCR || 0}`;
-                else { currentClan = null; localStorage.removeItem('pechenkoClan'); infoDiv.innerHTML = 'Вы не в клане.'; }
-            });
-        } else infoDiv.innerHTML = 'Вы не в клане.';
-    }
-    function loadClanLeaderboard() {
-        onValue(query(clansRef, orderByChild('totalCR'), limitToLast(10)), snapshot => {
-            const entries = [];
-            snapshot.forEach(child => entries.push({ name: child.key, ...child.val() }));
-            entries.sort((a,b) => (b.totalCR||0) - (a.totalCR||0));
-            const top10 = entries.slice(0,10);
-            const tbody = document.querySelector('#clanLeaderboardTable tbody');
-            tbody.innerHTML = '';
-            top10.forEach((e,i) => {
-                const row = tbody.insertRow();
-                row.insertCell().textContent = i+1;
-                row.insertCell().textContent = e.name;
-                row.insertCell().textContent = (e.totalCR||0).toLocaleString();
-            });
-        });
-    }
-    loadClanLeaderboard();
-    async function createClan(name) {
-        if (!name) return alert('Введите название');
-        const snap = await get(ref(database, 'clans/' + name));
-        if (snap.exists()) return alert('Клан уже существует');
-        if (currentClan) await update(ref(database, 'clans/' + currentClan + '/members'), { [playerName]: null });
-        await set(ref(database, 'clans/' + name), { name, totalCR: 0, members: { [playerName]: true } });
-        currentClan = name;
-        localStorage.setItem('pechenkoClan', name);
-        updateClanUI();
-    }
-    async function joinClan(name) {
-        if (!name) return alert('Введите название клана');
-        const snap = await get(ref(database, 'clans/' + name));
-        if (!snap.exists()) return alert('Клан не найден');
-        if (currentClan) await update(ref(database, 'clans/' + currentClan + '/members'), { [playerName]: null });
-        await update(ref(database, 'clans/' + name + '/members'), { [playerName]: true });
-        currentClan = name;
-        localStorage.setItem('pechenkoClan', name);
-        updateClanUI();
-    }
-    async function addCRToClan(cr) {
-        if (!currentClan) return;
-        const clanRef = ref(database, 'clans/' + currentClan);
-        const snap = await get(clanRef);
-        if (!snap.exists()) return;
-        const clan = snap.val();
-        await update(clanRef, { totalCR: (clan.totalCR || 0) + cr });
-    }
-
-    function startEvent(type) {
-        if (eventsFrozen) return;
-        if (eventActive) { clearTimeout(eventTimerId); eventMultiplier = 1; productionMultiplier = 1; grandmaBoost = 1; removeEventNotification(); }
-        eventActive = true;
-        const events = {
-            rain: { text: '🌧️ ДОЖДЬ ИЗ ПЕЧЕНЕК! Клик x2', duration: 30, cls: 'rain', apply: ()=> eventMultiplier = 2 },
-            gold: { text: '🟡 ЗОЛОТОЕ ПЕЧЕНЬЕ! Клик x5', duration: 10, cls: 'gold', apply: ()=> eventMultiplier = 5 },
-            storm: { text: '🌪️ ПЕЧЕНЬКОВЫЙ ШТОРМ! Авто-доход x2', duration: 20, cls: 'storm', apply: ()=> productionMultiplier = 2, clear: ()=> productionMultiplier = 1 },
-            bunt: { text: '👵 БАБУШКИН БУНТ! Бабушки x3', duration: 15, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 }
-        };
-        const ev = events[type];
-        if (!ev) return;
-        showEventNotification(ev.text, ev.duration, ev.cls);
-        ev.apply();
-        totalEvents++;
-        eventTimerId = setTimeout(() => {
-            eventMultiplier = 1; productionMultiplier = 1; grandmaBoost = 1;
-            if (ev.clear) ev.clear();
-            eventActive = false;
-            removeEventNotification();
-        }, ev.duration * 1000);
-        scheduleUIUpdate();
-    }
-    function showEventNotification(text, seconds, cls) {
-        const old = document.getElementById('eventNotification'); if (old) old.remove();
-        const notif = document.createElement('div');
-        notif.id = 'eventNotification';
-        notif.className = `event-notification ${cls}`;
-        notif.innerHTML = `${text} <span class="event-timer" id="eventTimer">${seconds}с</span>`;
-        document.body.appendChild(notif);
-        let remaining = seconds;
-        const timer = setInterval(() => {
-            remaining--;
-            const el = document.getElementById('eventTimer');
-            if (el) el.textContent = remaining + 'с';
-            if (remaining <= 0) clearInterval(timer);
-        }, 1000);
-        notif.dataset.intervalId = timer;
-    }
-    function removeEventNotification() {
-        const notif = document.getElementById('eventNotification');
-        if (notif) { clearInterval(parseInt(notif.dataset.intervalId)); notif.remove(); }
-    }
-    function scheduleRandomEvent() {
-        if (eventsFrozen) { setTimeout(scheduleRandomEvent, 60000); return; }
-        const types = ['rain','gold','storm','bunt'];
-        const weights = [40,15,25,20];
-        let r = Math.random() * weights.reduce((a,b)=>a+b), type = 'rain';
-        for (let i=0; i<types.length; i++) { r -= weights[i]; if (r <= 0) { type = types[i]; break; } }
-        setTimeout(() => { if (!eventActive) startEvent(type); scheduleRandomEvent(); }, Math.random() * 180000 + 120000);
-    }
-
-    function updateCookiesPerSecond() {
-        let base = upgrades.reduce((s,u) => s + u.cps * u.count, 0);
-        if (upgrades[0].count > 0) base += upgrades[0].cps * upgrades[0].count * (grandmaBoost - 1);
-        let mult = 1;
-        if (isVIP) mult *= 2;
-        if (isX3) mult *= 3;
-        cookiesPerSecond = base * productionMultiplier * mult;
-        document.getElementById('perSecond').textContent = cookiesPerSecond.toFixed(1);
-    }
-    function getUpgradeCost(i) { const u = upgrades[i]; return Math.floor(u.baseCost * Math.pow(u.costMult, u.count)); }
-    function getCurrentRank() { let rank = ranks[0]; for (let r of ranks) if (cookies >= r.threshold) rank = r; else break; return rank.name; }
-    function getPetBonus(type) { return 0; }
-
-    function scheduleUIUpdate() {
-        const now = Date.now();
-        if (now - lastUIUpdate >= UI_THROTTLE) {
-            lastUIUpdate = now;
-            updateUI();
-        } else {
-            if (!window._uiUpdateScheduled) {
-                window._uiUpdateScheduled = true;
-                setTimeout(() => {
-                    lastUIUpdate = Date.now();
-                    updateUI();
-                    window._uiUpdateScheduled = false;
-                }, UI_THROTTLE - (now - lastUIUpdate));
-            }
-        }
-    }
-
-    function updateUI() {
-        document.getElementById('score').textContent = Math.floor(cookies);
-        document.getElementById('rankDisplay').textContent = getCurrentRank();
-        upgrades.forEach((u,i) => {
-            const cost = getUpgradeCost(i);
-            document.getElementById(`cost${i+1}`).textContent = cost.toLocaleString();
-            document.getElementById(`count${i+1}`).textContent = u.count;
-            document.getElementById(u.id).disabled = cookies < cost;
-        });
-        const btn = document.getElementById('prestigeBtn');
-        const can = cookies >= prestigeCost;
-        btn.disabled = !can;
-        btn.textContent = can ? `✨ Переродиться! (+1🌟)` : `✨ Переродиться (нужно ${prestigeCost.toLocaleString()} 🍪)`;
-        document.getElementById('prestigeDisplay').textContent = `🌟 Очки престижа: ${prestigePoints}`;
-        document.getElementById('shopSection').style.display = prestigePoints > 0 ? 'block' : 'none';
-        document.getElementById('shopBuy1000').disabled = prestigePoints < 1;
-        document.getElementById('shopBuy10000').disabled = prestigePoints < 2;
-        document.getElementById('shopBuy1M').disabled = prestigePoints < 5;
-
-        const clickPowerBtn = document.getElementById('shopBuyClickPower');
-        const clickPowerCostSpan = document.getElementById('clickPowerCost');
-        const nextCost = 10 + clickPowerLevel * 5;
-        clickPowerCostSpan.textContent = `Цена: ${nextCost} 🌟`;
-        clickPowerBtn.disabled = prestigePoints < nextCost;
-
-        const now = Date.now();
-        const seasonalActive = now >= SEASON_START && now <= SEASON_END;
-        document.getElementById('seasonalBadge').style.display = seasonalActive ? 'inline-block' : 'none';
-
-        updateSkillButtons();
-        checkAchievements();
-        debouncedSave();
-    }
-
-    function updateSkillButtons() {
-        document.getElementById('skillGoldRain').style.display = skillCounts.goldRain > 0 ? 'inline-flex' : 'none';
-        document.getElementById('skillGrandmaRage').style.display = skillCounts.grandmaRage > 0 ? 'inline-flex' : 'none';
-        document.getElementById('skillQuantumLeap').style.display = skillCounts.quantumLeap > 0 ? 'inline-flex' : 'none';
-        document.getElementById('cntGoldRain').textContent = skillCounts.goldRain;
-        document.getElementById('cntGrandmaRage').textContent = skillCounts.grandmaRage;
-        document.getElementById('cntQuantumLeap').textContent = skillCounts.quantumLeap;
-    }
-
-    function activateSkill(skillName) {
-        if (skillCooldowns[skillName] > 0) return;
-        if (skillCounts[skillName] <= 0) return;
-        skillCounts[skillName]--;
-        localStorage.setItem('skillCount' + skillName.charAt(0).toUpperCase() + skillName.slice(1), skillCounts[skillName].toString());
-        switch(skillName) {
-            case 'goldRain':
-                eventMultiplier = 2;
-                skillCooldowns.goldRain = 60;
-                alert('Золотой дождь активирован! Клики x2 на 10 секунд.');
-                setTimeout(() => { if (!eventActive) eventMultiplier = 1; }, 10000);
-                break;
-            case 'grandmaRage':
-                grandmaBoost = 3;
-                skillCooldowns.grandmaRage = 90;
-                alert('Бабушкин гнев! Бабушки дают x3 на 15 секунд.');
-                setTimeout(() => { grandmaBoost = 1; updateCookiesPerSecond(); }, 15000);
-                break;
-            case 'quantumLeap':
-                const gain = Math.floor(cookies * 0.1);
-                cookies += gain;
-                skillCooldowns.quantumLeap = 120;
-                alert(`Квантовый скачок! +${gain.toLocaleString()} печенек.`);
-                scheduleUIUpdate();
-                break;
-        }
-        startSkillCooldown(skillName);
-    }
-    function startSkillCooldown(skillName) {
-        const cdElement = document.getElementById(`cd${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
-        const btn = document.getElementById(`skill${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
-        btn.disabled = true;
-        let remaining = skillCooldowns[skillName];
-        cdElement.textContent = `${remaining}s`;
-        skillTimers[skillName] = setInterval(() => {
-            remaining--;
-            skillCooldowns[skillName] = remaining;
-            cdElement.textContent = `${remaining}s`;
-            if (remaining <= 0) {
-                clearInterval(skillTimers[skillName]);
-                btn.disabled = false;
-                cdElement.textContent = '';
-            }
-        }, 1000);
-    }
-
-    function debouncedSave() {
-        if (saveTimeout) clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(async () => {
-            saveLocalGame();
-            await saveToCloud();
-            pushToLeaderboard(cookies);
-            pushToLeaderboardCR();
-            saveTimeout = null;
-        }, SAVE_DELAY);
-    }
-
-    function saveLocalGame() {
-        localStorage.setItem('pechenkoClickerSave', JSON.stringify({
-            cookies, cookiesPerClick, prestigePoints,
-            upgrades: upgrades.map(u => ({ count: u.count })),
-            totalClicks, totalEvents, prestigeCost,
-            clickPowerLevel, selectedSkin, lastSaveTime
-        }));
-        localStorage.setItem('pechenkoTotalClicks', totalClicks.toString());
-        localStorage.setItem('pechenkoTotalEvents', totalEvents.toString());
-        localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
-        localStorage.setItem('pechenkoClickPowerLevel', clickPowerLevel.toString());
-        localStorage.setItem('pechenkoLastSaveTime', lastSaveTime.toString());
-    }
-
-    async function saveToCloud() {
-        if (!uid) return;
-        const saveData = {
-            cookies, cookiesPerClick, prestigePoints,
-            upgrades: upgrades.map(u => ({ count: u.count })),
-            totalClicks, totalEvents, prestigeCost,
-            clickPowerLevel, selectedSkin, lastSaveTime: Date.now()
-        };
-        await set(ref(database, `users/${uid}`), saveData);
-    }
-
-    function buyUpgrade(i) {
-        const u = upgrades[i];
-        const cost = getUpgradeCost(i);
-        if (cookies >= cost) {
-            cookies -= cost; u.count++;
-            if (i === 0 && u.count % 10 === 0) cookiesPerClick++;
-            updateCookiesPerSecond(); scheduleUIUpdate();
-            const qBuy = quests.find(q => q.id === 'buy5');
-            if (qBuy) qBuy.progress = Math.min(qBuy.goal, qBuy.progress + 1);
-            updateQuests();
-        }
-    }
-
-    function showFloatingScore(x, y, amount) {
-        const el = document.createElement('div');
-        el.className = 'floating-score';
-        el.textContent = '+' + amount;
-        el.style.left = x + 'px'; el.style.top = y + 'px';
-        document.body.appendChild(el);
-        el.addEventListener('animationend', () => el.remove());
-    }
-
-    function performPrestige() {
-        if (cookies >= prestigeCost && confirm('Переродиться?')) {
-            pushToLeaderboard(cookies);
-            cookies = 0; cookiesPerClick = 1 + clickPowerLevel;
-            upgrades.forEach(u => u.count = 0);
-            updateCookiesPerSecond();
-            prestigePoints++;
-            pushToLeaderboardCR();
-            if (currentClan) addCRToClan(1);
-            prestigeCost = Math.floor(prestigeCost * 1.5);
-            localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString());
-            scheduleUIUpdate();
-            const qPrestige = quests.find(q => q.id === 'prestige1');
-            if (qPrestige) qPrestige.progress = 1;
-            updateQuests();
-            alert('Перерождение успешно!');
-        }
-    }
-
-    function buyClickPower() {
-        const cost = 10 + clickPowerLevel * 5;
-        if (prestigePoints >= cost) {
-            prestigePoints -= cost;
-            clickPowerLevel++;
-            cookiesPerClick = 1 + clickPowerLevel;
-            localStorage.setItem('pechenkoClickPowerLevel', clickPowerLevel.toString());
-            scheduleUIUpdate();
-            alert('Сила клика увеличена!');
-        } else alert('Недостаточно CR');
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('light');
-        const newTheme = document.body.classList.contains('light') ? 'light' : 'dark';
-        localStorage.setItem('cookieClickerTheme', newTheme);
-        localStorage.setItem('pechenkoThemePreference', 'manual');
-    }
-    function applyAutoTheme() {
-        const pref = localStorage.getItem('pechenkoThemePreference');
-        if (pref === 'manual') return;
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (prefersDark) {
-            document.body.classList.remove('light');
-            localStorage.setItem('cookieClickerTheme', 'dark');
-        } else {
-            document.body.classList.add('light');
-            localStorage.setItem('cookieClickerTheme', 'light');
-        }
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyAutoTheme);
-
-    function checkAchievements() {
-        achievements.forEach(a => {
-            if (!unlockedAchievements.includes(a.id) && a.check()) {
-                unlockedAchievements.push(a.id);
-                localStorage.setItem('pechenkoAchievements', JSON.stringify(unlockedAchievements));
-                alert(`🎖️ Достижение разблокировано: ${a.name}`);
-            }
-        });
-    }
-
-    function renderAchievements() {
-        const list = document.getElementById('achievementList');
-        list.innerHTML = '';
-        achievements.forEach(a => {
-            const unlocked = unlockedAchievements.includes(a.id);
-            const li = document.createElement('li');
-            li.textContent = `${unlocked ? '✅' : '🔒'} ${a.name} – ${a.desc}`;
-            list.appendChild(li);
-        });
-    }
-
-    function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-    // Присутствие
-    const myPresenceRef = ref(database, 'presence/' + encodeURIComponent(playerName));
-    function setMyPresence(typing = false) {
-        if (invisibleMode) return;
-        set(myPresenceRef, { name: playerName, typing: typing, lastSeen: serverTimestamp() });
-    }
-    onDisconnect(myPresenceRef).remove();
-
-    let typingUsers = {};
-    onValue(presenceRef, (snapshot) => {
-        const newTypingUsers = {};
-        snapshot.forEach(child => {
-            const data = child.val();
-            if (data && data.name !== playerName && data.typing) newTypingUsers[data.name] = true;
-        });
-        typingUsers = newTypingUsers;
-        updateTypingIndicator();
-    });
-
-    function updateTypingIndicator() {
-        const indicator = document.getElementById('typingIndicator');
-        const names = Object.keys(typingUsers);
-        if (names.length > 0) {
-            indicator.textContent = names.join(', ') + ' печатает...';
-            indicator.style.display = 'block';
-        } else {
-            indicator.style.display = 'none';
-        }
-    }
-
-    function requestNotificationPermission() {
-        if (Notification.permission === 'default') Notification.requestPermission();
-    }
-    function showDesktopNotification(title, body) {
-        if (Notification.permission === 'granted') new Notification(title, { body, icon: '🍪' });
-    }
-
-    // Чат
-    function renderChatMessage(msg, prepend = false) {
-        const container = document.getElementById('chatMessages');
-        if (privateChatUser) {
-            const isPrivate = (msg.name === playerName && msg.privateTo === privateChatUser) || (msg.name === privateChatUser && msg.privateTo === playerName);
-            if (!isPrivate) return;
-        }
-        if (mutedPlayers.includes(msg.name)) return;
-
-        const div = document.createElement('div');
-        div.className = 'chat-message';
-        div.dataset.id = msg.id || '';
-        div.dataset.name = msg.name || '';
-        div.dataset.text = msg.text || '';
-
-        let displayTag = msg.customTag || '';
-        if (!displayTag) {
-            if (msg.isSpecialAdmin) displayTag = '[Фулл разраб]';
-            else if (msg.isFriendAdmin) displayTag = '[Друн]';
-            else if (msg.isModer) displayTag = '[Модер]';
-            else if (msg.isVIP) displayTag = '[VIP]';
-            else if (msg.isTester) displayTag = '[Тестер]';
-        }
-        const displayName = msg.customNick || msg.name;
-        let nameHtml = '';
-        if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) {
-            nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isModer) {
-            nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isVIP) {
-            nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`;
-        } else if (msg.isTester) {
-            nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`;
-        } else {
-            nameHtml = `<strong>${escapeHtml(displayName)}</strong>`;
-        }
-        if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
-
-        let textHtml = escapeHtml(msg.text).replace(/@(\w+)/g, (match, user) => `<span class="mention">@${user}</span>`);
-        if (msg.isVIP) textHtml = `<span class="vip-text">${textHtml}</span>`;
-        else if (msg.isModer) textHtml = `<span class="moder-text">${textHtml}</span>`;
-        else if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) textHtml = `<span class="bold-text">${textHtml}</span>`;
-
-        let replyHtml = msg.replyTo ? `<div class="reply-preview">↩️ В ответ ${escapeHtml(msg.replyTo.name)}: ${escapeHtml(msg.replyTo.text).substring(0,50)}</div>` : '';
-        let videoHtml = '';
-        if (msg.text) {
-            const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-            const match = msg.text.match(youtubeRegex);
-            if (match) videoHtml = `<div class="youtube-preview"><iframe src="https://www.youtube.com/embed/${match[1]}" allowfullscreen></iframe></div>`;
-        }
-        let pollHtml = '';
-        if (msg.poll) {
-            const poll = msg.poll;
-            const divPoll = document.createElement('div');
-            divPoll.className = 'poll-options';
-            Object.keys(poll.options).forEach(opt => {
-                const btn = document.createElement('button');
-                btn.textContent = `${opt} (${poll.options[opt]})`;
-                btn.addEventListener('click', () => {
-                    if (!poll.voters[playerName]) update(ref(database, `messages/${msg.id}/poll`), { options: { ...poll.options, [opt]: poll.options[opt] + 1 }, voters: { ...poll.voters, [playerName]: true } });
-                });
-                divPoll.appendChild(btn);
-            });
-            pollHtml = divPoll.outerHTML;
-        }
-        const isFavorite = favorites.includes(msg.id);
-        const favStar = isFavorite ? '★' : '☆';
-        div.innerHTML = `${replyHtml} ${nameHtml}: ${textHtml} ${videoHtml} ${pollHtml} <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span> <span class="msg-actions-btn" title="Действия">⋯</span> <span class="favorite-star" style="cursor:pointer; margin-left:5px;">${favStar}</span> <div class="msg-menu"><button class="menu-reply-btn">↩️ Ответить</button>${msg.name === playerName ? '<button class="menu-edit-btn">✏️ Редактировать</button><button class="menu-delete-btn">🗑️ Удалить</button>' : ''}<button class="menu-fav-btn">⭐ В избранное</button>${(isSpecialAdmin || isFriendAdmin || isModer) ? '<button class="menu-mute-btn">🔇 Mute</button>' : ''}</div>`;
-        if (prepend) container.prepend(div); else container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
-
-        const actionsBtn = div.querySelector('.msg-actions-btn');
-        const menu = div.querySelector('.msg-menu');
-        actionsBtn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('active'); });
-        document.addEventListener('click', () => menu.classList.remove('active'));
-        div.querySelector('.menu-reply-btn')?.addEventListener('click', () => { replyTo = { id: msg.id, name: msg.name, text: msg.text }; document.getElementById('replyPreview').style.display = 'block'; document.getElementById('replyPreview').textContent = `Ответ для ${msg.name}: ${msg.text.substring(0,60)}`; document.getElementById('chatInput').focus(); });
-        div.querySelector('.menu-edit-btn')?.addEventListener('click', () => { const newText = prompt('Редактировать:', msg.text); if (newText && newText.trim()) update(ref(database, `messages/${msg.id}`), { text: newText.trim(), edited: true }); });
-        div.querySelector('.menu-delete-btn')?.addEventListener('click', () => { if (confirm('Удалить?')) remove(ref(database, `messages/${msg.id}`)); });
-        div.querySelector('.menu-fav-btn')?.addEventListener('click', () => toggleFavorite(msg.id));
-        div.querySelector('.menu-mute-btn')?.addEventListener('click', () => { const idx = mutedPlayers.indexOf(msg.name); if (idx === -1) mutedPlayers.push(msg.name); else mutedPlayers.splice(idx, 1); localStorage.setItem('pechenkoMutedPlayers', JSON.stringify(mutedPlayers)); alert(`${idx === -1 ? 'Заглушен' : 'Разглушен'} ${msg.name}`); });
-        div.querySelector('.favorite-star')?.addEventListener('click', () => toggleFavorite(msg.id));
-    }
-
-    function toggleFavorite(msgId) { const idx = favorites.indexOf(msgId); if (idx === -1) favorites.push(msgId); else favorites.splice(idx, 1); localStorage.setItem('pechenkoFavorites', JSON.stringify(favorites)); renderAllMessages(); }
-    function renderAllMessages() { const container = document.getElementById('chatMessages'); container.innerHTML = ''; allMessages.forEach(msg => renderChatMessage(msg)); }
-
-    function sendChatMessage() {
-        const input = document.getElementById('chatInput'); let text = input.value.trim(); if (!text) return;
-        let privateTo = privateChatUser || null;
-        if (text.startsWith('/w ')) { const parts = text.split(' '); const target = parts[1]; const whisperText = parts.slice(2).join(' '); if (target && whisperText) { privateTo = target; text = whisperText; } }
-        if (text === '/ping') text = '🏓 Понг!'; else if (text === '/help') text = '🤖 Команды: /ping, /cookie, /top, /help, /w';
-        else if (text.startsWith('/poll ')) { const parts = text.substring(6).split('?'); if (parts.length === 2) { const question = parts[0].trim(); const options = parts[1].split(' ').filter(o => o.trim()); if (options.length >= 2) { const pollData = { question, options: options.reduce((acc, opt) => { acc[opt] = 0; return acc; }, {}), voters: {} }; push(chatRef, { name: customNick || playerName, text, poll: pollData, isSpecialAdmin, isFriendAdmin, isTester, isVIP, isModer, rankPosition: getPlayerRankPosition(), customTag, customNick, privateTo: null, timestamp: serverTimestamp() }); input.value = ''; return; } } }
-        push(chatRef, { name: customNick || playerName, text, isSpecialAdmin, isFriendAdmin, isTester, isVIP, isModer, rankPosition: getPlayerRankPosition(), customTag, customNick, replyTo: replyTo ? { id: replyTo.id, name: replyTo.name, text: replyTo.text } : null, privateTo, timestamp: serverTimestamp() });
-        input.value = ''; replyTo = null; document.getElementById('replyPreview').style.display = 'none'; setMyPresence(false);
-    }
-
-    let typingTimeout;
-    document.getElementById('chatInput').addEventListener('input', () => { setMyPresence(true); clearTimeout(typingTimeout); typingTimeout = setTimeout(() => setMyPresence(false), 2000); });
-    document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
-    document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
-    document.getElementById('chatSearch').addEventListener('input', function() { const term = this.value.toLowerCase(); document.querySelectorAll('.chat-message').forEach(msg => { const text = (msg.dataset.text || '').toLowerCase(); msg.style.display = text.includes(term) ? '' : 'none'; }); });
-    document.getElementById('privateChatBtn').addEventListener('click', () => { const users = [...new Set(allMessages.map(m => m.name).filter(n => n !== playerName))]; const list = document.getElementById('privateUsersList'); list.innerHTML = ''; users.forEach(user => { const btn = document.createElement('button'); btn.textContent = user; btn.addEventListener('click', () => { privateChatUser = user; document.getElementById('chatMessages').innerHTML = ''; allMessages.forEach(msg => renderChatMessage(msg)); document.getElementById('closePrivateChatBtn').style.display = 'inline-block'; list.style.display = 'none'; }); list.appendChild(btn); }); list.style.display = 'flex'; });
-    document.getElementById('closePrivateChatBtn').addEventListener('click', () => { privateChatUser = null; document.getElementById('chatMessages').innerHTML = ''; allMessages.forEach(msg => renderChatMessage(msg)); document.getElementById('closePrivateChatBtn').style.display = 'none'; document.getElementById('privateUsersList').style.display = 'none'; });
-    document.getElementById('showFavoritesBtn').addEventListener('click', () => { document.getElementById('chatMessages').innerHTML = ''; allMessages.forEach(msg => { if (favorites.includes(msg.id)) renderChatMessage(msg); }); });
-    document.getElementById('chatThemeToggle').addEventListener('click', () => { const chatContent = document.querySelector('#chatModal .modal-content'); chatContent.classList.toggle('chat-light'); const newTheme = chatContent.classList.contains('chat-light') ? 'light' : 'dark'; localStorage.setItem('pechenkoChatTheme', newTheme); });
-    if (chatTheme === 'light') document.querySelector('#chatModal .modal-content').classList.add('chat-light');
-    document.getElementById('invisibleToggle').addEventListener('click', function() { invisibleMode = !invisibleMode; this.textContent = invisibleMode ? '👁 Видимый' : '👻 Невидимка'; if (invisibleMode) set(myPresenceRef, null); else setMyPresence(false); alert(`Режим невидимки: ${invisibleMode ? 'вкл' : 'выкл'}`); });
-
-    const mentionSuggestions = document.createElement('div'); mentionSuggestions.className = 'mention-suggestions hidden'; document.querySelector('.chat-input-area').appendChild(mentionSuggestions);
-    document.getElementById('chatInput').addEventListener('input', function() { const val = this.value; const atIndex = val.lastIndexOf('@'); if (atIndex !== -1 && val.substring(atIndex + 1).indexOf(' ') === -1) { const partial = val.substring(atIndex + 1).toLowerCase(); const users = [...new Set(allMessages.map(m => m.name).filter(n => n !== playerName && n.toLowerCase().startsWith(partial)))]; mentionSuggestions.innerHTML = ''; if (users.length > 0 && partial.length > 0) { users.forEach(user => { const div = document.createElement('div'); div.textContent = user; div.addEventListener('click', () => { this.value = val.substring(0, atIndex) + '@' + user + ' '; mentionSuggestions.innerHTML = ''; this.focus(); }); mentionSuggestions.appendChild(div); }); mentionSuggestions.classList.remove('hidden'); } else { mentionSuggestions.classList.add('hidden'); } } else { mentionSuggestions.classList.add('hidden'); } });
-    document.addEventListener('mouseup', (e) => { const selection = window.getSelection().toString().trim(); if (selection && e.target.closest('.chat-message')) { const quoteBtn = document.getElementById('quoteBtn'); if (!quoteBtn) { const btn = document.createElement('div'); btn.id = 'quoteBtn'; btn.className = 'quote-btn'; btn.textContent = 'Цитировать'; document.body.appendChild(btn); btn.addEventListener('click', () => { const text = btn.dataset.text; const name = btn.dataset.msgName; const input = document.getElementById('chatInput'); input.value += `> ${name}: ${text}\n`; input.focus(); btn.style.display = 'none'; }); } const btn = document.getElementById('quoteBtn'); btn.style.display = 'block'; btn.style.top = (e.clientY - 30) + 'px'; btn.style.left = (e.clientX + 10) + 'px'; btn.dataset.text = selection; btn.dataset.msgName = e.target.closest('.chat-message').dataset.name; } else { const btn = document.getElementById('quoteBtn'); if (btn) btn.style.display = 'none'; } });
-    onChildAdded(chatRef, (snap) => { const msg = snap.val(); msg.id = snap.key; allMessages.push(msg); if (!chatModalActive && document.hidden) showDesktopNotification(`Новое сообщение от ${msg.name}`, msg.text.substring(0, 100)); if (!chatModalActive) { unreadCount++; updateBadge(); playNotificationSound(); } renderChatMessage(msg); });
-
-    function playNotificationSound() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const now = audioCtx.currentTime; const osc1 = audioCtx.createOscillator(); const gain1 = audioCtx.createGain(); osc1.connect(gain1); gain1.connect(audioCtx.destination); osc1.frequency.value = 880; osc1.type = 'sine'; gain1.gain.setValueAtTime(0.3, now); gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08); osc1.start(now); osc1.stop(now + 0.08); const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain(); osc2.connect(gain2); gain2.connect(audioCtx.destination); osc2.frequency.value = 1100; osc2.type = 'sine'; gain2.gain.setValueAtTime(0.3, now + 0.08); gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16); osc2.start(now + 0.08); osc2.stop(now + 0.16); }
-    let unreadCount = 0, chatModalActive = false;
-    const chatBtn = document.getElementById('openChatBtn'); const badge = document.createElement('span'); badge.className = 'unread-badge hidden'; badge.textContent = '0'; chatBtn.style.position = 'relative'; chatBtn.appendChild(badge);
-    function updateBadge() { if (unreadCount > 0) { badge.textContent = unreadCount > 99 ? '99+' : unreadCount; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
-    document.getElementById('closeChatModal').addEventListener('click', () => closeModal(document.getElementById('chatModal')));
-
-    // Обработчики кликов
-    document.querySelectorAll('.modal').forEach(modal => { const closeBtn = modal.querySelector('[id^="close"]'); if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal)); });
-    document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
-
-    document.getElementById('cookieBtn').addEventListener('click', (e) => {
-        let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
-        const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (1 + getPetBonus('click')) * clickMult;
-        cookies += eff; totalClicks++;
-        // Сезонный токен
-        const now = Date.now();
-        if (now >= SEASON_START && now <= SEASON_END) {
-            seasonalTokens++;
-            localStorage.setItem('pechenkoSeasonalTokens', seasonalTokens.toString());
-            if (seasonalTokens >= 1000 && !seasonalQuestDone) {
-                seasonalQuestDone = true;
-                localStorage.setItem('pechenkoSeasonalQuestDone', 'true');
-                alert('🌞 Летний квест выполнен! Вы получаете скин "🍍"!');
-                if (!document.querySelector('.skin-option[data-skin="🍍"]')) {
-                    const skinSelector = document.getElementById('skinSelector');
-                    const opt = document.createElement('span');
-                    opt.className = 'skin-option';
-                    opt.dataset.skin = '🍍';
-                    opt.textContent = '🍍';
-                    opt.addEventListener('click', () => { selectedSkin = '🍍'; localStorage.setItem('pechenkoSelectedSkin', '🍍'); document.getElementById('cookieBtn').textContent = '🍍'; updateSkinSelection(); });
-                    skinSelector.appendChild(opt);
-                }
-            }
-        }
-        const qClick = quests.find(q => q.id === 'click100'); if (qClick) qClick.progress = Math.min(qClick.goal, qClick.progress + 1);
-        scheduleUIUpdate();
-        showFloatingScore(e.clientX, e.clientY, eff);
-        playClickSound();
-    });
-    upgrades.forEach((u,i) => document.getElementById(u.id).addEventListener('click', () => buyUpgrade(i)));
-    document.getElementById('prestigeBtn').addEventListener('click', performPrestige);
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    document.getElementById('shopBuy1000').addEventListener('click', () => buyShopItem(1000,1));
-    document.getElementById('shopBuy10000').addEventListener('click', () => buyShopItem(10000,2));
-    document.getElementById('shopBuy1M').addEventListener('click', () => buyShopItem(1000000,5));
-    document.getElementById('shopBuyClickPower').addEventListener('click', buyClickPower);
-    document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
-
-    document.getElementById('adminRestoreProgress').addEventListener('click', () => { if (playerName !== 'tr3haszz' || !isSpecialAdmin) return; cookies = 2000000000000; clickPowerLevel = 3; cookiesPerClick = 1 + clickPowerLevel; scheduleUIUpdate(); alert('Прогресс tr3haszz восстановлен!'); });
-    document.getElementById('adminRestoreT1nator').addEventListener('click', () => { if (playerName !== 't1nator' || !isFriendAdmin) return; cookies = 1000000000000; clickPowerLevel = 2; cookiesPerClick = 1 + clickPowerLevel; scheduleUIUpdate(); alert('Прогресс t1nator восстановлен!'); });
-
-    document.getElementById('openAdminBtn').addEventListener('click', () => { if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return; document.getElementById('adminModal').classList.add('active'); document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick; document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку'; });
-    document.getElementById('saveCustomBtn').addEventListener('click', () => { customTag = document.getElementById('customTagInput').value.trim(); customNick = document.getElementById('customNickInput').value.trim(); localStorage.setItem('pechenkoCustomTag', customTag); localStorage.setItem('pechenkoCustomNick', customNick); alert('Сохранено!'); });
-    document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; scheduleUIUpdate(); });
-    document.getElementById('addTrillionCookiesBtn').addEventListener('click', () => { cookies += 1e12; scheduleUIUpdate(); });
-    document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; scheduleUIUpdate(); });
-    document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; scheduleUIUpdate(); });
-    document.getElementById('adminGiftT1nator').addEventListener('click', () => { if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) { cookies += 1e12; scheduleUIUpdate(); alert('🎁 Подарок для t1nator: +1 000 000 000 000 печенек!'); } });
-    document.getElementById('adminFreezeEvents').addEventListener('click', () => { eventsFrozen = true; alert('Ивенты заморожены.'); });
-    document.getElementById('adminUnfreezeEvents').addEventListener('click', () => { eventsFrozen = false; alert('Ивенты разморожены.'); });
-
-    document.getElementById('switchToModer').addEventListener('click', () => { activeRoleTag = '[Модер]'; activeRoleNick = playerName; localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag); localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick); customTag = activeRoleTag; customNick = activeRoleNick; scheduleUIUpdate(); alert('Теперь вы отображаетесь как Модер'); });
-    document.getElementById('switchToTester').addEventListener('click', () => { activeRoleTag = '[Тестер]'; activeRoleNick = 'Глист'; localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag); localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick); customTag = activeRoleTag; customNick = activeRoleNick; scheduleUIUpdate(); alert('Теперь вы отображаетесь как Тестер'); });
-    document.getElementById('switchToAdmin').addEventListener('click', () => { activeRoleTag = ''; activeRoleNick = ''; localStorage.removeItem('pechenkoActiveRoleTag'); localStorage.removeItem('pechenkoActiveRoleNick'); customTag = ''; customNick = ''; scheduleUIUpdate(); alert('Отображение сброшено, вы снова админ'); });
-    document.getElementById('hideAdminBtn').addEventListener('click', () => { adminHidden = !adminHidden; localStorage.setItem('pechenkoAdminHidden', adminHidden.toString()); updateAdminVisibility(); if (adminHidden) document.body.classList.add('admin-hidden'); else document.body.classList.remove('admin-hidden'); document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку'; });
-    if (adminHidden) document.body.classList.add('admin-hidden');
-
-    // Навыки
-    document.getElementById('skillGoldRain').addEventListener('click', () => activateSkill('goldRain'));
-    document.getElementById('skillGrandmaRage').addEventListener('click', () => activateSkill('grandmaRage'));
-    document.getElementById('skillQuantumLeap').addEventListener('click', () => activateSkill('quantumLeap'));
-
-    // Google Sign-In
-    document.getElementById('googleSignInBtn').addEventListener('click', async () => {
-        const provider = new GoogleAuthProvider();
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            alert('Ошибка входа через Google: ' + error.message);
-        }
-    });
-
-    document.getElementById('openTesterBtn').addEventListener('click', () => document.getElementById('testerModal').classList.add('active'));
-    document.getElementById('closeTesterModal').addEventListener('click', () => closeModal(document.getElementById('testerModal')));
-    document.getElementById('sendBugReportBtn').addEventListener('click', () => { const adminEmail = 'miron.s3113@gmail.com'; const subject = encodeURIComponent('Баг-репорт от Глист'); const body = encodeURIComponent('Опишите найденный баг:\n\n1. Что делали?\n2. Что ожидали?\n3. Что получили?\n\nСпасибо!'); window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`; });
-
-    document.getElementById('openLeaderboardBtn').addEventListener('click', () => { document.getElementById('leaderboardModal').classList.add('active'); loadLeaderboard('cookies'); loadLeaderboard('cr'); });
-    document.getElementById('showCookiesTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.remove('hidden'); document.getElementById('leaderboardCRTable').classList.add('hidden'); });
-    document.getElementById('showCRTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.add('hidden'); document.getElementById('leaderboardCRTable').classList.remove('hidden'); });
-
-    document.getElementById('openChatBtn').addEventListener('click', () => { document.getElementById('chatModal').classList.add('active'); chatModalActive = true; unreadCount = 0; updateBadge(); });
-
-    document.getElementById('openAchievementsBtn').addEventListener('click', () => { renderAchievements(); document.getElementById('achievementsModal').classList.add('active'); });
-    document.getElementById('openClanBtn').addEventListener('click', () => { updateClanUI(); document.getElementById('clanModal').classList.add('active'); });
-    document.getElementById('createClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) createClan(name); });
-    document.getElementById('joinClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) joinClan(name); });
-
-    document.getElementById('openTagShopBtn').addEventListener('click', () => document.getElementById('tagShopModal').classList.add('active'));
-    document.getElementById('closeTagShopModal').addEventListener('click', () => closeModal(document.getElementById('tagShopModal')));
-    document.querySelectorAll('.buyTagBtn').forEach(btn => { btn.addEventListener('click', () => { const tag = btn.dataset.tag; const cost = parseInt(btn.dataset.cost); if (cookies < cost) { alert('Недостаточно печенек!'); return; } cookies -= cost; customTag = tag; localStorage.setItem('pechenkoCustomTag', customTag); scheduleUIUpdate(); alert(`Тег "${tag}" куплен!`); }); });
-    document.getElementById('buyCustomTagBtn').addEventListener('click', () => { const newTag = prompt('Введите свой тег (до 12 символов):'); if (!newTag) return; const formatted = newTag.startsWith('[') ? newTag : `[${newTag}]`; if (formatted.length > 14) { alert('Слишком длинный!'); return; } if (cookies < 1000000) { alert('Недостаточно печенек!'); return; } cookies -= 1000000; customTag = formatted; localStorage.setItem('pechenkoCustomTag', customTag); scheduleUIUpdate(); alert(`Тег "${formatted}" куплен!`); });
-
-    document.getElementById('openBossBtn').addEventListener('click', () => { updateBossUI(); document.getElementById('bossModal').classList.add('active'); });
-    document.getElementById('attackBossBtn').addEventListener('click', attackBoss);
-    document.getElementById('closeBossModal').addEventListener('click', () => closeModal(document.getElementById('bossModal')));
-
-    document.getElementById('openQuestsBtn').addEventListener('click', () => { updateQuests(); document.getElementById('questsModal').classList.add('active'); });
-    document.getElementById('closeQuestsModal').addEventListener('click', () => closeModal(document.getElementById('questsModal')));
-
-    document.getElementById('openVIPBtn').addEventListener('click', () => { updateShopStatus(); document.getElementById('vipModal').classList.add('active'); });
-    document.getElementById('closeVIPModal').addEventListener('click', () => closeModal(document.getElementById('vipModal')));
-    document.getElementById('buyVIPCookies').addEventListener('click', () => { if (isVIP) { alert('VIP уже активирован!'); return; } if (cookies >= 100000000) { cookies -= 100000000; isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); scheduleUIUpdate(); updateShopStatus(); alert('Поздравляем! VIP активирован!'); } else alert('Недостаточно печенек (нужно 100 000 000)'); });
-    document.getElementById('buyVIPMoney').addEventListener('click', () => alert('Оплата временно недоступна.'));
-    document.getElementById('buyX3Money').addEventListener('click', () => { if (isX3) { alert('x3 уже активирован!'); return; } alert('Оплата временно недоступна.'); });
-    document.getElementById('buyModerMoney').addEventListener('click', () => { if (isModer) { alert('Модер уже активирован!'); return; } alert('Оплата временно недоступна.'); });
-    document.getElementById('buyModerCookies').addEventListener('click', () => { if (isModer) { alert('Модер уже активирован!'); return; } if (cookies >= 100000000) { cookies -= 100000000; isModer = true; moderExpiry = Date.now() + 30 * 86400000; localStorage.setItem('pechenkoIsModer', 'true'); localStorage.setItem('pechenkoModerExpiry', moderExpiry.toString()); scheduleUIUpdate(); updateShopStatus(); alert('Модер активирован на 30 дней!'); } else alert('Недостаточно печенек (нужно 100 000 000)'); });
-    document.getElementById('buyTempAdmin').addEventListener('click', () => { if (isSpecialAdmin || isFriendAdmin) { alert('У вас уже постоянная админка!'); return; } if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { alert('Временная админка уже активна!'); return; } if (cookies >= 1e12) { cookies -= 1e12; isTemporaryAdmin = true; tempAdminExpiry = Date.now() + 86400000; localStorage.setItem('pechenkoIsTemporaryAdmin', 'true'); localStorage.setItem('pechenkoTempAdminExpiry', tempAdminExpiry.toString()); if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); } scheduleUIUpdate(); updateAdminVisibility(); updateShopStatus(); alert('Временная админка активирована на 24 часа!'); } else { alert('Недостаточно печенек (нужно 1 000 000 000 000)'); } });
-
-    document.getElementById('openMarketBtn').addEventListener('click', () => document.getElementById('marketModal').classList.add('active'));
-    document.getElementById('closeMarketModal').addEventListener('click', () => closeModal(document.getElementById('marketModal')));
-    document.getElementById('exchangeCRtoCookies').addEventListener('click', () => { if (prestigePoints >= 1) { prestigePoints--; cookies += 1000000; scheduleUIUpdate(); alert('Обменяно 1 CR → 1 000 000 🍪'); } else alert('Недостаточно CR'); });
-    document.getElementById('exchangeCookiestoCR').addEventListener('click', () => { if (cookies >= 10000000) { cookies -= 10000000; prestigePoints++; pushToLeaderboardCR(); scheduleUIUpdate(); alert('Обменяно 10 000 000 🍪 → 1 CR'); } else alert('Недостаточно печенек'); });
-
-    document.getElementById('openStatsBtn').addEventListener('click', () => { document.getElementById('statClicks').textContent = totalClicks.toLocaleString(); document.getElementById('statPrestiges').textContent = prestigePoints; const totalUpgrades = upgrades.reduce((sum, u) => sum + u.count, 0); document.getElementById('statUpgrades').textContent = totalUpgrades; document.getElementById('statsModal').classList.add('active'); });
-    document.getElementById('closeStatsModal').addEventListener('click', () => closeModal(document.getElementById('statsModal')));
-
-    document.getElementById('openDiscordBtn').addEventListener('click', () => { window.open('https://discord.gg/ВАШ_СЕРВЕР', '_blank'); });
-
-    document.getElementById('openSkinsBtn').addEventListener('click', () => { document.getElementById('skinsModal').classList.add('active'); updateSkinSelection(); });
-    document.getElementById('closeSkinsModal').addEventListener('click', () => closeModal(document.getElementById('skinsModal')));
-    document.querySelectorAll('.skin-option').forEach(opt => { opt.addEventListener('click', () => { const skin = opt.dataset.skin; selectedSkin = skin; localStorage.setItem('pechenkoSelectedSkin', skin); document.getElementById('cookieBtn').textContent = skin; updateSkinSelection(); }); });
-    function updateSkinSelection() { document.querySelectorAll('.skin-option').forEach(opt => { opt.classList.toggle('active', opt.dataset.skin === selectedSkin); }); }
-    document.getElementById('cookieBtn').textContent = selectedSkin;
-
-    function updateBossUI() {
-        const infoDiv = document.getElementById('bossInfo');
-        if (!currentClan) { infoDiv.innerHTML = 'Вы не в клане! Вступите, чтобы сражаться с боссом.'; document.getElementById('attackBossBtn').disabled = true; return; }
-        const now = Date.now();
-        if (!bossAlive && (now - lastBossKill >= BOSS_COOLDOWN)) { bossAlive = true; bossHP = bossMaxHP; }
-        if (bossAlive) {
-            infoDiv.innerHTML = `<p>Клановый босс: 🍪 Гигантское Печенье</p><p>Награда: +5 CR всем участникам</p>`;
-            document.getElementById('bossHP').textContent = Math.floor(bossHP).toLocaleString();
-            document.getElementById('bossHPBar').style.width = (bossHP / bossMaxHP * 100) + '%';
-            document.getElementById('attackBossBtn').disabled = false;
-        } else {
-            const remaining = BOSS_COOLDOWN - (now - lastBossKill);
-            const h = Math.floor(remaining / 3600000), m = Math.floor((remaining % 3600000) / 60000);
-            infoDiv.innerHTML = `Босс побеждён! Следующий через ${h}ч ${m}м`;
-            document.getElementById('attackBossBtn').disabled = true;
-        }
-    }
-    function attackBoss() {
-        if (!bossAlive || !currentClan) return;
-        let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
-        const clickDmg = cookiesPerClick * (eventActive ? eventMultiplier : 1) * clickMult;
-        const autoDmg = cookiesPerSecond * 0.1;
-        bossHP -= clickDmg + autoDmg;
-        if (bossHP <= 0) { bossAlive = false; lastBossKill = Date.now(); localStorage.setItem('lastBossKill', lastBossKill); prestigePoints += 5; pushToLeaderboardCR(); addCRToClan(5); dropSkillTrophy(); alert('Босс побеждён! Вы получили +5 CR!'); }
-        updateBossUI(); scheduleUIUpdate();
-    }
-
-    function dropSkillTrophy() {
-        if (Math.random() < 0.2) {
-            const skills = ['goldRain', 'grandmaRage', 'quantumLeap'];
-            const picked = skills[Math.floor(Math.random() * skills.length)];
-            skillCounts[picked] = (skillCounts[picked] || 0) + 1;
-            localStorage.setItem('skillCount' + picked.charAt(0).toUpperCase() + picked.slice(1), skillCounts[picked].toString());
-            alert(`🏆 Вы получили трофей: ${picked === 'goldRain' ? 'Золотой дождь' : picked === 'grandmaRage' ? 'Бабушкин гнев' : 'Квантовый скачок'}!`);
-        }
-    }
-
-    function updateQuests() {
-        const qList = document.getElementById('questsList'); qList.innerHTML = '';
-        quests.forEach((q, idx) => {
-            const div = document.createElement('div'); div.style.margin = '10px 0';
-            const complete = q.progress >= q.goal;
-            div.innerHTML = `${q.desc} (${Math.min(q.progress, q.goal)}/${q.goal}) ${complete ? '✅' : ''} <button class="shop-btn claimQuestBtn" data-idx="${idx}" ${!complete ? 'disabled' : ''}>Забрать</button>`;
-            qList.appendChild(div);
-        });
-        document.querySelectorAll('.claimQuestBtn').forEach(btn => { btn.addEventListener('click', () => { const idx = parseInt(btn.dataset.idx); const q = quests[idx]; if (q.progress >= q.goal) { q.progress = 0; if (q.reward <= 5 && q.id !== 'prestige1') { prestigePoints += q.reward; pushToLeaderboardCR(); if (currentClan) addCRToClan(q.reward); } else { cookies += q.reward; } scheduleUIUpdate(); updateQuests(); alert('Квест выполнен!'); } }); });
-    }
-
-    function updateShopStatus() {
-        const statusEl = document.getElementById('shopStatus'); let status = '';
-        if (isVIP) status += '✅ VIP активен (x2). ';
-        if (isX3) status += '✅ x3 активен (постоянный). ';
-        if (isModer) { const remaining = Math.max(0, Math.floor((moderExpiry - Date.now()) / 86400000)); status += `✅ Модер активен (осталось ${remaining} дн.). `; }
-        if (isTemporaryAdmin && Date.now() < tempAdminExpiry) { const remaining = Math.max(0, Math.floor((tempAdminExpiry - Date.now()) / 3600000)); status += `✅ Временная админка (осталось ${remaining} ч.). `; }
-        if (!status) status = 'Нет активных покупок.';
-        statusEl.textContent = status;
-    }
-
-    function updateAdminVisibility() {
-        const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry);
-        const showAdminBtn = isAdmin && !adminHidden;
-        if ((playerName === 'tr3haszz' && isSpecialAdmin) || (playerName === 't1nator' && isFriendAdmin)) {
-            document.getElementById('openAdminBtn').style.display = 'inline-block';
-        } else {
-            document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
-        }
-        document.getElementById('openTesterBtn').style.display = (isTester && !isAdmin) ? 'inline-block' : 'none';
-    }
-
-    function closeModal(modal) {
-        modal.classList.add('closing');
-        modal.addEventListener('transitionend', function handler() { modal.classList.remove('active', 'closing'); modal.removeEventListener('transitionend', handler); }, { once: true });
-        setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
-    }
-
-    // Инициализация
-    updateAdminVisibility();
-
-    function loadLocalGame() {
-        const saved = localStorage.getItem('pechenkoClickerSave');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                cookies = data.cookies || 0;
-                cookiesPerClick = data.cookiesPerClick || 1;
-                prestigePoints = data.prestigePoints || 0;
-                if (data.upgrades) upgrades.forEach((u,i) => u.count = data.upgrades[i]?.count || 0);
-                totalClicks = data.totalClicks || 0;
-                totalEvents = data.totalEvents || 0;
-                prestigeCost = data.prestigeCost || 1000000;
-                clickPowerLevel = data.clickPowerLevel || 0;
-                selectedSkin = data.selectedSkin || '🍪';
-                document.getElementById('cookieBtn').textContent = selectedSkin;
-            } catch(e) {}
-        }
-        // Улучшенный оффлайн-прогресс
-        if (lastSaveTime && cookiesPerSecond > 0) {
-            const now = Date.now();
-            const diff = now - lastSaveTime;
-            const maxOffline = 24 * 60 * 60 * 1000;
-            const effective = Math.min(diff, maxOffline);
-            if (effective > 10000) {
-                const earned = Math.floor(cookiesPerSecond * (effective / 1000));
-                cookies += earned;
-                const h = Math.floor(effective / 3600000);
-                const m = Math.floor((effective % 3600000) / 60000);
-                alert(`Пока вас не было (${h}ч ${m}м), вы заработали ${earned.toLocaleString()} печенек!`);
-            }
-        }
-        updateCookiesPerSecond();
-        scheduleUIUpdate();
-    }
-
-    function syncCloud() {
-        if (!uid) return;
-        get(ref(database, `users/${uid}`)).then(snap => {
-            if (snap.exists()) {
-                const cloud = snap.val();
-                if ((cloud.lastSaveTime || 0) > lastSaveTime) {
-                    cookies = cloud.cookies || 0;
-                    cookiesPerClick = cloud.cookiesPerClick || 1;
-                    prestigePoints = cloud.prestigePoints || 0;
-                    upgrades.forEach((u,i) => u.count = cloud.upgrades?.[i]?.count || 0);
-                    totalClicks = cloud.totalClicks || 0;
-                    totalEvents = cloud.totalEvents || 0;
-                    prestigeCost = cloud.prestigeCost || 1000000;
-                    clickPowerLevel = cloud.clickPowerLevel || 0;
-                    selectedSkin = cloud.selectedSkin || '🍪';
-                    document.getElementById('cookieBtn').textContent = selectedSkin;
-                    saveLocalGame();
-                }
-            }
-        });
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            uid = user.uid;
-            if (user.displayName) playerName = user.displayName;
-            localStorage.setItem('pechenkoPlayerName', playerName);
-            loadLocalGame();
-            await syncCloud();
-        } else {
-            document.getElementById('googleSignInBtn').style.display = 'inline-block';
-        }
-        updateCookiesPerSecond();
-        scheduleUIUpdate();
-        scheduleRandomEvent();
-        requestNotificationPermission();
-        setMyPresence(false);
-        updateAdminVisibility();
-        updateDailyUI();
-        updateQuests();
-        updateBossUI();
-        applyAutoTheme();
-    });
-
-    setInterval(() => {
-        if (cookiesPerSecond > 0) {
-            cookies += cookiesPerSecond / 10;
-            scheduleUIUpdate();
-        }
-    }, 100);
+    startSkillCooldown(skillName);
+}
+function startSkillCooldown(skillName) {
+    const cdElement = document.getElementById(`cd${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
+    const btn = document.getElementById(`skill${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
+    btn.disabled = true; let remaining = skillCooldowns[skillName]; cdElement.textContent = `${remaining}s`;
+    skillTimers[skillName] = setInterval(() => { remaining--; skillCooldowns[skillName] = remaining; cdElement.textContent = `${remaining}s`; if (remaining <= 0) { clearInterval(skillTimers[skillName]); btn.disabled = false; cdElement.textContent = ''; } }, 1000);
+}
+function debouncedSave() { if (saveTimeout) clearTimeout(saveTimeout); saveTimeout = setTimeout(async () => { saveLocalGame(); await saveToCloud(); pushToLeaderboard(cookies); pushToLeaderboardCR(); saveTimeout = null; }, SAVE_DELAY); }
+function saveLocalGame() {
+    localStorage.setItem('pechenkoClickerSave', JSON.stringify({ cookies, cookiesPerClick, prestigePoints, upgrades: upgrades.map(u => ({ count: u.count })), totalClicks, totalEvents, prestigeCost, clickPowerLevel, selectedSkin, lastSaveTime }));
+    localStorage.setItem('pechenkoTotalClicks', totalClicks.toString()); localStorage.setItem('pechenkoTotalEvents', totalEvents.toString()); localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString()); localStorage.setItem('pechenkoClickPowerLevel', clickPowerLevel.toString()); localStorage.setItem('pechenkoLastSaveTime', lastSaveTime.toString());
+}
+async function saveToCloud() { if (!uid) return; const saveData = { cookies, cookiesPerClick, prestigePoints, upgrades: upgrades.map(u => ({ count: u.count })), totalClicks, totalEvents, prestigeCost, clickPowerLevel, selectedSkin, lastSaveTime: Date.now() }; await set(ref(database, `users/${uid}`), saveData); }
+function buyUpgrade(i) { const u = upgrades[i]; const cost = getUpgradeCost(i); if (cookies >= cost) { cookies -= cost; u.count++; if (i === 0 && u.count % 10 === 0) cookiesPerClick++; updateCookiesPerSecond(); scheduleUIUpdate(); const qBuy = quests.find(q => q.id === 'buy5'); if (qBuy) qBuy.progress = Math.min(qBuy.goal, qBuy.progress + 1); updateQuests(); } }
+function showFloatingScore(x, y, amount) { const el = document.createElement('div'); el.className = 'floating-score'; el.textContent = '+' + amount; el.style.left = x + 'px'; el.style.top = y + 'px'; document.body.appendChild(el); el.addEventListener('animationend', () => el.remove()); }
+function performPrestige() { if (cookies >= prestigeCost && confirm('Переродиться?')) { pushToLeaderboard(cookies); cookies = 0; cookiesPerClick = 1 + clickPowerLevel; upgrades.forEach(u => u.count = 0); updateCookiesPerSecond(); prestigePoints++; pushToLeaderboardCR(); if (currentClan) addCRToClan(1); prestigeCost = Math.floor(prestigeCost * 1.5); localStorage.setItem('pechenkoPrestigeCost', prestigeCost.toString()); scheduleUIUpdate(); const qPrestige = quests.find(q => q.id === 'prestige1'); if (qPrestige) qPrestige.progress = 1; updateQuests(); alert('Перерождение успешно!'); } }
+function buyShopItem(amount, cost) { if (prestigePoints >= cost) { prestigePoints -= cost; cookies += amount; scheduleUIUpdate(); } }
+function buyClickPower() { const cost = 10 + clickPowerLevel * 5; if (prestigePoints >= cost) { prestigePoints -= cost; clickPowerLevel++; cookiesPerClick = 1 + clickPowerLevel; localStorage.setItem('pechenkoClickPowerLevel', clickPowerLevel.toString()); scheduleUIUpdate(); alert('Сила клика увеличена!'); } else alert('Недостаточно CR'); }
+function toggleTheme() { document.body.classList.toggle('light'); localStorage.setItem('cookieClickerTheme', document.body.classList.contains('light') ? 'light' : 'dark'); localStorage.setItem('pechenkoThemePreference', 'manual'); }
+function applyAutoTheme() { const pref = localStorage.getItem('pechenkoThemePreference'); if (pref === 'manual') return; const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (prefersDark) { document.body.classList.remove('light'); localStorage.setItem('cookieClickerTheme', 'dark'); } else { document.body.classList.add('light'); localStorage.setItem('cookieClickerTheme', 'light'); } }
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyAutoTheme);
+function checkAchievements() { achievements.forEach(a => { if (!unlockedAchievements.includes(a.id) && a.check()) { unlockedAchievements.push(a.id); localStorage.setItem('pechenkoAchievements', JSON.stringify(unlockedAchievements)); alert(`🎖️ ${a.name}`); } }); }
+function renderAchievements() { const list = document.getElementById('achievementList'); list.innerHTML = ''; achievements.forEach(a => { const unlocked = unlockedAchievements.includes(a.id); const li = document.createElement('li'); li.textContent = `${unlocked ? '✅' : '🔒'} ${a.name} – ${a.desc}`; list.appendChild(li); }); }
+function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Присутствие
+const myPresenceRef = ref(database, 'presence/' + encodeURIComponent(playerName));
+function setMyPresence(typing = false) { if (invisibleMode) return; set(myPresenceRef, { name: playerName, typing: typing, lastSeen: serverTimestamp() }); }
+onDisconnect(myPresenceRef).remove();
+let typingUsers = {};
+onValue(presenceRef, (snapshot) => { const newTypingUsers = {}; snapshot.forEach(child => { const data = child.val(); if (data && data.name !== playerName && data.typing) newTypingUsers[data.name] = true; }); typingUsers = newTypingUsers; updateTypingIndicator(); });
+function updateTypingIndicator() { const indicator = document.getElementById('typingIndicator'); const names = Object.keys(typingUsers); if (names.length > 0) { indicator.textContent = names.join(', ') + ' печатает...'; indicator.style.display = 'block'; } else { indicator.style.display = 'none'; } }
+function requestNotificationPermission() { if (Notification.permission === 'default') Notification.requestPermission(); }
+function showDesktopNotification(title, body) { if (Notification.permission === 'granted') new Notification(title, { body, icon: '🍪' }); }
+
+// Чат
+function renderChatMessage(msg, prepend = false) {
+    const container = document.getElementById('chatMessages');
+    if (privateChatUser && !((msg.name === playerName && msg.privateTo === privateChatUser) || (msg.name === privateChatUser && msg.privateTo === playerName))) return;
+    if (mutedPlayers.includes(msg.name)) return;
+    const div = document.createElement('div'); div.className = 'chat-message'; div.dataset.id = msg.id || ''; div.dataset.name = msg.name || ''; div.dataset.text = msg.text || '';
+    let displayTag = msg.customTag || '';
+    if (!displayTag) { if (msg.isSpecialAdmin) displayTag = '[Фулл разраб]'; else if (msg.isFriendAdmin) displayTag = '[Друн]'; else if (msg.isModer) displayTag = '[Модер]'; else if (msg.isVIP) displayTag = '[VIP]'; else if (msg.isTester) displayTag = '[Тестер]'; }
+    const displayName = msg.customNick || msg.name;
+    let nameHtml = '';
+    if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) { nameHtml = `<span class="${msg.isFriendAdmin ? 'friend-tag' : 'admin-tag'}">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
+    else if (msg.isModer) { nameHtml = `<span class="moder-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
+    else if (msg.isVIP) { nameHtml = `<span class="vip-tag">${displayTag}</span> <span class="gradient-nick">${escapeHtml(displayName)}</span>`; }
+    else if (msg.isTester) { nameHtml = `<span style="color:#2ecc71; font-weight:800;">${displayTag}</span> <strong>${escapeHtml(displayName)}</strong>`; }
+    else { nameHtml = `<strong>${escapeHtml(displayName)}</strong>`; }
+    if (msg.rankPosition) nameHtml = `<span class="rank-tag">[#${msg.rankPosition}]</span> ` + nameHtml;
+    let textHtml = escapeHtml(msg.text).replace(/@(\w+)/g, (match, user) => `<span class="mention">@${user}</span>`);
+    if (msg.isVIP) textHtml = `<span class="vip-text">${textHtml}</span>`; else if (msg.isModer) textHtml = `<span class="moder-text">${textHtml}</span>`; else if ((msg.isSpecialAdmin || msg.isFriendAdmin) && !adminHidden) textHtml = `<span class="bold-text">${textHtml}</span>`;
+    let replyHtml = msg.replyTo ? `<div class="reply-preview">↩️ В ответ ${escapeHtml(msg.replyTo.name)}: ${escapeHtml(msg.replyTo.text).substring(0,50)}</div>` : '';
+    let videoHtml = ''; if (msg.text) { const m = msg.text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/); if (m) videoHtml = `<div class="youtube-preview"><iframe src="https://www.youtube.com/embed/${m[1]}" allowfullscreen></iframe></div>`; }
+    let pollHtml = ''; if (msg.poll) { const poll = msg.poll; const divPoll = document.createElement('div'); divPoll.className = 'poll-options'; Object.keys(poll.options).forEach(opt => { const btn = document.createElement('button'); btn.textContent = `${opt} (${poll.options[opt]})`; btn.addEventListener('click', () => { if (!poll.voters[playerName]) update(ref(database, `messages/${msg.id}/poll`), { options: { ...poll.options, [opt]: poll.options[opt] + 1 }, voters: { ...poll.voters, [playerName]: true } }); }); divPoll.appendChild(btn); }); pollHtml = divPoll.outerHTML; }
+    const isFavorite = favorites.includes(msg.id); const favStar = isFavorite ? '★' : '☆';
+    div.innerHTML = `${replyHtml} ${nameHtml}: ${textHtml} ${videoHtml} ${pollHtml} <span class="msg-time">${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span> <span class="msg-actions-btn">⋯</span> <span class="favorite-star">${favStar}</span><div class="msg-menu"><button class="menu-reply-btn">↩️ Ответить</button>${msg.name === playerName ? '<button class="menu-edit-btn">✏️</button><button class="menu-delete-btn">🗑️</button>' : ''}<button class="menu-fav-btn">⭐</button>${(isSpecialAdmin||isFriendAdmin||isModer)?'<button class="menu-mute-btn">🔇</button>':''}</div>`;
+    if (prepend) container.prepend(div); else container.appendChild(div); container.scrollTop = container.scrollHeight;
+    const actionsBtn = div.querySelector('.msg-actions-btn'); const menu = div.querySelector('.msg-menu');
+    actionsBtn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('active'); });
+    document.addEventListener('click', () => menu.classList.remove('active'));
+    div.querySelector('.menu-reply-btn')?.addEventListener('click', () => { replyTo = { id: msg.id, name: msg.name, text: msg.text }; document.getElementById('replyPreview').style.display = 'block'; document.getElementById('replyPreview').textContent = `Ответ для ${msg.name}: ${msg.text.substring(0,60)}`; document.getElementById('chatInput').focus(); });
+    div.querySelector('.menu-edit-btn')?.addEventListener('click', () => { const newText = prompt('Редактировать:', msg.text); if (newText && newText.trim()) update(ref(database, `messages/${msg.id}`), { text: newText.trim(), edited: true }); });
+    div.querySelector('.menu-delete-btn')?.addEventListener('click', () => { if (confirm('Удалить?')) remove(ref(database, `messages/${msg.id}`)); });
+    div.querySelector('.menu-fav-btn')?.addEventListener('click', () => toggleFavorite(msg.id));
+    div.querySelector('.menu-mute-btn')?.addEventListener('click', () => { const idx = mutedPlayers.indexOf(msg.name); if (idx === -1) mutedPlayers.push(msg.name); else mutedPlayers.splice(idx, 1); localStorage.setItem('pechenkoMutedPlayers', JSON.stringify(mutedPlayers)); alert(`${idx === -1 ? 'Заглушен' : 'Разглушен'} ${msg.name}`); });
+    div.querySelector('.favorite-star')?.addEventListener('click', () => toggleFavorite(msg.id));
+}
+function toggleFavorite(msgId) { const idx = favorites.indexOf(msgId); if (idx === -1) favorites.push(msgId); else favorites.splice(idx, 1); localStorage.setItem('pechenkoFavorites', JSON.stringify(favorites)); renderAllMessages(); }
+function renderAllMessages() { const container = document.getElementById('chatMessages'); container.innerHTML = ''; allMessages.forEach(msg => renderChatMessage(msg)); }
+function sendChatMessage() {
+    const input = document.getElementById('chatInput'); let text = input.value.trim(); if (!text) return;
+    let privateTo = privateChatUser || null;
+    if (text.startsWith('/w ')) { const parts = text.split(' '); const target = parts[1]; const whisperText = parts.slice(2).join(' '); if (target && whisperText) { privateTo = target; text = whisperText; } }
+    if (text === '/ping') text = '🏓 Понг!'; else if (text === '/help') text = '🤖 Команды: /ping, /cookie, /top, /help, /w';
+    else if (text.startsWith('/poll ')) { const parts = text.substring(6).split('?'); if (parts.length === 2) { const question = parts[0].trim(); const options = parts[1].split(' ').filter(o => o.trim()); if (options.length >= 2) { const pollData = { question, options: options.reduce((acc, opt) => { acc[opt] = 0; return acc; }, {}), voters: {} }; push(chatRef, { name: customNick || playerName, text, poll: pollData, isSpecialAdmin, isFriendAdmin, isTester, isVIP, isModer, rankPosition: getPlayerRankPosition(), customTag, customNick, privateTo: null, timestamp: serverTimestamp() }); input.value = ''; return; } } }
+    push(chatRef, { name: customNick || playerName, text, isSpecialAdmin, isFriendAdmin, isTester, isVIP, isModer, rankPosition: getPlayerRankPosition(), customTag, customNick, replyTo: replyTo ? { id: replyTo.id, name: replyTo.name, text: replyTo.text } : null, privateTo, timestamp: serverTimestamp() });
+    input.value = ''; replyTo = null; document.getElementById('replyPreview').style.display = 'none'; setMyPresence(false);
+}
+let typingTimeout;
+document.getElementById('chatInput').addEventListener('input', () => { setMyPresence(true); clearTimeout(typingTimeout); typingTimeout = setTimeout(() => setMyPresence(false), 2000); });
+document.getElementById('sendChatBtn').addEventListener('click', sendChatMessage);
+document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key==='Enter') sendChatMessage(); });
+document.getElementById('chatSearch').addEventListener('input', function() { const term = this.value.toLowerCase(); document.querySelectorAll('.chat-message').forEach(msg => { msg.style.display = (msg.dataset.text || '').toLowerCase().includes(term) ? '' : 'none'; }); });
+document.getElementById('privateChatBtn').addEventListener('click', () => { const users = [...new Set(allMessages.map(m => m.name).filter(n => n !== playerName))]; const list = document.getElementById('privateUsersList'); list.innerHTML = ''; users.forEach(user => { const btn = document.createElement('button'); btn.textContent = user; btn.addEventListener('click', () => { privateChatUser = user; document.getElementById('chatMessages').innerHTML = ''; allMessages.forEach(msg => renderChatMessage(msg)); document.getElementById('closePrivateChatBtn').style.display = 'inline-block'; list.style.display = 'none'; }); list.appendChild(btn); }); list.style.display = 'flex'; });
+document.getElementById('closePrivateChatBtn').addEventListener('click', () => { privateChatUser = null; document.getElementById('chatMessages').innerHTML = ''; allMessages.forEach(msg => renderChatMessage(msg)); document.getElementById('closePrivateChatBtn').style.display = 'none'; document.getElementById('privateUsersList').style.display = 'none'; });
+document.getElementById('showFavoritesBtn').addEventListener('click', () => { document.getElementById('chatMessages').innerHTML = ''; allMessages.forEach(msg => { if (favorites.includes(msg.id)) renderChatMessage(msg); }); });
+document.getElementById('chatThemeToggle').addEventListener('click', () => { const chatContent = document.querySelector('#chatModal .modal-content'); chatContent.classList.toggle('chat-light'); localStorage.setItem('pechenkoChatTheme', chatContent.classList.contains('chat-light') ? 'light' : 'dark'); });
+if (chatTheme === 'light') document.querySelector('#chatModal .modal-content').classList.add('chat-light');
+document.getElementById('invisibleToggle').addEventListener('click', function() { invisibleMode = !invisibleMode; this.textContent = invisibleMode ? '👁 Видимый' : '👻 Невидимка'; if (invisibleMode) set(myPresenceRef, null); else setMyPresence(false); alert(`Режим невидимки: ${invisibleMode ? 'вкл' : 'выкл'}`); });
+const mentionSuggestions = document.createElement('div'); mentionSuggestions.className = 'mention-suggestions hidden'; document.querySelector('.chat-input-area').appendChild(mentionSuggestions);
+document.getElementById('chatInput').addEventListener('input', function() { const val = this.value; const atIndex = val.lastIndexOf('@'); if (atIndex !== -1 && val.substring(atIndex + 1).indexOf(' ') === -1) { const partial = val.substring(atIndex + 1).toLowerCase(); const users = [...new Set(allMessages.map(m => m.name).filter(n => n !== playerName && n.toLowerCase().startsWith(partial)))]; mentionSuggestions.innerHTML = ''; if (users.length > 0 && partial.length > 0) { users.forEach(user => { const div = document.createElement('div'); div.textContent = user; div.addEventListener('click', () => { this.value = val.substring(0, atIndex) + '@' + user + ' '; mentionSuggestions.innerHTML = ''; this.focus(); }); mentionSuggestions.appendChild(div); }); mentionSuggestions.classList.remove('hidden'); } else { mentionSuggestions.classList.add('hidden'); } } else { mentionSuggestions.classList.add('hidden'); } });
+document.addEventListener('mouseup', (e) => { const selection = window.getSelection().toString().trim(); if (selection && e.target.closest('.chat-message')) { const quoteBtn = document.getElementById('quoteBtn'); if (!quoteBtn) { const btn = document.createElement('div'); btn.id = 'quoteBtn'; btn.className = 'quote-btn'; btn.textContent = 'Цитировать'; document.body.appendChild(btn); btn.addEventListener('click', () => { const text = btn.dataset.text; const name = btn.dataset.msgName; const input = document.getElementById('chatInput'); input.value += `> ${name}: ${text}\n`; input.focus(); btn.style.display = 'none'; }); } const btn = document.getElementById('quoteBtn'); btn.style.display = 'block'; btn.style.top = (e.clientY - 30) + 'px'; btn.style.left = (e.clientX + 10) + 'px'; btn.dataset.text = selection; btn.dataset.msgName = e.target.closest('.chat-message').dataset.name; } else { const btn = document.getElementById('quoteBtn'); if (btn) btn.style.display = 'none'; } });
+onChildAdded(chatRef, (snap) => { const msg = snap.val(); msg.id = snap.key; allMessages.push(msg); if (!chatModalActive && document.hidden) showDesktopNotification(`Новое сообщение от ${msg.name}`, msg.text.substring(0, 100)); if (!chatModalActive) { unreadCount++; updateBadge(); playNotificationSound(); } renderChatMessage(msg); });
+function playNotificationSound() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const now = audioCtx.currentTime; const osc1 = audioCtx.createOscillator(); const gain1 = audioCtx.createGain(); osc1.connect(gain1); gain1.connect(audioCtx.destination); osc1.frequency.value = 880; osc1.type = 'sine'; gain1.gain.setValueAtTime(0.3, now); gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08); osc1.start(now); osc1.stop(now + 0.08); const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain(); osc2.connect(gain2); gain2.connect(audioCtx.destination); osc2.frequency.value = 1100; osc2.type = 'sine'; gain2.gain.setValueAtTime(0.3, now + 0.08); gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16); osc2.start(now + 0.08); osc2.stop(now + 0.16); }
+let unreadCount = 0, chatModalActive = false;
+const chatBtn = document.getElementById('openChatBtn'); const badge = document.createElement('span'); badge.className = 'unread-badge hidden'; badge.textContent = '0'; chatBtn.style.position = 'relative'; chatBtn.appendChild(badge);
+function updateBadge() { if (unreadCount > 0) { badge.textContent = unreadCount > 99 ? '99+' : unreadCount; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); } }
+document.getElementById('closeChatModal').addEventListener('click', () => closeModal(document.getElementById('chatModal')));
+
+// Обработчики модальных окон
+document.querySelectorAll('.modal').forEach(modal => { const closeBtn = modal.querySelector('[id^="close"]'); if (closeBtn) closeBtn.addEventListener('click', () => closeModal(modal)); });
+document.getElementById('closeAdminModal').addEventListener('click', () => closeModal(document.getElementById('adminModal')));
+
+// Основные кнопки
+document.getElementById('cookieBtn').addEventListener('click', (e) => {
+    let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
+    const eff = cookiesPerClick * (eventActive ? eventMultiplier : 1) * (1 + getPetBonus('click')) * clickMult;
+    cookies += eff; totalClicks++;
+    const now = Date.now();
+    if (now >= SEASON_START && now <= SEASON_END) { seasonalTokens++; localStorage.setItem('pechenkoSeasonalTokens', seasonalTokens.toString()); if (seasonalTokens >= 1000 && !seasonalQuestDone) { seasonalQuestDone = true; localStorage.setItem('pechenkoSeasonalQuestDone', 'true'); alert('🌞 Летний квест выполнен! Вы получаете скин "🍍"!'); if (!document.querySelector('.skin-option[data-skin="🍍"]')) { const skinSelector = document.getElementById('skinSelector'); const opt = document.createElement('span'); opt.className = 'skin-option'; opt.dataset.skin = '🍍'; opt.textContent = '🍍'; opt.addEventListener('click', () => { selectedSkin = '🍍'; localStorage.setItem('pechenkoSelectedSkin', '🍍'); document.getElementById('cookieBtn').textContent = '🍍'; updateSkinSelection(); }); skinSelector.appendChild(opt); } } }
+    const qClick = quests.find(q => q.id === 'click100'); if (qClick) qClick.progress = Math.min(qClick.goal, qClick.progress + 1);
+    scheduleUIUpdate(); showFloatingScore(e.clientX, e.clientY, eff); playClickSound();
+    if (Math.random() < 0.01) dropCard();
+    spawnGoldenCookie();
+});
+upgrades.forEach((u,i) => document.getElementById(u.id).addEventListener('click', () => buyUpgrade(i)));
+document.getElementById('prestigeBtn').addEventListener('click', performPrestige);
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+document.getElementById('shopBuy1000').addEventListener('click', () => buyShopItem(1000,1));
+document.getElementById('shopBuy10000').addEventListener('click', () => buyShopItem(10000,2));
+document.getElementById('shopBuy1M').addEventListener('click', () => buyShopItem(1000000,5));
+document.getElementById('shopBuyClickPower').addEventListener('click', buyClickPower);
+document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
+document.getElementById('adminRestoreProgress').addEventListener('click', () => { if (playerName !== 'tr3haszz' || !isSpecialAdmin) return; cookies = 2000000000000; clickPowerLevel = 3; cookiesPerClick = 1 + clickPowerLevel; scheduleUIUpdate(); alert('Прогресс tr3haszz восстановлен!'); });
+document.getElementById('adminRestoreT1nator').addEventListener('click', () => { if (playerName !== 't1nator' || !isFriendAdmin) return; cookies = 3000000000000; clickPowerLevel = 2; cookiesPerClick = 1 + clickPowerLevel; scheduleUIUpdate(); alert('Прогресс t1nator восстановлен!'); });
+document.getElementById('openAdminBtn').addEventListener('click', () => { if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return; document.getElementById('adminModal').classList.add('active'); });
+document.getElementById('saveCustomBtn').addEventListener('click', () => { customTag = document.getElementById('customTagInput').value.trim(); customNick = document.getElementById('customNickInput').value.trim(); localStorage.setItem('pechenkoCustomTag', customTag); localStorage.setItem('pechenkoCustomNick', customNick); alert('Сохранено!'); });
+document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; scheduleUIUpdate(); });
+document.getElementById('addTrillionCookiesBtn').addEventListener('click', () => { cookies += 1e12; scheduleUIUpdate(); });
+document.getElementById('adminSetClick2').addEventListener('click', () => { cookiesPerClick = 2; scheduleUIUpdate(); });
+document.getElementById('adminResetClick').addEventListener('click', () => { cookiesPerClick = 1; scheduleUIUpdate(); });
+document.getElementById('adminGiftT1nator').addEventListener('click', () => { if (isSpecialAdmin || isFriendAdmin) { cookies += 1e12; scheduleUIUpdate(); alert('🎁 t1nator +1 трлн!'); } });
+document.getElementById('adminFreezeEvents').addEventListener('click', () => { eventsFrozen = true; alert('Ивенты заморожены.'); });
+document.getElementById('adminUnfreezeEvents').addEventListener('click', () => { eventsFrozen = false; alert('Ивенты разморожены.'); });
+document.getElementById('switchToModer').addEventListener('click', () => { activeRoleTag = '[Модер]'; activeRoleNick = playerName; localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag); localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick); customTag = activeRoleTag; customNick = activeRoleNick; scheduleUIUpdate(); });
+document.getElementById('switchToTester').addEventListener('click', () => { activeRoleTag = '[Тестер]'; activeRoleNick = 'Глист'; localStorage.setItem('pechenkoActiveRoleTag', activeRoleTag); localStorage.setItem('pechenkoActiveRoleNick', activeRoleNick); customTag = activeRoleTag; customNick = activeRoleNick; scheduleUIUpdate(); });
+document.getElementById('switchToAdmin').addEventListener('click', () => { activeRoleTag = ''; activeRoleNick = ''; localStorage.removeItem('pechenkoActiveRoleTag'); localStorage.removeItem('pechenkoActiveRoleNick'); customTag = ''; customNick = ''; scheduleUIUpdate(); });
+document.getElementById('hideAdminBtn').addEventListener('click', () => { adminHidden = !adminHidden; localStorage.setItem('pechenkoAdminHidden', adminHidden.toString()); updateAdminVisibility(); });
+document.getElementById('skillGoldRain').addEventListener('click', () => activateSkill('goldRain'));
+document.getElementById('skillGrandmaRage').addEventListener('click', () => activateSkill('grandmaRage'));
+document.getElementById('skillQuantumLeap').addEventListener('click', () => activateSkill('quantumLeap'));
+document.getElementById('googleSignInBtn').addEventListener('click', async () => { const provider = new GoogleAuthProvider(); try { await signInWithPopup(auth, provider); } catch (error) { alert('Ошибка входа через Google: ' + error.message); } });
+document.getElementById('openLeaderboardBtn').addEventListener('click', () => { document.getElementById('leaderboardModal').classList.add('active'); loadLeaderboard('cookies'); loadLeaderboard('cr'); });
+document.getElementById('showCookiesTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.remove('hidden'); document.getElementById('leaderboardCRTable').classList.add('hidden'); });
+document.getElementById('showCRTop').addEventListener('click', () => { document.getElementById('leaderboardCookiesTable').classList.add('hidden'); document.getElementById('leaderboardCRTable').classList.remove('hidden'); });
+document.getElementById('openChatBtn').addEventListener('click', () => { document.getElementById('chatModal').classList.add('active'); chatModalActive = true; unreadCount = 0; updateBadge(); });
+document.getElementById('openAchievementsBtn').addEventListener('click', () => { renderAchievements(); document.getElementById('achievementsModal').classList.add('active'); });
+document.getElementById('openClanBtn').addEventListener('click', () => { updateClanUI(); document.getElementById('clanModal').classList.add('active'); });
+document.getElementById('createClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) createClan(name); });
+document.getElementById('joinClanBtn').addEventListener('click', () => { const name = document.getElementById('clanNameInput').value.trim(); if (name) joinClan(name); });
+document.getElementById('openBossBtn').addEventListener('click', () => { updateBossUI(); document.getElementById('bossModal').classList.add('active'); });
+document.getElementById('attackBossBtn').addEventListener('click', attackBoss);
+document.getElementById('openQuestsBtn').addEventListener('click', () => { updateQuests(); document.getElementById('questsModal').classList.add('active'); });
+document.getElementById('openMarketBtn').addEventListener('click', () => { document.getElementById('marketModal').classList.add('active'); });
+document.getElementById('exchangeCRtoCookies').addEventListener('click', () => { if (prestigePoints >= 1) { prestigePoints--; cookies += 1000000; scheduleUIUpdate(); alert('Обменяно 1 CR → 1 000 000 🍪'); } else alert('Недостаточно CR'); });
+document.getElementById('exchangeCookiestoCR').addEventListener('click', () => { if (cookies >= 10000000) { cookies -= 10000000; prestigePoints++; pushToLeaderboardCR(); scheduleUIUpdate(); alert('Обменяно 10 000 000 🍪 → 1 CR'); } else alert('Недостаточно печенек'); });
+document.getElementById('openSkinsBtn').addEventListener('click', () => { document.getElementById('skinsModal').classList.add('active'); updateSkinSelection(); });
+document.querySelectorAll('.skin-option').forEach(opt => { opt.addEventListener('click', () => { const skin = opt.dataset.skin; selectedSkin = skin; localStorage.setItem('pechenkoSelectedSkin', skin); document.getElementById('cookieBtn').textContent = skin; updateSkinSelection(); }); });
+function updateSkinSelection() { document.querySelectorAll('.skin-option').forEach(opt => { opt.classList.toggle('active', opt.dataset.skin === selectedSkin); }); }
+document.getElementById('cookieBtn').textContent = selectedSkin;
+
+// Новые кнопки
+document.getElementById('openMinigameBtn').addEventListener('click', () => { document.getElementById('minigameModal').classList.add('active'); });
+document.getElementById('spinRouletteBtn').addEventListener('click', () => { const cost = 10000; if (cookies < cost) return alert('Недостаточно печенек'); cookies -= cost; const win = Math.random() < 0.3 ? cost*3 : 0; cookies += win; document.getElementById('rouletteResult').textContent = win > 0 ? `Выигрыш: ${win} 🍪` : 'Проигрыш'; scheduleUIUpdate(); });
+document.getElementById('openCardsBtn').addEventListener('click', () => { document.getElementById('cardsModal').classList.add('active'); const div = document.getElementById('cardCollectionDiv'); div.innerHTML = ''; for (const [card, count] of Object.entries(cardCollection)) { div.innerHTML += `${card}: ${count}<br>`; } });
+document.getElementById('openPetsBtn').addEventListener('click', () => { document.getElementById('petsModal').classList.add('active'); });
+document.getElementById('buyCatBtn').addEventListener('click', () => buyPet('cat', 10000));
+document.getElementById('buyDogBtn').addEventListener('click', () => buyPet('dog', 50000));
+document.getElementById('buyDragonBtn').addEventListener('click', () => buyPet('dragon', 500000));
+document.getElementById('openTreeBtn').addEventListener('click', () => { document.getElementById('treeModal').classList.add('active'); });
+document.getElementById('buyOfflineTime').addEventListener('click', () => buyTreeUpgrade('offlineTime', 10));
+document.getElementById('buyCpsMult').addEventListener('click', () => buyTreeUpgrade('cpsMult', 20));
+document.getElementById('buyClickBase').addEventListener('click', () => buyTreeUpgrade('clickBase', 15));
+document.getElementById('buyGoldenChance').addEventListener('click', () => buyTreeUpgrade('goldenChance', 25));
+document.getElementById('openFriendsBtn').addEventListener('click', () => { document.getElementById('friendsModal').classList.add('active'); updateFriendsUI(); });
+document.getElementById('addFriendBtn').addEventListener('click', () => addFriend(document.getElementById('friendNameInput').value.trim()));
+document.getElementById('openBankBtn').addEventListener('click', () => { updateBank(); document.getElementById('bankDepositDisplay').textContent = Math.floor(bankDeposit).toLocaleString(); document.getElementById('bankModal').classList.add('active'); });
+document.getElementById('depositBtn').addEventListener('click', () => { if (cookies < 10000) return alert('Недостаточно печенек'); cookies -= 10000; bankDeposit += 10000; bankTimestamp = Date.now(); localStorage.setItem('bankDeposit', bankDeposit); localStorage.setItem('bankTimestamp', bankTimestamp); document.getElementById('bankDepositDisplay').textContent = Math.floor(bankDeposit).toLocaleString(); scheduleUIUpdate(); });
+document.getElementById('withdrawBtn').addEventListener('click', () => { cookies += bankDeposit; bankDeposit = 0; bankTimestamp = 0; localStorage.setItem('bankDeposit', '0'); localStorage.setItem('bankTimestamp', '0'); document.getElementById('bankDepositDisplay').textContent = '0'; scheduleUIUpdate(); });
+document.getElementById('openLootboxBtn').addEventListener('click', () => { document.getElementById('lootboxModal').classList.add('active'); });
+document.getElementById('openLootboxBtnModal').addEventListener('click', () => { openLootbox(); document.getElementById('lootboxResult').textContent = 'Открыто!'; });
+document.getElementById('closeMinigameModal').addEventListener('click', () => closeModal(document.getElementById('minigameModal')));
+document.getElementById('closeCardsModal').addEventListener('click', () => closeModal(document.getElementById('cardsModal')));
+document.getElementById('closePetsModal').addEventListener('click', () => closeModal(document.getElementById('petsModal')));
+document.getElementById('closeTreeModal').addEventListener('click', () => closeModal(document.getElementById('treeModal')));
+document.getElementById('closeFriendsModal').addEventListener('click', () => closeModal(document.getElementById('friendsModal')));
+document.getElementById('closeBankModal').addEventListener('click', () => closeModal(document.getElementById('bankModal')));
+document.getElementById('closeLootboxModal').addEventListener('click', () => closeModal(document.getElementById('lootboxModal')));
+
+// Функции босса и квестов
+function updateBossUI() {
+    const infoDiv = document.getElementById('bossInfo');
+    if (!currentClan) { infoDiv.innerHTML = 'Вы не в клане!'; document.getElementById('attackBossBtn').disabled = true; return; }
+    const now = Date.now();
+    if (!bossAlive && (now - lastBossKill >= BOSS_COOLDOWN)) { bossAlive = true; bossHP = bossMaxHP; }
+    if (bossAlive) { infoDiv.innerHTML = `<p>Клановый босс: 🍪 Гигантское Печенье</p><p>Награда: +5 CR</p>`; document.getElementById('bossHP').textContent = Math.floor(bossHP).toLocaleString(); document.getElementById('bossHPBar').style.width = (bossHP / bossMaxHP * 100) + '%'; document.getElementById('attackBossBtn').disabled = false; }
+    else { const remaining = BOSS_COOLDOWN - (now - lastBossKill); const h = Math.floor(remaining / 3600000), m = Math.floor((remaining % 3600000) / 60000); infoDiv.innerHTML = `Босс побеждён! Следующий через ${h}ч ${m}м`; document.getElementById('attackBossBtn').disabled = true; }
+}
+function attackBoss() {
+    if (!bossAlive || !currentClan) return;
+    let clickMult = 1; if (isVIP) clickMult *= 2; if (isX3) clickMult *= 3;
+    const clickDmg = cookiesPerClick * (eventActive ? eventMultiplier : 1) * clickMult;
+    const autoDmg = cookiesPerSecond * 0.1;
+    bossHP -= clickDmg + autoDmg;
+    if (bossHP <= 0) { bossAlive = false; lastBossKill = Date.now(); localStorage.setItem('lastBossKill', lastBossKill); prestigePoints += 5; pushToLeaderboardCR(); addCRToClan(5); dropSkillTrophy(); alert('Босс побеждён! +5 CR'); }
+    updateBossUI(); scheduleUIUpdate();
+}
+function dropSkillTrophy() { if (Math.random() < 0.2) { const skills = ['goldRain', 'grandmaRage', 'quantumLeap']; const picked = skills[Math.floor(Math.random() * skills.length)]; skillCounts[picked]++; localStorage.setItem('skillCount' + picked.charAt(0).toUpperCase() + picked.slice(1), skillCounts[picked].toString()); alert(`🏆 Трофей: ${picked === 'goldRain' ? 'Золотой дождь' : picked === 'grandmaRage' ? 'Бабушкин гнев' : 'Квантовый скачок'}!`); } }
+function updateQuests() { const qList = document.getElementById('questsList'); qList.innerHTML = ''; quests.forEach((q, idx) => { const div = document.createElement('div'); div.style.margin = '10px 0'; const complete = q.progress >= q.goal; div.innerHTML = `${q.desc} (${Math.min(q.progress, q.goal)}/${q.goal}) ${complete ? '✅' : ''} <button class="shop-btn claimQuestBtn" data-idx="${idx}" ${!complete ? 'disabled' : ''}>Забрать</button>`; qList.appendChild(div); }); document.querySelectorAll('.claimQuestBtn').forEach(btn => { btn.addEventListener('click', () => { const idx = parseInt(btn.dataset.idx); const q = quests[idx]; if (q.progress >= q.goal) { q.progress = 0; if (q.reward <= 5 && q.id !== 'prestige1') { prestigePoints += q.reward; pushToLeaderboardCR(); if (currentClan) addCRToClan(q.reward); } else { cookies += q.reward; } scheduleUIUpdate(); updateQuests(); alert('Квест выполнен!'); } }); }); }
+
+function updateAdminVisibility() { const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry); const showAdminBtn = isAdmin && !adminHidden; if ((playerName === 'tr3haszz' && isSpecialAdmin) || (playerName === 't1nator' && isFriendAdmin)) { document.getElementById('openAdminBtn').style.display = 'inline-block'; } else { document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none'; } }
+function closeModal(modal) { modal.classList.add('closing'); modal.addEventListener('transitionend', function handler() { modal.classList.remove('active', 'closing'); modal.removeEventListener('transitionend', handler); }, { once: true }); setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350); }
+
+updateAdminVisibility();
+function loadLocalGame() {
+    const saved = localStorage.getItem('pechenkoClickerSave');
+    if (saved) { try { const data = JSON.parse(saved); cookies = data.cookies || 0; cookiesPerClick = data.cookiesPerClick || 1; prestigePoints = data.prestigePoints || 0; if (data.upgrades) upgrades.forEach((u,i) => u.count = data.upgrades[i]?.count || 0); totalClicks = data.totalClicks || 0; totalEvents = data.totalEvents || 0; prestigeCost = data.prestigeCost || 1000000; clickPowerLevel = data.clickPowerLevel || 0; selectedSkin = data.selectedSkin || '🍪'; document.getElementById('cookieBtn').textContent = selectedSkin; } catch(e) {} }
+    if (lastSaveTime && cookiesPerSecond > 0) { const now = Date.now(); const diff = now - lastSaveTime; const maxOffline = 24 * 60 * 60 * 1000 + getTreeBonusOfflineHours() * 3600000; const effective = Math.min(diff, maxOffline); if (effective > 10000) { const earned = Math.floor(cookiesPerSecond * (effective / 1000)); cookies += earned; const h = Math.floor(effective / 3600000); const m = Math.floor((effective % 3600000) / 60000); alert(`Пока вас не было (${h}ч ${m}м), вы заработали ${earned.toLocaleString()} печенек!`); } }
+    updateCookiesPerSecond(); scheduleUIUpdate();
+}
+async function syncCloud() { if (!uid) return; const snap = await get(ref(database, `users/${uid}`)); if (snap.exists()) { const cloud = snap.val(); if ((cloud.lastSaveTime || 0) > lastSaveTime) { cookies = cloud.cookies || 0; cookiesPerClick = cloud.cookiesPerClick || 1; prestigePoints = cloud.prestigePoints || 0; upgrades.forEach((u,i) => u.count = cloud.upgrades?.[i]?.count || 0); totalClicks = cloud.totalClicks || 0; totalEvents = cloud.totalEvents || 0; prestigeCost = cloud.prestigeCost || 1000000; clickPowerLevel = cloud.clickPowerLevel || 0; selectedSkin = cloud.selectedSkin || '🍪'; document.getElementById('cookieBtn').textContent = selectedSkin; saveLocalGame(); } } }
+onAuthStateChanged(auth, async (user) => { if (user) { uid = user.uid; if (user.displayName) playerName = user.displayName; localStorage.setItem('pechenkoPlayerName', playerName); loadLocalGame(); await syncCloud(); } else { document.getElementById('googleSignInBtn').style.display = 'inline-block'; await signInAnonymously(auth); } updateCookiesPerSecond(); scheduleUIUpdate(); scheduleRandomEvent(); requestNotificationPermission(); setMyPresence(false); updateAdminVisibility(); updateDailyUI(); updateQuests(); updateBossUI(); applyAutoTheme(); });
+setInterval(() => { if (cookiesPerSecond > 0) { cookies += cookiesPerSecond / 10; scheduleUIUpdate(); } }, 100);
 </script>
 </body>
 </html>
