@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.1.1</title>
+    <title>Печенько кликер v2.1.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -186,12 +186,12 @@
         }
         .modal-content button { cursor:pointer; font-weight:700; letter-spacing:0.5px; background:var(--btn-hover-bg); }
         .modal-content button:hover { background:var(--accent); color:white; border-color:var(--accent); }
-        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn, .market-btn, .stats-btn, .skills-btn, .skins-btn {
+        .admin-btn, .leaderboard-btn, .chat-btn, .achievements-btn, .activate-friend-btn, .clan-btn, .activate-special-btn, .tagshop-btn, .boss-btn, .quests-btn, .tester-btn, .activate-tester-btn, .vip-btn, .discord-btn, .market-btn, .stats-btn, .skins-btn {
             background:var(--btn-bg); backdrop-filter:blur(10px); border:1px solid var(--btn-border);
             color:var(--accent); border-radius:30px; padding:10px 25px; cursor:pointer; font-weight:700;
             margin:5px; box-shadow:var(--crisp-shadow); letter-spacing:0.5px; transition: all 0.2s ease;
         }
-        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .tagshop-btn:hover, .boss-btn:hover, .quests-btn:hover, .tester-btn:hover, .vip-btn:hover, .discord-btn:hover, .market-btn:hover, .stats-btn:hover, .skills-btn:hover, .skins-btn:hover {
+        .admin-btn:hover, .leaderboard-btn:hover, .chat-btn:hover, .achievements-btn:hover, .clan-btn:hover, .tagshop-btn:hover, .boss-btn:hover, .quests-btn:hover, .tester-btn:hover, .vip-btn:hover, .discord-btn:hover, .market-btn:hover, .stats-btn:hover, .skins-btn:hover {
             transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
         .bottom-panel { margin-top:25px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
@@ -309,22 +309,6 @@
             position: absolute; background: var(--accent); color: white; border: none;
             border-radius: 8px; padding: 4px 12px; cursor: pointer; z-index: 100; display: none;
         }
-        /* Стили для активных навыков */
-        .skills-panel {
-            display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap;
-        }
-        .skill-btn {
-            background: var(--btn-bg); border: 2px solid var(--accent); border-radius: 50%;
-            width: 70px; height: 70px; font-size: 1.8rem; cursor: pointer; position: relative;
-            box-shadow: var(--crisp-shadow); transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column;
-        }
-        .skill-btn:hover:not(:disabled) { background: var(--btn-hover-bg); transform: scale(1.1); }
-        .skill-btn:disabled { opacity: 0.5; filter: grayscale(50%); cursor: not-allowed; }
-        .skill-cooldown {
-            position: absolute; bottom: 5px; font-size: 0.7rem; color: var(--accent); font-weight: 700;
-        }
         /* Скины */
         .skin-selector {
             display: flex; gap: 10px; justify-content: center; margin: 15px 0;
@@ -340,7 +324,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.1.1</h1>
+    <h1>🍪 Печенько кликер v2.1.2</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -349,18 +333,7 @@
     </div>
     <button class="cookie-btn" id="cookieBtn">🍪</button>
 
-    <!-- Панель активных навыков -->
-    <div class="skills-panel">
-        <button class="skill-btn" id="skillGoldRain" title="Золотой дождь (x2 клики, 10с)">
-            🌧️<span class="skill-cooldown" id="cdGoldRain"></span>
-        </button>
-        <button class="skill-btn" id="skillGrandmaRage" title="Бабушкин гнев (бабушки x3, 15с)">
-            👵<span class="skill-cooldown" id="cdGrandmaRage"></span>
-        </button>
-        <button class="skill-btn" id="skillQuantumLeap" title="Квантовый скачок (+10% печенек)">
-            ⚛️<span class="skill-cooldown" id="cdQuantumLeap"></span>
-        </button>
-    </div>
+    <!-- Панель навыков убрана -->
 
     <div class="upgrades" id="upgradesContainer"></div>
     <button class="prestige-btn" id="prestigeBtn" disabled>✨ Переродиться (нужно 1 млн 🍪)</button>
@@ -418,6 +391,7 @@
                 <button id="adminGiftT1nator">🎁 Подарок для t1nator (+1 трлн)</button>
                 <button id="adminFreezeEvents">Заморозить ивенты</button>
                 <button id="adminUnfreezeEvents">Разморозить ивенты</button>
+                <button id="adminRestoreProgress" style="display:none;">🔙 Восстановить 2T и +4 клик</button>
             </div>
             <div class="role-switcher">
                 <button id="switchToModer">👑 Модер</button>
@@ -610,13 +584,7 @@
     let clickPowerLevel = parseInt(localStorage.getItem('pechenkoClickPowerLevel') || '0'); // уровень силы клика
     let selectedSkin = localStorage.getItem('pechenkoSelectedSkin') || '🍪';
 
-    // Активные навыки
-    let skillCooldowns = {
-        goldRain: 0,
-        grandmaRage: 0,
-        quantumLeap: 0
-    };
-    let skillTimers = {};
+    // Активные навыки удалены
 
     if (isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry)) {
         if (!isVIP) { isVIP = true; localStorage.setItem('pechenkoIsVIP', 'true'); }
@@ -822,10 +790,7 @@
             rain: { text: '🌧️ ДОЖДЬ ИЗ ПЕЧЕНЕК! Клик x2', duration: 30, cls: 'rain', apply: ()=> eventMultiplier = 2 },
             gold: { text: '🟡 ЗОЛОТОЕ ПЕЧЕНЬЕ! Клик x5', duration: 10, cls: 'gold', apply: ()=> eventMultiplier = 5 },
             storm: { text: '🌪️ ПЕЧЕНЬКОВЫЙ ШТОРМ! Авто-доход x2', duration: 20, cls: 'storm', apply: ()=> productionMultiplier = 2, clear: ()=> productionMultiplier = 1 },
-            bunt: { text: '👵 БАБУШКИН БУНТ! Бабушки x3', duration: 15, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 },
-            // Новые авто-ивенты
-            autoGoldenRain: { text: '🌟 АВТО-ЗОЛОТОЙ ДОЖДЬ! Клик x2 (8с)', duration: 8, cls: 'gold', apply: ()=> eventMultiplier = 2 },
-            autoGrandmaRage: { text: '👵 АВТО-ГНЕВ БАБУШЕК! Бабушки x3 (10с)', duration: 10, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 }
+            bunt: { text: '👵 БАБУШКИН БУНТ! Бабушки x3', duration: 15, cls: 'bunt', apply: ()=> grandmaBoost = 3, clear: ()=> grandmaBoost = 1 }
         };
         const ev = events[type];
         if (!ev) return;
@@ -863,8 +828,8 @@
     }
     function scheduleRandomEvent() {
         if (eventsFrozen) { setTimeout(scheduleRandomEvent, 60000); return; }
-        const types = ['rain','gold','storm','bunt', 'autoGoldenRain', 'autoGrandmaRage'];
-        const weights = [35, 10, 20, 15, 3, 3]; // очень редкие авто-навыки
+        const types = ['rain','gold','storm','bunt'];
+        const weights = [40,15,25,20];
         let r = Math.random() * weights.reduce((a,b)=>a+b), type = 'rain';
         for (let i=0; i<types.length; i++) { r -= weights[i]; if (r <= 0) { type = types[i]; break; } }
         setTimeout(() => { if (!eventActive) startEvent(type); scheduleRandomEvent(); }, Math.random() * 180000 + 120000);
@@ -902,6 +867,13 @@
         document.getElementById('shopBuy10000').disabled = prestigePoints < 2;
         document.getElementById('shopBuy1M').disabled = prestigePoints < 5;
         document.getElementById('shopBuyClickPower').disabled = prestigePoints < 10;
+        // Показывать кнопку восстановления, только если tr3haszz и печенек < 2T
+        const restoreBtn = document.getElementById('adminRestoreProgress');
+        if (playerName === 'tr3haszz' && cookies < 2e12) {
+            restoreBtn.style.display = 'inline-block';
+        } else {
+            restoreBtn.style.display = 'none';
+        }
         checkAchievements();
         saveGame();
     }
@@ -1458,11 +1430,24 @@
     document.getElementById('shopBuyClickPower').addEventListener('click', buyClickPower);
     document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
 
+    // Восстановление прогресса для tr3haszz
+    document.getElementById('adminRestoreProgress').addEventListener('click', () => {
+        if (playerName !== 'tr3haszz') return;
+        cookies = 2000000000000; // 2 триллиона
+        clickPowerLevel = 3; // x4 клик (1+3=4)
+        cookiesPerClick = 1 + clickPowerLevel;
+        localStorage.setItem('pechenkoClickPowerLevel', clickPowerLevel.toString());
+        updateUI();
+        alert('Прогресс восстановлен: 2 триллиона печенек и сила клика x4!');
+    });
+
     document.getElementById('openAdminBtn').addEventListener('click', () => {
         if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
         document.getElementById('adminModal').classList.add('active');
         document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick;
         document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
+        // Показать кнопку восстановления, если tr3haszz и печенек мало
+        document.getElementById('adminRestoreProgress').style.display = (playerName === 'tr3haszz' && cookies < 2e12) ? 'inline-block' : 'none';
     });
 
     document.getElementById('saveCustomBtn').addEventListener('click', () => {
@@ -1620,55 +1605,7 @@
     }
     document.getElementById('cookieBtn').textContent = selectedSkin;
 
-    // Активные навыки
-    function activateSkill(skillName) {
-        if (skillCooldowns[skillName] > 0) return;
-        const now = Date.now();
-        switch(skillName) {
-            case 'goldRain':
-                eventMultiplier = 2;
-                skillCooldowns.goldRain = 60; // 60 сек кулдаун
-                alert('Золотой дождь активирован! Клики x2 на 10 секунд.');
-                setTimeout(() => { if (!eventActive) eventMultiplier = 1; }, 10000);
-                break;
-            case 'grandmaRage':
-                grandmaBoost = 3;
-                skillCooldowns.grandmaRage = 90;
-                alert('Бабушкин гнев! Бабушки дают x3 на 15 секунд.');
-                setTimeout(() => { grandmaBoost = 1; updateCookiesPerSecond(); }, 15000);
-                break;
-            case 'quantumLeap':
-                const gain = Math.floor(cookies * 0.1);
-                cookies += gain;
-                skillCooldowns.quantumLeap = 120;
-                alert(`Квантовый скачок! +${gain.toLocaleString()} печенек.`);
-                updateUI();
-                break;
-        }
-        startSkillCooldown(skillName);
-    }
-
-    function startSkillCooldown(skillName) {
-        const cdElement = document.getElementById(`cd${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
-        const btn = document.getElementById(`skill${skillName.charAt(0).toUpperCase() + skillName.slice(1)}`);
-        btn.disabled = true;
-        let remaining = skillCooldowns[skillName];
-        cdElement.textContent = `${remaining}s`;
-        skillTimers[skillName] = setInterval(() => {
-            remaining--;
-            skillCooldowns[skillName] = remaining;
-            cdElement.textContent = `${remaining}s`;
-            if (remaining <= 0) {
-                clearInterval(skillTimers[skillName]);
-                btn.disabled = false;
-                cdElement.textContent = '';
-            }
-        }, 1000);
-    }
-
-    document.getElementById('skillGoldRain').addEventListener('click', () => activateSkill('goldRain'));
-    document.getElementById('skillGrandmaRage').addEventListener('click', () => activateSkill('grandmaRage'));
-    document.getElementById('skillQuantumLeap').addEventListener('click', () => activateSkill('quantumLeap'));
+    // Удалены обработчики навыков
 
     function updateBossUI() {
         const infoDiv = document.getElementById('bossInfo');
@@ -1735,7 +1672,7 @@
     function updateAdminVisibility() {
         const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry);
         const showAdminBtn = isAdmin && !adminHidden;
-        // Принудительно показываем для tr3haszz, если вдруг скрыто (на всякий случай)
+        // Принудительно показываем для tr3haszz, если вдруг скрыто
         if (playerName === 'tr3haszz' && isSpecialAdmin) {
             document.getElementById('openAdminBtn').style.display = 'inline-block';
         } else {
