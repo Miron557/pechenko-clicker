@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>">
-    <title>Печенько кликер v2.1.4</title>
+    <title>Печенько кликер v2.1.5.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -322,7 +322,7 @@
 <body>
 <div class="game-container">
     <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌓</button>
-    <h1>🍪 Печенько кликер v2.1.4</h1>
+    <h1>🍪 Печенько кликер v2.1.5.1</h1>
     <div class="score-display">
         <span class="score-label">Печенек собрано</span>
         <span class="score" id="score">0</span>
@@ -384,7 +384,8 @@
                 <button id="adminGiftT1nator">🎁 Подарок для t1nator (+1 трлн)</button>
                 <button id="adminFreezeEvents">Заморозить ивенты</button>
                 <button id="adminUnfreezeEvents">Разморозить ивенты</button>
-                <button id="adminRestoreProgress" style="display:none;">🔙 Восстановить 2T и +4 клик</button>
+                <button id="adminRestoreProgress" style="display:none;">🔙 Восстановить 2T и +4 клик (tr3haszz)</button>
+                <button id="adminRestoreT1nator" style="display:none;">🔙 Восстановить 1T и x3 клик (t1nator)</button>
             </div>
             <div class="role-switcher">
                 <button id="switchToModer">👑 Модер</button>
@@ -589,11 +590,11 @@
     let clickPowerLevel = parseInt(localStorage.getItem('pechenkoClickPowerLevel') || '0');
     let selectedSkin = localStorage.getItem('pechenkoSelectedSkin') || '🍪';
 
-    // Throttle & Debounce
-    let lastUIUpdate = 0;
-    const UI_THROTTLE = 100; // ms
-    let saveTimeout = null;
-    const SAVE_DELAY = 5000; // 5 sec
+    // Принудительно сбрасываем скрытие админки для tr3haszz и t1nator
+    if ((playerName === 'tr3haszz' && isSpecialAdmin) || (playerName === 't1nator' && isFriendAdmin)) {
+        adminHidden = false;
+        localStorage.removeItem('pechenkoAdminHidden');
+    }
 
     const DAILY_KEY = 'pechenkoDaily';
     let dailyData = JSON.parse(localStorage.getItem(DAILY_KEY) || '{"lastClaim":0,"streak":0}');
@@ -627,6 +628,12 @@
     let unlockedAchievements = JSON.parse(localStorage.getItem('pechenkoAchievements') || '[]');
     let totalClicks = parseInt(localStorage.getItem('pechenkoTotalClicks') || '0');
     let totalEvents = parseInt(localStorage.getItem('pechenkoTotalEvents') || '0');
+
+    // Throttle & Debounce
+    let lastUIUpdate = 0;
+    const UI_THROTTLE = 100; // ms
+    let saveTimeout = null;
+    const SAVE_DELAY = 5000; // 5 sec
     let uid = null;
     let lastSaveTime = parseInt(localStorage.getItem('pechenkoLastSaveTime') || Date.now().toString());
 
@@ -879,9 +886,21 @@
         document.getElementById('shopBuy10000').disabled = prestigePoints < 2;
         document.getElementById('shopBuy1M').disabled = prestigePoints < 5;
         document.getElementById('shopBuyClickPower').disabled = prestigePoints < 10;
-        if (playerName === 'tr3haszz') {
-            document.getElementById('adminRestoreProgress').style.display = 'inline-block';
+
+        // Кнопки восстановления
+        const restoreTr = document.getElementById('adminRestoreProgress');
+        const restoreT1 = document.getElementById('adminRestoreT1nator');
+        if (playerName === 'tr3haszz' && isSpecialAdmin) {
+            restoreTr.style.display = 'inline-block';
+            restoreT1.style.display = 'none'; // показываем только свою
+        } else if (playerName === 't1nator' && isFriendAdmin) {
+            restoreT1.style.display = 'inline-block';
+            restoreTr.style.display = 'none';
+        } else {
+            restoreTr.style.display = 'none';
+            restoreT1.style.display = 'none';
         }
+
         checkAchievements();
         debouncedSave();
     }
@@ -1054,7 +1073,7 @@
         if (Notification.permission === 'granted') new Notification(title, { body, icon: '🍪' });
     }
 
-    // Чат
+    // Рендер сообщения
     function renderChatMessage(msg, prepend = false) {
         const container = document.getElementById('chatMessages');
         if (privateChatUser) {
@@ -1194,9 +1213,32 @@
     document.getElementById('shopBuyClickPower').addEventListener('click', buyClickPower);
     document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
 
-    document.getElementById('adminRestoreProgress').addEventListener('click', () => { if (playerName !== 'tr3haszz') return; cookies = 2000000000000; clickPowerLevel = 3; cookiesPerClick = 1 + clickPowerLevel; scheduleUIUpdate(); alert('Прогресс восстановлен!'); });
+    // Восстановление прогресса для tr3haszz
+    document.getElementById('adminRestoreProgress').addEventListener('click', () => {
+        if (playerName !== 'tr3haszz' || !isSpecialAdmin) return;
+        cookies = 2000000000000;
+        clickPowerLevel = 3;
+        cookiesPerClick = 1 + clickPowerLevel;
+        scheduleUIUpdate();
+        alert('Прогресс tr3haszz восстановлен: 2 трлн и x4 клик!');
+    });
 
-    document.getElementById('openAdminBtn').addEventListener('click', () => { if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return; document.getElementById('adminModal').classList.add('active'); document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick; document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку'; });
+    // Восстановление прогресса для t1nator
+    document.getElementById('adminRestoreT1nator').addEventListener('click', () => {
+        if (playerName !== 't1nator' || !isFriendAdmin) return;
+        cookies = 1000000000000;
+        clickPowerLevel = 2; // x3 клик (1 + 2 = 3)
+        cookiesPerClick = 1 + clickPowerLevel;
+        scheduleUIUpdate();
+        alert('Прогресс t1nator восстановлен: 1 трлн и x3 клик!');
+    });
+
+    document.getElementById('openAdminBtn').addEventListener('click', () => {
+        if (!(isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry))) return;
+        document.getElementById('adminModal').classList.add('active');
+        document.getElementById('customTagInput').value = customTag; document.getElementById('customNickInput').value = customNick;
+        document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку';
+    });
     document.getElementById('saveCustomBtn').addEventListener('click', () => { customTag = document.getElementById('customTagInput').value.trim(); customNick = document.getElementById('customNickInput').value.trim(); localStorage.setItem('pechenkoCustomTag', customTag); localStorage.setItem('pechenkoCustomNick', customNick); alert('Сохранено!'); });
     document.getElementById('addCookiesBtn').addEventListener('click', () => { cookies += 1000; scheduleUIUpdate(); });
     document.getElementById('addTrillionCookiesBtn').addEventListener('click', () => { cookies += 1e12; scheduleUIUpdate(); });
@@ -1212,8 +1254,8 @@
     document.getElementById('hideAdminBtn').addEventListener('click', () => { adminHidden = !adminHidden; localStorage.setItem('pechenkoAdminHidden', adminHidden.toString()); updateAdminVisibility(); if (adminHidden) document.body.classList.add('admin-hidden'); else document.body.classList.remove('admin-hidden'); document.getElementById('hideAdminBtn').textContent = adminHidden ? '👁 Показать админку' : '🙈 Скрыть админку'; });
     if (adminHidden) document.body.classList.add('admin-hidden');
 
-    document.getElementById('activateFriendBtn').addEventListener('click', () => { if (isFriendAdmin) return; const secret = prompt('Пароль для друга:'); if (secret === 'friend') { isFriendAdmin = true; playerName = 't1nator'; localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator'); updateAdminVisibility(); scheduleUIUpdate(); alert('Доступ активирован! Теперь ты [Друн] t1nator.'); } else alert('Неверный пароль'); });
-    document.getElementById('activateSpecialBtn').addEventListener('click', () => { if (isSpecialAdmin) return; const secret = prompt('Секретный пароль:'); if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; } const ip = prompt('IP для подтверждения:'); if (ip !== '94.181.23.61') { alert('Неверный IP'); return; } isSpecialAdmin = true; playerName = 'tr3haszz'; localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz'); updateAdminVisibility(); scheduleUIUpdate(); alert('tr3haszz активирован!'); });
+    document.getElementById('activateFriendBtn').addEventListener('click', () => { if (isFriendAdmin) return; const secret = prompt('Пароль для друга:'); if (secret === 'friend') { isFriendAdmin = true; playerName = 't1nator'; localStorage.setItem('pechenkoIsFriendAdmin','true'); localStorage.setItem('pechenkoPlayerName','t1nator'); updateAdminVisibility(); scheduleUIUpdate(); alert('Доступ активирован! Теперь ты [Друн] t1nator.'); location.reload(); } else alert('Неверный пароль'); });
+    document.getElementById('activateSpecialBtn').addEventListener('click', () => { if (isSpecialAdmin) return; const secret = prompt('Секретный пароль:'); if (secret !== 'fish') { alert('Нононо мистер фиш...'); return; } const ip = prompt('IP для подтверждения:'); if (ip !== '94.181.23.61') { alert('Неверный IP'); return; } isSpecialAdmin = true; playerName = 'tr3haszz'; localStorage.setItem('pechenkoIsSpecialAdmin','true'); localStorage.setItem('pechenkoAdminIP', ip); localStorage.setItem('pechenkoPlayerName','tr3haszz'); updateAdminVisibility(); scheduleUIUpdate(); alert('tr3haszz активирован!'); location.reload(); });
     document.getElementById('activateTesterBtn').addEventListener('click', () => { if (isTester) return; const secret = prompt('Пароль тестера:'); if (secret === 'tester') { isTester = true; playerName = 'Глист'; localStorage.setItem('pechenkoIsTester', 'true'); localStorage.setItem('pechenkoPlayerName', 'Глист'); updateAdminVisibility(); scheduleUIUpdate(); alert('Доступ тестера активирован!'); } else alert('Неверный пароль'); });
 
     document.getElementById('openTesterBtn').addEventListener('click', () => document.getElementById('testerModal').classList.add('active'));
@@ -1319,8 +1361,11 @@
     function updateAdminVisibility() {
         const isAdmin = isSpecialAdmin || isFriendAdmin || (isTemporaryAdmin && Date.now() < tempAdminExpiry);
         const showAdminBtn = isAdmin && !adminHidden;
-        if (playerName === 'tr3haszz' && isSpecialAdmin) document.getElementById('openAdminBtn').style.display = 'inline-block';
-        else document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
+        if ((playerName === 'tr3haszz' && isSpecialAdmin) || (playerName === 't1nator' && isFriendAdmin)) {
+            document.getElementById('openAdminBtn').style.display = 'inline-block';
+        } else {
+            document.getElementById('openAdminBtn').style.display = showAdminBtn ? 'inline-block' : 'none';
+        }
         document.getElementById('openTesterBtn').style.display = (isTester && !isAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateFriendBtn').style.display = (!isFriendAdmin && !isSpecialAdmin) ? 'inline-block' : 'none';
         document.getElementById('activateSpecialBtn').style.display = (!isSpecialAdmin && !isFriendAdmin) ? 'inline-block' : 'none';
@@ -1333,7 +1378,10 @@
         setTimeout(() => { if (modal.classList.contains('closing')) modal.classList.remove('active', 'closing'); }, 350);
     }
 
-    // Инициализация
+    // Инициализация: сразу вызываем updateAdminVisibility, не дожидаясь Firebase
+    updateAdminVisibility();
+
+    // Загрузка локальных данных
     function loadLocalGame() {
         const saved = localStorage.getItem('pechenkoClickerSave');
         if (saved) {
